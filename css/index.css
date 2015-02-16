@@ -1,0 +1,120 @@
+/* Created 02/15/15 */
+
+body {
+	background-color: lightgray;
+}
+
+body, p, h1 {
+	padding: 0;
+	margin: 0;
+}
+
+/* FUNCTION */
+.game-container {
+	position: relative;
+}
+
+.object { position: absolute; }
+
+.hidden { visibility: hidden; }
+
+.none { display: none; }
+
+/* SKIN */
+/* containers */
+.game-container {
+	display: inline-block;
+	width: 50rem;
+	height: 30rem;
+	border: 1px solid black;
+}
+
+.row {
+	/* For visualization */
+	width: 85%;
+	height: 2rem;
+	border: 1px solid black;
+}
+
+.others.row-1 {
+	top: 0;
+}
+
+.others.row-2 {
+	top: 2rem;
+}
+
+.others.row-3 {
+	top: 4rem;
+}
+
+.others.row-4 {
+	top: 6rem;
+}
+
+.others.row-5 {
+	top: 8rem;
+}
+
+.barriers {
+	bottom: 1.5rem;
+}
+
+
+/* sprites */
+.other1 {
+	top: 0;
+	width: 1rem;
+	height: 1rem;
+	background-color: teal;
+	/*background-image: url('../images/other1.png');*/
+}
+
+.other2 {
+	top: 0;
+	width: 1rem;
+	height: 1rem;
+	background-color: coral;
+	/*background-image: url('../images/other2.png');*/
+}
+
+.other3 {
+	top: 0;
+	width: 1rem;
+	height: 1rem;
+	background-color: firebrick;
+	/*background-image: url('../images/other3.png');*/
+}
+
+.barrier {
+	bottom: 1.5rem;
+	width: 2rem;
+	height: 1rem;
+	background-color: black;
+}
+
+.player {
+	bottom: 0;
+	width: 1rem;
+	height: 1rem;
+	background-color: teal;
+}
+
+.bullet {
+	width: 0.25rem;
+	height: 0.4rem;
+	background-color: cornsilk;
+}
+
+
+/* STRUCTURE */
+body {text-align: center;}
+
+.splash-screen {
+	
+}
+
+/* CONTAINERS */
+
+/* CONTENT */
+
