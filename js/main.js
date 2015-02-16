@@ -45,7 +45,6 @@ TODO:
 			othersList.push( other );
 		}
 
-		console.log(othersList);
 		return othersList;
 	}
 
@@ -102,18 +101,57 @@ TODO:
 
 	};  // end appendRows()
 
-	var moveRow = function ( row ) {
+	var moveRowHor = function ( rowHTML, left, direction ) {
 
-		// if at left-most
-			// direction = "right";
-			// move down 1 unit;
-		// else if rightmost
-			// same
-		// else if ( row.direction === "right" ) {
-			// move right 1 unit
-		// } same for left
+		if ( direction === "right" ) {
 
-	};  // end moveRow
+			left += 0.25;
+			rowHTML.dataset.left = left;
+			rowHTML.style.left = left + "rem" ;
+
+		} else {
+			left -= 0.25;
+			rowHTML.dataset.left = left;
+			rowHTML.style.left = left + "rem" ;
+		}
+
+		return rowHTML;
+
+	};  // end moveRowHor()
+
+	var moveRow = function ( rowHTML ) {
+
+		var direction = rowHTML.dataset.direction;
+		var top  = parseFloat(rowHTML.dataset.top);
+		var left = parseFloat(rowHTML.dataset.left);
+
+		if ( (left <= 0) || (left >= 10.25) ) {
+			top += 0.25;
+			rowHTML.dataset.top = top;
+			rowHTML.style.top = top + "rem";
+
+			// TODO: Base this on which side it's on?
+			// TODO: Figure out synchronous way of moving
+			// vertically then laterally
+			if ( direction === "left" ) {
+				rowHTML.dataset.direction = "right";
+				moveRowHor( rowHTML, left, "right" );
+			} else {
+				rowHTML.dataset.direction = "left";
+				moveRowHor( rowHTML, left, "left" );
+			}
+
+		// Currently direction doesn't change fast enough to
+		// do this right if it's in its own if statement
+		} else if ( direction === "right" ) {
+			moveRowHor( rowHTML, left, "right" );
+		} else {
+			moveRowHor( rowHTML, left, "left" );
+		}
+
+		return rowHTML;
+
+	};  // end moveRow()
 
 // });
 
