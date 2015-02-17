@@ -8,9 +8,9 @@ var Player = function ( id ) {
 
 	// player._state = {};
 
-	player._leftKey = [ "a", "left" ];
-	player._rightKey = [ "d", "right" ];
-	player._fireKey = [ "space", "return", "up" ];
+	player._leftKeyList = [ "a", "left" ];
+	player._rightKeyList = [ "d", "right" ];
+	player._fireKeyList = [ "space", "return", "up" ];
 	// Possible values: "left", "right", "none"
 	player._direction = "none";
 	player._speed = 0.75;
@@ -67,33 +67,52 @@ var Player = function ( id ) {
 
 	player._keypress = new window.keypress.Listener();
 
-	player._bindInput = function () {
-	/*
+	player._bindInput = function ( keyCombo, keyDown, keyUp, thisObj ) {
+	/* ( str, func, func, {} ) -> {}
 
 	*/
+		var obj = thisObj;
 
+		obj._keypress.register_combo({
+		    "keys"              : keyCombo,
+		    "on_keydown"        : keyDown,
+		    "on_keyup"          : keyUp,
+		    // "on_release"        : null,
+		    "this"              : obj,
+		    "prevent_default"   : true,
+		    // "prevent_repeat"    : false,
+		    // "is_unordered"      : false,
+		    // "is_counting"       : false,
+		    // "is_exclusive"      : false,
+		    // "is_solitary"       : false,
+		    // "is_sequence"       : false
+		});
 
+		return thisObj;
 
 	};  //  end player._bindInput()
 
 
-	var key = "d";
+	for ( var keyi = 0; keyi < player._leftKeyList.length; keyi++ ) {
 
-	player._keypress.register_combo({
-	    "keys"              : key,
-	    "on_keydown"        : function () { player._changeDirection( "right" ); },
-	    "on_keyup"          : function () { player._changeDirection( "none" ); },
-	    // "on_release"        : null,
-	    "this"              : player,
-	    "prevent_default"   : true,
-	    // "prevent_repeat"    : false,
-	    // "is_unordered"      : false,
-	    // "is_counting"       : false,
-	    // "is_exclusive"      : false,
-	    // "is_solitary"       : false,
-	    // "is_sequence"       : false
-	});
+		player._bindInput( player._leftKeyList[ keyi ],
+			function () { player._changeDirection( "left" ); },
+			function () { player._changeDirection( "none" ); },
+			player
+		);
 
+	}; // end for ( leftKey )
+
+
+	for ( var keyi = 0; keyi < player._rightKeyList.length; keyi++ ) {
+
+		player._bindInput( player._rightKeyList[ keyi ],
+			function () { player._changeDirection( "right" ); },
+			function () { player._changeDirection( "none" ); },
+			player
+		);
+
+	}; // end for ( rightKey )
 
 
 	return player;
