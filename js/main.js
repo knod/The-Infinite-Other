@@ -19,6 +19,9 @@ TODO:
 - Unit tests
 - ~ Other movement (partially done)
 
+MAYBE TODO:
+- Build converters to convert from pixels to rem and maybe to %
+
 QUESTIONS:
 - Is there a way to change the size and placement
 of the row based on its contents, to have its contents
@@ -29,7 +32,7 @@ determine its size and position?
 // "a" & "d"
 
 // Shooting
-// spacebar & return
+// spacebar, return, up arrow
 
 */
 
@@ -49,6 +52,22 @@ determine its size and position?
 	// This determines how the Other elements are laid out in the rows
 	var otherWidth 	= 1/3;
 	var colPercent  = 100/( (numCols-1) + otherWidth );
+
+	var player1 = Player( 1 );
+	var playerList = [ player1 ];
+
+	// THIS IS ALL WRONG, FIX - game containers and their contents should be
+	// created at the same time. Perhaps updates should be for containers as
+	// well.
+	var addPlayers = function ( parent, playerList ) {
+	/*
+
+	*/
+		var player = playerList[ 0 ];
+		player._buildHTML();
+		parent.appendChild( player._html );
+
+	};  // end addPlayers()
 
 	var buildOthersRow = function ( type, mappedOthers ) {
 	/* ( str, {} ) -> [Other]
@@ -159,7 +178,7 @@ determine its size and position?
 				rowHTML.style.left = left + "rem" ;
 
 			} else {
-				left -= 0.25;
+				left -= otherMoveDistance;
 				rowHTML.dataset.left = left;
 				rowHTML.style.left = left + "rem" ;
 			}
@@ -274,5 +293,9 @@ determine its size and position?
 // =============
 var y = buildRows( rowMap, Other, othersTypes );
 appendToRows( rowList, y );
+
+var gameCont = document.getElementsByClassName("game-container")[0];
+addPlayers( gameCont, playerList );
+
 update();
 

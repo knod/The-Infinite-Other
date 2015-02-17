@@ -15,6 +15,16 @@ var update = function () {
 
 Loop to update the whole game
 */
+	
+	// ===================
+	// PLAYER MOVEMENT
+	// ===================
+	for ( var playeri = 0; playeri < playerList.length; playeri++ ) {
+
+		var player = playerList[ playeri ];
+		player._move( player._direction );
+
+	}  // end for( player )
 
 	// ===================
 	// OTHER MOVEMENT
