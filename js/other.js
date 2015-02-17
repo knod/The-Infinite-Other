@@ -5,8 +5,8 @@
 // Other things
 var rowHeight = 2;
 
-// Types of Others and their properties
-var othersObjs = {
+// Types of Others and their unique properties
+var othersTypes = {
 	1: {
 		_points: 10,
 		_classes: "object other other1"
@@ -21,11 +21,15 @@ var othersObjs = {
 		_points: 30,
 		_classes: "object other other3"
 	}
-};  // end othersObjs{}
+};  // end othersTypes{}
 
 // Other Obj
 // ( JS Obj ) -> Other
 var Other = function ( type, left ) {
+/* ( {}, int ) -> Other
+
+Returns an other of type Other in the position indicated with "left"
+*/
 
 	var self = {};
 
@@ -37,13 +41,18 @@ var Other = function ( type, left ) {
 
 	self._left   	 =				left;
 	self._top   	 =  			   0;
-	self._id     	 = 				null;
+	self._id     	 = 				null;  // currently not in use
 
 
 	// =============
 	// FUNCTIONS
 	// =============
 	self._buildHTML  = function () {
+	/* ( none ) -> Other
+
+	Builds html element and changes self._html to match.
+	Returns self.
+	*/
 		var self = this;
 
 		var html 		= document.createElement("div");
@@ -56,7 +65,12 @@ var Other = function ( type, left ) {
 	};  // end other.buildHTML()
 
 
+	// TODO: Not needed?
 	self._updateLeft = function ( left ) {
+	/* ( int ) -> Other
+
+	Moves this Other to a new style.left using "left"
+	*/
 
 		self._html.style.left = left;
 

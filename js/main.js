@@ -24,28 +24,32 @@ determine its size and position?
 
 // window.addEventListener( "load", function () {
 
-	var rowList = document.getElementsByClassName("row");
+	// These two need to be the same length
+	// TODO: create data values for rows of their Other type
+	// and use that to get mapped types
+	var rowList 	= document.getElementsByClassName("row");
+	var rowMap   	= ["1", "2", "2", "3", "3"];
 
-	var numRows  	=  rowList.length;
 	var numCols  	= 11;
 	// TODO: Determine this dynamically
 	// TODO: !!!! THIS MATH IS WRONG !!! FIGURE IT OUT !!!
+	// This determines how the Other elements are laid out in the rows
 	var otherWidth 	= 1/3;
 	var colPercent  = 100/( (numCols-1) + otherWidth );
-	var rowMap   	= ["1", "2", "2", "3", "3"];
 
-	var buildOthersList = function ( type, mappedOthers ) {
-		/* (str, JS Obj) -> [Other]
-		
-		Does it need to be a int instead of an str?
-		The keys in mappedOthers should be integers
-		*/
+	var buildOthersRow = function ( type, mappedOthers ) {
+	/* ( str, {} ) -> [Other]
+	
+	Returns a list of Other objects to fill a row (based on number of columns)
+	mappedOthers: object of objects containing the values for the Others to be generated
+	*/
 		var othersList = [];
 
 		for ( var col = 0; col < numCols; col++ ) {
 			var leftVal = col * colPercent;
 			var leftStr = leftVal + "%";
 
+			// Create an Other of this type with this css "left" value
 			var other = Other( mappedOthers[ type ], leftStr );
 			other._buildHTML();
 			othersList.push( other );
@@ -65,22 +69,23 @@ determine its size and position?
 	};  // end buildRow()
 
 
-	// Builds all the rows handed in
-	// ( [HTML], HTML ) -> [HTML]
-	// var buildRows = function ( rowList, node ) {
-	var buildRows = function ( numRows, rowMap, Other, mappedOthers ) {
-		/* ( int, [int], {}, {} ) -> [HTML?]
+	var buildRows = function ( rowMap, Other, mappedOthers ) {
+	/* ( int, [str], {}, {} ) -> [HTML]
 
-		*/
+	Returns a list of Other's go in each row. Used to then add Other's
+	html to the currently empty row elements
+
+	rowMap: list of which types of objects go in which row. Those strings will
+		be used to get objects from mappedOthers
+	mappedOthers: object of objects containing the values for the Others to be generated
+	*/
 
 		var rows = [];
 
-		for ( var rowi = 0; rowi < numRows; rowi++ ) {
-
-			var mappedVal = rowMap[ rowi ];
-			var othersList = buildOthersList( mappedVal, mappedOthers );
+		for ( var rowi = 0; rowi < rowMap.length; rowi++ ) {
+			var typeVal = rowMap[ rowi ];
+			var othersList = buildOthersRow( typeVal, mappedOthers );
 			rows.push( othersList );
-
 		}
 
 		return rows;
@@ -89,11 +94,18 @@ determine its size and position?
 
 
 	var appendToRows = function ( htmlRows, toAppend ) {
+	/* ( [HTML], [[ HTML ]] ) -> [HTML]
 
+	Makes the Others appear on the page in the correct rows.
+	Returns the original rows handed in.
+	*/
+
+		// Get each row element
 		for ( var rowi = 0; rowi < htmlRows.length; rowi++ ) {
 			var docRow = htmlRows[ rowi ];
+			// Get the corresponding row in toAppend,
 			var othersRow = toAppend[ rowi ];
-
+			// Get each Other object in that row
 			for ( var coli = 0; coli < othersRow.length; coli++ ) {
 				docRow.appendChild( othersRow[ coli ]._html );
 			}
@@ -103,25 +115,31 @@ determine its size and position?
 
 	};  // end appendRows()
 
+	// 
 	var otherMoveDistance = 0.25;
 
 	// TODO: needs a different name now that it triggers subsequent rows
-	var moveRowHor = function ( rowsHTML, indx ) {
-		/* ( DOM Obj ) -> same
+	var moveRows = function ( rowsHTML, indx ) {
+	/* ( DOM Obj ) -> same
 
-		Moves row laterally depending on direction then
-		triggers the movement of the next row
-		*/
+	Moves row laterally depending on direction then
+	triggers the movement of the next row
+	*/
 
+		// If there are no rows left, stop
 		if ( indx > (rowsHTML.length - 1) ) {
 			return rowsHTML
+
+		// Otherwise, cycle through the rows, pausing between each row
 		} else {
 
-			var rowHTML = rowsHTML[ indx ];
+			var rowHTML 	= rowsHTML[ indx ];
 
-			var direction = rowHTML.dataset.direction;
-			var left = parseFloat(rowHTML.dataset.left);
+			// get the row's current direction and position
+			var direction 	= rowHTML.dataset.direction;
+			var left 		= parseFloat(rowHTML.dataset.left);
 
+			// Move accordingly
 			if ( direction === "right" ) {
 				left += otherMoveDistance;
 				rowHTML.dataset.left = left;
@@ -133,30 +151,36 @@ determine its size and position?
 				rowHTML.style.left = left + "rem" ;
 			}
 
-			var newIndx = indx + 1;
-
 			// NEXT LOOP
-			setTimeout( function() {moveRowHor( rowsHTML, newIndx );},
-				100);
+			var newIndx = indx + 1;
+			
+			// Pause to give that good ye ol' Space Invader feel
+			// otherMovePos is currently in update.js
+			setTimeout( function() {moveRows( rowsHTML, newIndx );},
+				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
+				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
+				// Start at about 100
+				otherMovePause/10 );
 
-		}
+		}  // end if (no row)
 
-	};  // end moveRowHor()
+	};  // end moveRows()
+
 
 	// Also drops on each change of direction
 	var changeDirection = function ( gameContainerHTML ) {
-		/* ( DOM Obj ) -> same
+	/* ( DOM Obj ) -> same
 
-		Changes ai row direction dataset value.
-		Lowers ai rows on each change of direction.
-		*/
+	Changes ai row direction dataset value to its opposite.
+	Lowers ai rows on each change of direction.
+	*/
 
 		var othersRows = gameContainerHTML.getElementsByClassName( "row" );
 
 		for ( var rowi = 0; rowi < othersRows.length; rowi++ ) {
 			var rowHTML = othersRows[ rowi ];
 
-			// Change direction data value
+			// Change direction data value to opposite
 			var direction = rowHTML.dataset.direction;
 			if ( direction === "right" ) {
 				rowHTML.dataset.direction = "left";
@@ -164,11 +188,11 @@ determine its size and position?
 				rowHTML.dataset.direction = "right";
 			}
 
-			// Move down
-			var top  = parseFloat(rowHTML.dataset.top);
-			top += otherMoveDistance;
+			// Move row down
+			var top  			= parseFloat(rowHTML.dataset.top);
+			top 				+= otherMoveDistance;
 			rowHTML.dataset.top = top;
-			rowHTML.style.top = top + "rem";
+			rowHTML.style.top 	= top + "rem";
 
 		}  // end for( row )
 
@@ -177,11 +201,12 @@ determine its size and position?
 
 	};  // end changeDirection();
 
-	var needDirectionChange = function ( gameContainerHTML ) {
-		/* ( DOM Obj ) -> bool
 
-		Determines if the ai rows need to change direction.
-		*/
+	var needDirectionChange = function ( gameContainerHTML ) {
+	/* ( DOM Obj ) -> bool
+
+	Determines if the ai rows need to change direction.
+	*/
 
 		var needChange = false;
 
@@ -189,6 +214,7 @@ determine its size and position?
 		var containerRight 	= gameContainerHTML.getBoundingClientRect().right;
 		var allOthers 		= gameContainerHTML.getElementsByClassName( "other" );
 
+		// If any "other"s are out of their game container, true will be returned
 		for ( var otheri = 0; otheri < allOthers.length; otheri++ ) {
 			var other = allOthers[ otheri ];
 
@@ -199,17 +225,20 @@ determine its size and position?
 			if ( (containerLeft >= otherLeft) || (containerRight <= (otherRight + 1)) ) {
 				needChange = true;
 			}
-		}
+		}  // for (other (HTML) )
 
 		return needChange;
 
 	};  // end needDirectionChange()
 
 
+	var triggerRowMovement = function ( gameContainerHTML ) {
+	// TODO: Add pause between the movement of each row
+	/* ( [HTML] ) -> same
 
-	var moveAllRows = function ( gameContainerHTML ) {
-		// TODO: Add pause between the movement of each row
-		/* Triggers the movement of all rows */
+	Changes direction if needed then triggers the movement of
+	all rows in the gameContainerHTML
+	*/
 
 		var othersRows = gameContainerHTML.getElementsByClassName( "row" );
 
@@ -217,20 +246,20 @@ determine its size and position?
 		if (needChange) {
 			changeDirection( gameContainerHTML );
 		}
-		
+
 		// Start with the first row
-		moveRowHor( othersRows, 0 );
+		moveRows( othersRows, 0 );
 
 		return gameContainerHTML;
 
-	};  // end moveAllRows()
+	};  // end triggerRowMovement()
 
 // });
 
 // =============
 // TESTS
 // =============
-var y = buildRows( 5, rowMap, Other, othersObjs );
+var y = buildRows( rowMap, Other, othersTypes );
 appendToRows( rowList, y );
 update();
 

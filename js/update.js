@@ -2,41 +2,47 @@
 
 'use strict'
 
+// Gives ability to create pauses between movement of Others
 var oldTime = Date.now();
 var newTime = Date.now();
-var gameCont = document.getElementsByClassName("game-container")[0];
-var otherSpeed = 2;
+
+var otherSpeedModifier 	= 2;
+var otherMovePause 		= 1000;
+
 
 var update = function () {
+/* ( none ) -> None
+
+Loop to update the whole game
+*/
 
 	// ===================
 	// OTHER MOVEMENT
 	// ===================
-	// Currently 55 (02/17/15)
-	var numOthers = document.getElementsByClassName("game-container")[0]
+	// Final speed of Others based on number of others left
+
+	// Number of others in this game container (need to make dynamic
+	// with function). Currently 55 (02/17/15)
+	var gameCont = document.getElementsByClassName("game-container")[0];
+	var numOthers = gameCont
 		.getElementsByClassName("other")
-		.length;
+		.length
 	;
 
-	var otherMovePause = otherSpeed * Math.pow(numOthers, 1.55);
+	// Pause between the moving of others
+	// Starts at about 1000
+	otherMovePause = otherSpeedModifier * Math.pow(numOthers, 1.55);
 	var timeDiff = newTime - oldTime;
 
 	if ( timeDiff > otherMovePause ) {
-		moveAllRows( gameCont );
+		// This will move each row, delaying between each
+		triggerRowMovement( gameCont );
+		// FOR NEXT LOOP
 		oldTime = newTime;
 	}
 
-	// var needChange = needDirectionChange(gameCont);
-	// if (needChange) {
-	// 	changeDirection( gameCont );
-	// }
-
-	// setTimeout( function () { moveAllRows( gameCont ) }, movePause );
-
-
-
 	// ====================
-	// LOOP
+	// FOR NEXT LOOP
 	// ====================
 	newTime = Date.now();
 
