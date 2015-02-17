@@ -2,20 +2,24 @@
 
 'use strict'
 
-var Player = function ( id ) {
+var Player = function ( parent, id ) {
+/*
 
+*/
 	var player = {};
 
 	// player._state = {};
 
-	player._leftKeyList = [ "a", "left" ];
-	player._rightKeyList = [ "d", "right" ];
-	player._fireKeyList = [ "space", "return", "up" ];
+	player._leftKeyList 	= [ "a", "left" ];
+	player._rightKeyList 	= [ "d", "right" ];
+	player._fireKeyList 	= [ "space", "return", "up" ];
 	// Possible values: "left", "right", "none"
-	player._direction = "none";
-	player._speed = 0.75;
+	player._direction 		= "none";
+	player._speed 			= 0.75;
 
-	player._html = null;
+	player._html 			= null;
+
+	player._parent 			= document.getElementsByClassName("game-container")[0];
 
 	player._buildHTML = function () {
 	/*
@@ -62,9 +66,29 @@ var Player = function ( id ) {
 		self._html.dataset.left = left;
 		self._html.style.left = left + "rem";
 
-		return player;
+		return self;
 	};  // end Player._move()
 
+
+	player._shoot = function ( parent ) {
+	/* ( HTML ) -> Player
+
+	*/
+		var self = this;
+
+		var bullet = Bullet( 1, "up" );
+		bullet._buildHTML( self._html );
+
+		playerBulletList.push( bullet );
+		parent.appendChild( bullet._html );
+
+		return self;
+	};
+
+
+	// ============
+	// INPUT
+	// ============
 	player._keypress = new window.keypress.Listener();
 
 	player._bindInput = function ( keyCombo, keyDown, keyUp, thisObj ) {
@@ -93,6 +117,10 @@ var Player = function ( id ) {
 	};  //  end player._bindInput()
 
 
+	// ================
+	// SET UP PLAYER (with inputs)
+	// ================
+	// EVENT LISTENERS
 	for ( var keyi = 0; keyi < player._leftKeyList.length; keyi++ ) {
 
 		player._bindInput( player._leftKeyList[ keyi ],
@@ -103,7 +131,6 @@ var Player = function ( id ) {
 
 	}; // end for ( leftKey )
 
-
 	for ( var keyi = 0; keyi < player._rightKeyList.length; keyi++ ) {
 
 		player._bindInput( player._rightKeyList[ keyi ],
@@ -113,6 +140,17 @@ var Player = function ( id ) {
 		);
 
 	}; // end for ( rightKey )
+
+
+	for ( var keyi = 0; keyi < player._fireKeyList.length; keyi++ ) {
+
+		player._bindInput( player._fireKeyList[ keyi ],
+			function () { player._shoot( player._parent ); },
+			function () {  },
+			player
+		);
+
+	}; // end for ( fireKey )
 
 
 	return player;

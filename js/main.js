@@ -56,6 +56,8 @@ determine its size and position?
 	var player1 = Player( 1 );
 	var playerList = [ player1 ];
 
+	var playerBulletList = [];
+
 	// THIS IS ALL WRONG, FIX - game containers and their contents should be
 	// created at the same time. Perhaps updates should be for containers as
 	// well.

@@ -39,6 +39,7 @@ Returns an other of type Other in the position indicated with "left"
 	self._points 	 =		type._points;
 	self._killed 	 =			   false;
 
+	// Position in rem's
 	self._left   	 =				left;
 	self._top   	 =  			   0;
 	self._id     	 = 				null;  // currently not in use

@@ -27,6 +27,16 @@ Loop to update the whole game
 	}  // end for( player )
 
 	// ===================
+	// BULLET MOVEMENT
+	// ===================
+	for ( var playerBulleti = 0; playerBulleti < playerBulletList.length; playerBulleti++ ) {
+
+		var playerBullet = playerBulletList[ playerBulleti ];
+		playerBullet._move( playerBullet._direction );
+
+	}  // end for( player )
+
+	// ===================
 	// OTHER MOVEMENT
 	// ===================
 	// Final speed of Others based on number of others left
