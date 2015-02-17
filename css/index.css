@@ -26,14 +26,16 @@ body, p, h1 {
 	display: inline-block;
 	width: 50rem;
 	height: 30rem;
-	border: 1px solid black;
+	background-color: darkgray;
+	/*border: 1px solid black;*/
 }
 
 .row {
 	/* For visualization */
 	width: 85%;
 	height: 2rem;
-	border: 1px solid black;
+	background-color: darkkhaki;
+	/*border: 1px solid black;*/
 }
 
 .others.row-1 {

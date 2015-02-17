@@ -9,17 +9,17 @@ var rowHeight = 2;
 var othersObjs = {
 	1: {
 		_points: 10,
-		_classes: "object other1"
+		_classes: "object other other1"
 	},
 
 	2: {
 		_points: 20,
-		_classes: "object other2"
+		_classes: "object other other2"
 	},
 
 	3: {
 		_points: 30,
-		_classes: "object other3"
+		_classes: "object other other3"
 	}
 };  // end othersObjs{}
 
