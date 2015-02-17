@@ -28,7 +28,10 @@ determine its size and position?
 
 	var numRows  	=  rowList.length;
 	var numCols  	= 11;
-	var colPercent  = 100/numCols;
+	// TODO: Determine this dynamically
+	// TODO: !!!! THIS MATH IS WRONG !!! FIGURE IT OUT !!!
+	var otherWidth 	= 1/3;
+	var colPercent  = 100/( (numCols-1) + otherWidth );
 	var rowMap   	= ["1", "2", "2", "3", "3"];
 
 	var buildOthersList = function ( type, mappedOthers ) {
@@ -100,68 +103,72 @@ determine its size and position?
 
 	};  // end appendRows()
 
-	var moveRowHor = function ( rowHTML, left, direction ) {
+	var otherMoveDistance = 0.25;
 
-		if ( direction === "right" ) {
+	// TODO: needs a different name now that it triggers subsequent rows
+	var moveRowHor = function ( rowsHTML, indx ) {
+		/* ( DOM Obj ) -> same
 
-			left += 0.25;
-			rowHTML.dataset.left = left;
-			rowHTML.style.left = left + "rem" ;
+		Moves row laterally depending on direction then
+		triggers the movement of the next row
+		*/
 
+		if ( indx > (rowsHTML.length - 1) ) {
+			return rowsHTML
 		} else {
-			left -= 0.25;
-			rowHTML.dataset.left = left;
-			rowHTML.style.left = left + "rem" ;
-		}
 
-		return rowHTML;
+			var rowHTML = rowsHTML[ indx ];
+
+			var direction = rowHTML.dataset.direction;
+			var left = parseFloat(rowHTML.dataset.left);
+
+			if ( direction === "right" ) {
+				left += otherMoveDistance;
+				rowHTML.dataset.left = left;
+				rowHTML.style.left = left + "rem" ;
+
+			} else {
+				left -= 0.25;
+				rowHTML.dataset.left = left;
+				rowHTML.style.left = left + "rem" ;
+			}
+
+			var newIndx = indx + 1;
+
+			// NEXT LOOP
+			setTimeout( function() {moveRowHor( rowsHTML, newIndx );},
+				100);
+
+		}
 
 	};  // end moveRowHor()
 
-	var moveRow = function ( rowHTML ) {
-
-		var direction = rowHTML.dataset.direction;
-		var top  = parseFloat(rowHTML.dataset.top);
-		var left = parseFloat(rowHTML.dataset.left);
-
-		// TODO: way of telling rightmost is incorrect,
-		// ai has to always move as far right as possible
-		if ( (left <= 0) || (left >= 10.25) ) {
-			top += 0.25;
-			rowHTML.dataset.top = top;
-			rowHTML.style.top = top + "rem";
-
-			// Currently direction doesn't change fast enough to
-			// do this right if it's in its own if statement
-			if ( direction === "right" ) {
-			moveRowHor( rowHTML, left, "right" );
-			} else {
-				moveRowHor( rowHTML, left, "left" );
-			}
-
-		} else if ( direction === "right" ) {
-			moveRowHor( rowHTML, left, "right" );
-		} else {
-			moveRowHor( rowHTML, left, "left" );
-		}
-
-		return rowHTML;
-
-	};  // end moveRow()
-
+	// Also drops on each change of direction
 	var changeDirection = function ( gameContainerHTML ) {
+		/* ( DOM Obj ) -> same
+
+		Changes ai row direction dataset value.
+		Lowers ai rows on each change of direction.
+		*/
 
 		var othersRows = gameContainerHTML.getElementsByClassName( "row" );
 
 		for ( var rowi = 0; rowi < othersRows.length; rowi++ ) {
+			var rowHTML = othersRows[ rowi ];
 
-			var direction = othersRows[ rowi ].dataset.direction;
-
+			// Change direction data value
+			var direction = rowHTML.dataset.direction;
 			if ( direction === "right" ) {
-				othersRows[ rowi ].dataset.direction = "left";
+				rowHTML.dataset.direction = "left";
 			} else {
-				othersRows[ rowi ].dataset.direction = "right";
+				rowHTML.dataset.direction = "right";
 			}
+
+			// Move down
+			var top  = parseFloat(rowHTML.dataset.top);
+			top += otherMoveDistance;
+			rowHTML.dataset.top = top;
+			rowHTML.style.top = top + "rem";
 
 		}  // end for( row )
 
@@ -171,6 +178,11 @@ determine its size and position?
 	};  // end changeDirection();
 
 	var needDirectionChange = function ( gameContainerHTML ) {
+		/* ( DOM Obj ) -> bool
+
+		Determines if the ai rows need to change direction.
+		*/
+
 		var needChange = false;
 
 		var containerLeft 	= gameContainerHTML.getBoundingClientRect().left;
@@ -183,7 +195,8 @@ determine its size and position?
 			var otherLeft 	= other.getBoundingClientRect().left;
 			var otherRight 	= other.getBoundingClientRect().right;
 
-			if ( (containerLeft >= otherLeft) || (containerRight <= otherRight) ) {
+			// +1 on the right so it doesn't have to actually cross the boundry to be detected
+			if ( (containerLeft >= otherLeft) || (containerRight <= (otherRight + 1)) ) {
 				needChange = true;
 			}
 		}
@@ -195,6 +208,8 @@ determine its size and position?
 
 
 	var moveAllRows = function ( gameContainerHTML ) {
+		// TODO: Add pause between the movement of each row
+		/* Triggers the movement of all rows */
 
 		var othersRows = gameContainerHTML.getElementsByClassName( "row" );
 
@@ -202,10 +217,9 @@ determine its size and position?
 		if (needChange) {
 			changeDirection( gameContainerHTML );
 		}
-
-		for ( var rowi = 0; rowi < othersRows.length; rowi++ ) {
-			moveRow( othersRows[ rowi ] );
-		}
+		
+		// Start with the first row
+		moveRowHor( othersRows, 0 );
 
 		return gameContainerHTML;
 

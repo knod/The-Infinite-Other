@@ -24,17 +24,18 @@ body, p, h1 {
 /* containers */
 .game-container {
 	display: inline-block;
-	width: 50rem;
+	width: 35rem;
 	height: 30rem;
+	/* For visibility */
 	background-color: darkgray;
 	/*border: 1px solid black;*/
 }
 
 .row {
-	/* For visualization */
-	width: 85%;
+	/* For visibility */
+	width: 31rem;  /* game-container width - (otherSpeed * 16) */
 	height: 2rem;
-	background-color: darkkhaki;
+	/*background-color: darkkhaki;*/
 	/*border: 1px solid black;*/
 }
 
