@@ -2,8 +2,24 @@
 /*
 TODO:
 - Player input
-- Other movement
-- Row constructions
+- Destroying AI
+	- score
+	- collision detection with bullets
+- Destroy Player
+- Bullet collision
+- AI bullets (only shoot from lowest)
+- Lives
+- Top variable score AI
+- Barriers
+- Win/loss conditions
+	2 loss conditions: lose lives, Others reach bottom (barriers? player?)
+	2 non-loss conditions: destroy all, not destroy
+- High score
+- Opening & closing screens
+- Unit tests
+- ~ Other movement (partially done)
+
+QUESTIONS:
 - Is there a way to change the size and placement
 of the row based on its contents, to have its contents
 determine its size and position?
@@ -14,9 +30,6 @@ determine its size and position?
 
 // Shooting
 // spacebar & return
-
-// 11 columns, 5 rows
-// 16 movements
 
 */
 
@@ -156,7 +169,7 @@ determine its size and position?
 			
 			// Pause to give that good ye ol' Space Invader feel
 			// otherMovePos is currently in update.js
-			setTimeout( function() {moveRows( rowsHTML, newIndx );},
+			setTimeout( function() { moveRows( rowsHTML, newIndx ); },
 				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
 				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
 				// Start at about 100
