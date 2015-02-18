@@ -96,39 +96,37 @@ var Bullet = function ( id, direction ) {
 	};  // end Bullet._collide()
 
 
-	bullet._collisionTest = function ( collideeList ) {
+	bullet._goingOutOfBounds = function ( bounderHTML ) {
+	/* ( HTML ) -> HTML
+
+	*/
+		var self = this;
+
+		var exitedObj = null;
+		var hitsEdge = utilA._doesHitEdge( self._html, bounderHTML );
+
+		if ( hitsEdge ) { exitedObj = bounderHTML }
+
+		return exitedObj;
+	};  // end Bullet.__goingOutOfBounds()
+
+
+	bullet._collisionTest = function ( obj ) {
 	/* -> 
 
 	*/
 		var self = this;
-		var selfHTML = self._html;
 
-		var collided = null;
+		var collidee = null;
+		var collides = utilA._doesOverlap( self._html, obj._html );
+		if ( collides ) { collidee = obj; }
 
-		var selfHTML = self._html;
-
-		// Check for non-collision with game-container
-		utilA._doesHitEdge( selfHTML, self._parent );
-
-		// Check for collision with other elements
-
-
-
-		return collided;
-		// Externally, if returned value is not null,
-		// remove bullet from list
+		return collidee;
 	};  // end Bullet._collisionTest()
 
 
-	bullet._die = function () {
-	/* -> 
-
-	*/
-		
-
-
-	};  // end Bullet._die()
-
-
+	// =============
+	// END bullet{}
+	// ============
 	return bullet;
 };  // end Bullet()

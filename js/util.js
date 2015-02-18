@@ -44,6 +44,8 @@ var Utilities = function ( id ) {
 	};  // end Utilities._hasSomeOverlap
 
 
+	// TODO: ?Change to eventually return object like
+	// _doesHitEdge triggers in bullet?
 	util._doesOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 

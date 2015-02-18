@@ -21,6 +21,7 @@ TODO:
 - How to unbind Keypress listeners (to rebind user keys)
 - "Field" class for rows/game-container
 - Make speedModifier into speedMultiplyer and add speedExponent
+- HTML OR DOM
 
 
 
@@ -77,8 +78,8 @@ determine its size and position?
 
 	};  // end addPlayers()
 
-	var buildOthersRow = function ( type, mappedOthers ) {
-	/* ( str, {} ) -> [Other]
+	var buildOthersRow = function ( Factory, type, mappedOthers ) {
+	/* ( func{}, str, {} ) -> [Other]
 	
 	Returns a list of Other objects to fill a row (based on number of columns)
 	mappedOthers: object of objects containing the values for the Others to be generated
@@ -90,7 +91,7 @@ determine its size and position?
 			var leftStr = leftVal + "%";
 
 			// Create an Other of this type with this css "left" value
-			var other = Other( mappedOthers[ type ], leftStr );
+			var other = Factory( mappedOthers[ type ], leftStr );
 			other._buildHTML();
 			othersList.push( other );
 		}
@@ -109,8 +110,8 @@ determine its size and position?
 	};  // end buildRow()
 
 
-	var buildRows = function ( rowMap, Other, mappedOthers ) {
-	/* ( int, [str], {}, {} ) -> [HTML]
+	var buildRows = function ( rowMap, Factory, mappedOthers ) {
+	/* ( [], func{}, {} ) -> [ [ Other ] ]
 
 	Returns a list of Other's go in each row. Used to then add Other's
 	html to the currently empty row elements
@@ -124,7 +125,7 @@ determine its size and position?
 
 		for ( var rowi = 0; rowi < rowMap.length; rowi++ ) {
 			var typeVal = rowMap[ rowi ];
-			var othersList = buildOthersRow( typeVal, mappedOthers );
+			var othersList = buildOthersRow( Factory, typeVal, mappedOthers );
 			rows.push( othersList );
 		}
 
@@ -301,8 +302,17 @@ determine its size and position?
 // =============
 var utilA = Utilities( 1 );
 
-var y = buildRows( rowMap, Other, othersTypes );
-appendToRows( rowList, y );
+var rowsA = buildRows( rowMap, Other, othersTypes );
+appendToRows( rowList, rowsA );
+
+var othersList = [];
+for ( var rowi = 0; rowi < rowsA.length; rowi++ ) {
+	var row = rowsA[ rowi ];
+
+	for ( var otheri = 0; otheri < row.length; otheri++ ) {
+		othersList.push( row[ otheri ] );
+	}
+}  // end for ( rows in rowA )
 
 var gameCont = document.getElementsByClassName("game-container")[0];
 addPlayers( gameCont, playerList );

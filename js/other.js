@@ -79,7 +79,15 @@ Returns an other of type Other in the position indicated with "left"
 	};  // end other._updateLeft()
 
 
-	self._die = function () {}; // end other._die()
+	self._destroy = function () {
+	/*  -> 
+
+	
+	*/
+
+		console.log("ow");
+
+	}; // end other._die()
 
 	self._shoot = function () {}; // end other._shoot()
 
