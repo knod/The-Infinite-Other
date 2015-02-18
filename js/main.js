@@ -18,6 +18,11 @@ TODO:
 - Opening & closing screens
 - Unit tests
 - ~ Other movement (partially done)
+- How to unbind Keypress listeners (to rebind user keys)
+- "Field" class for rows/game-container
+- Make speedModifier into speedMultiplyer and add speedExponent
+
+
 
 MAYBE TODO:
 - Build converters to convert from pixels to rem and maybe to %
@@ -57,6 +62,7 @@ determine its size and position?
 	var playerList = [ player1 ];
 
 	var playerBulletList = [];
+	var barrierElementsList = [];
 
 	// THIS IS ALL WRONG, FIX - game containers and their contents should be
 	// created at the same time. Perhaps updates should be for containers as

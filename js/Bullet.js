@@ -19,7 +19,9 @@ var Bullet = function ( id, direction ) {
 	// MUST BE SMALLER THAN HEIGHT OF AI (currently. MATH.)
 	bullet._speed 	= 15;
 
-	bullet._direction = direction;
+	bullet._direction 			= direction;
+	// MUST BE SMALLER THAN THE DISTANCE BETWEEN TWO AI
+	bullet._destrucitonRadius 	= 5;
 
 	bullet._buildHTML = function ( shooter ) {
 	/* ( HTML ) -> Bullet
@@ -82,9 +84,15 @@ var Bullet = function ( id, direction ) {
 	/* -> 
 
 	*/
+		var self = this;
 
-		//
+		// Get all elements within the destruction radius
+			// If they're not ancestor, destroy them
 
+		// Destroy self visually (removal from js list will
+			// be external)
+
+		return self;
 	};  // end Bullet._collide()
 
 
@@ -93,10 +101,22 @@ var Bullet = function ( id, direction ) {
 
 	*/
 		var self = this;
+		var selfHTML = self._html;
 
 		var collided = null;
 
+		var selfHTML = self._html;
+		var selfRect = selfHTML.getBoundingClientRect()
+
+		// Check for collision with game-container
+
+		// Check for collision with other elements
+
+
+
 		return collided;
+		// Externally, if returned value is not null,
+		// remove bullet from list
 	};  // end Bullet._collisionTest()
 
 
