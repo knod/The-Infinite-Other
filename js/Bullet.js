@@ -17,7 +17,7 @@ var Bullet = function ( id, direction ) {
 	bullet._left 	= 0;
 
 	// MUST BE SMALLER THAN HEIGHT OF AI (currently. MATH.)
-	bullet._speed 	= 15;
+	bullet._speed 	= 5;
 
 	bullet._direction 			= direction;
 	// MUST BE SMALLER THAN THE DISTANCE BETWEEN TWO AI
@@ -106,9 +106,9 @@ var Bullet = function ( id, direction ) {
 		var collided = null;
 
 		var selfHTML = self._html;
-		var selfRect = selfHTML.getBoundingClientRect()
 
-		// Check for collision with game-container
+		// Check for non-collision with game-container
+		utilA._doesHitEdge( selfHTML, self._parent );
 
 		// Check for collision with other elements
 
@@ -118,6 +118,16 @@ var Bullet = function ( id, direction ) {
 		// Externally, if returned value is not null,
 		// remove bullet from list
 	};  // end Bullet._collisionTest()
+
+
+	bullet._die = function () {
+	/* -> 
+
+	*/
+		
+
+
+	};  // end Bullet._die()
 
 
 	return bullet;

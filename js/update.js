@@ -1,4 +1,9 @@
-/* Created 02/16/15 */
+/* Created 02/16/15
+
+RESOURCES:
+http://stackoverflow.com/questions/12066870/how-to-check-if-an-element-is-overlapping-other-elements
+
+*/
 
 'use strict'
 
@@ -33,6 +38,14 @@ Loop to update the whole game
 
 		var playerBullet = playerBulletList[ playerBulleti ];
 		playerBullet._move( playerBullet._direction );
+		
+		var collides = playerBullet._collisionTest( [] );
+		if ( collides ) {
+
+			playerBullet._die();
+
+		}
+
 
 	}  // end for( player )
 

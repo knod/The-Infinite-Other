@@ -2,9 +2,10 @@
 
 'use strict'
 
-var Utilities = function () {
+var Utilities = function ( id ) {
 
 	var util = {};
+	util.id = id;
 
 	util._hasSomeOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
@@ -59,6 +60,32 @@ var Utilities = function () {
 
 		return someOverlap || inside;
 	};  // end Utilities._doesOverlap()
+
+
+	util._doesHitEdge = function ( DOM1, DOM2 ) {
+	/* ( DOM, DOM ) -> bool
+
+	*/
+		var self = this;
+
+		var rect1 = DOM1.getBoundingClientRect();
+		var rect2 = DOM2.getBoundingClientRect();
+
+		var hitsEdge = (
+			rect1.left <= rect2.left || 
+			rect1.right >= rect2.right || 
+			rect1.top <= rect2.top || 
+			rect1.bottom >= rect2.bottom
+	    );
+
+		// Test
+		// if (hitsEdge) {
+		// 	DOM1.style["background-color"] = "red";
+		// }
+
+		return hitsEdge;
+	};  // end Utilities._doesHitEdge()
+
 
 	return util;
 };  // end Utilities()

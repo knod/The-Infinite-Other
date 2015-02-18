@@ -299,6 +299,8 @@ determine its size and position?
 // =============
 // TESTS
 // =============
+var utilA = Utilities( 1 );
+
 var y = buildRows( rowMap, Other, othersTypes );
 appendToRows( rowList, y );
 

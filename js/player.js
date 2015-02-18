@@ -77,6 +77,7 @@ var Player = function ( parent, id ) {
 		var self = this;
 
 		var bullet = Bullet( 1, "up" );
+		bullet._parent = parent;
 		bullet._buildHTML( self._html );
 
 		playerBulletList.push( bullet );
