@@ -161,24 +161,25 @@ determine its size and position?
 	};  // end appendRows()
 
 	// 
-	var otherMoveDistance = 0.25;
+	var otherHorDistance 	= 0.25;
+	var otherVertDistance 	= 0.8;
 
 	// TODO: needs a different name now that it triggers subsequent rows
-	var moveRows = function ( rowsHTML, indx ) {
-	/* ( DOM Obj ) -> same
+	var moveHorRows = function ( rowsHTMLList, indx ) {
+	/* ( DOM Obj, int ) -> same
 
 	Moves row laterally depending on direction then
 	triggers the movement of the next row
 	*/
 
 		// If there are no rows left, stop
-		if ( indx > (rowsHTML.length - 1) ) {
-			return rowsHTML
+		if ( indx < 0 ) {
+			return rowsHTMLList
 
 		// Otherwise, cycle through the rows, pausing between each row
 		} else {
 
-			var rowHTML 	= rowsHTML[ indx ];
+			var rowHTML 	= rowsHTMLList[ indx ];
 
 			// get the row's current direction and position
 			var direction 	= rowHTML.dataset.direction;
@@ -186,22 +187,22 @@ determine its size and position?
 
 			// Move accordingly
 			if ( direction === "right" ) {
-				left += otherMoveDistance;
+				left += otherHorDistance;
 				rowHTML.dataset.left = left;
 				rowHTML.style.left = left + "rem" ;
 
 			} else {
-				left -= otherMoveDistance;
+				left -= otherHorDistance;
 				rowHTML.dataset.left = left;
 				rowHTML.style.left = left + "rem" ;
 			}
 
 			// NEXT LOOP
-			var newIndx = indx + 1;
+			var newIndx = indx - 1;
 			
 			// Pause to give that good ye ol' Space Invader feel
 			// otherMovePos is currently in update.js
-			setTimeout( function() { moveRows( rowsHTML, newIndx ); },
+			setTimeout( function() { moveHorRows( rowsHTMLList, newIndx ); },
 				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
 				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
 				// Start at about 100
@@ -209,8 +210,47 @@ determine its size and position?
 
 		}  // end if (no row)
 
-	};  // end moveRows()
+	};  // end moveHorRows()
 
+
+	var moveDownRows = function ( rowsHTMLList, indx ) {
+	/* ( DOM Obj ) -> same
+
+	Moves row laterally depending on direction then
+	triggers the movement of the next row
+	*/
+
+		// If there are no rows left, stop
+		if ( indx < 0 ) {
+			return rowsHTMLList
+
+		// Otherwise, cycle through the rows, pausing between each row
+		} else {
+
+
+
+			var rowHTML 	= rowsHTMLList[ indx ];
+
+
+			var top  			= parseFloat(rowHTML.dataset.top);
+			top 				+= otherVertDistance;
+			rowHTML.dataset.top = top;
+			rowHTML.style.top 	= top + "rem";
+
+			// NEXT LOOP
+			var newIndx = indx - 1;
+			
+			// Pause to give that good ye ol' Space Invader feel
+			// otherMovePos is currently in update.js
+			setTimeout( function() { moveDownRows( rowsHTMLList, newIndx ); },
+				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
+				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
+				// Start at about 100
+				otherMovePause/10 );
+
+		}  // end if (no row)
+
+	};  // end moveDownRows()
 
 	// Also drops on each change of direction
 	var changeDirection = function ( gameContainerHTML ) {
@@ -234,12 +274,15 @@ determine its size and position?
 			}
 
 			// Move row down
-			var top  			= parseFloat(rowHTML.dataset.top);
-			top 				+= otherMoveDistance;
-			rowHTML.dataset.top = top;
-			rowHTML.style.top 	= top + "rem";
+			// var top  			= parseFloat(rowHTML.dataset.top);
+			// top 				+= otherVertDistance;
+			// rowHTML.dataset.top = top;
+			// rowHTML.style.top 	= top + "rem";
 
 		}  // end for( row )
+
+		// Move rows down in a staggered style
+		moveDownRows( othersRows, (othersRows.length - 1) );
 
 		// TODO: What to return? Container or rows list or what?
 		return gameContainerHTML;
@@ -293,7 +336,7 @@ determine its size and position?
 		}
 
 		// Start with the first row
-		moveRows( othersRows, 0 );
+		moveHorRows( othersRows, (othersRows.length - 1) );
 
 		return gameContainerHTML;
 
