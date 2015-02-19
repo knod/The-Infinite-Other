@@ -31,24 +31,26 @@ var Other = function ( type, left ) {
 Returns an other of type Other in the position indicated with "left"
 */
 
-	var self = {};
+	var other = {};
 
-	self._classes    =     type._classes;
-	self._html 		 =				null;
+	other._classes    = type._classes;
+	other._html 		 = null;
 
-	self._points 	 =		type._points;
-	self._killed 	 =			   false;
+	other._points 	 = type._points;
+	other._killed 	 = false;
 
 	// Position in rem's
-	self._left   	 =				left;
-	self._top   	 =  			   0;
-	self._id     	 = 				null;  // currently not in use
+	other._left   	 = left;
+	other._top   	 = 0;
+	other._id     	 = null;  // currently not in use
+
+	other._column	 = null;
 
 
 	// =============
 	// FUNCTIONS
 	// =============
-	self._buildHTML  = function () {
+	other._buildHTML  = function () {
 	/* ( none ) -> Other
 
 	Builds html element and changes self._html to match.
@@ -67,7 +69,7 @@ Returns an other of type Other in the position indicated with "left"
 
 
 	// TODO: Not needed?
-	self._updateLeft = function ( left ) {
+	other._updateLeft = function ( left ) {
 	/* ( int ) -> Other
 
 	Moves this Other to a new style.left using "left"
@@ -79,7 +81,7 @@ Returns an other of type Other in the position indicated with "left"
 	};  // end other._updateLeft()
 
 
-	self._destroy = function () {
+	other._destroy = function () {
 	/*  -> 
 
 	
@@ -89,8 +91,23 @@ Returns an other of type Other in the position indicated with "left"
 
 	}; // end other._die()
 
-	self._shoot = function () {}; // end other._shoot()
+	other._shoot = function ( parent ) {
+	/* ( HTML ) -> Player
 
-	return self;
+	*/
+		var self = this;
+
+		var bullet = Bullet( 1, "down" );
+		bullet._parent = parent;
+		bullet._buildHTML( self._html );
+
+		otherBulletList.push( bullet );
+		parent.appendChild( bullet._html );
+
+		return self;
+
+	}; // end other._shoot()
+
+	return other;
 
 };  // end other{}

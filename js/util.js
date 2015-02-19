@@ -12,6 +12,29 @@ var Utilities = function ( id ) {
 	var util = {};
 	util.id = id;
 
+
+	util._getRandomInt = function ( min, maxExcluded ) {
+	/* ( int, int ) -> int
+
+	WARNING: max value is excluded from results
+	Returns an integer between min and max
+	*/
+	  return Math.floor(Math.random() * (maxExcluded - min)) + min;
+	};  // End Utilities._randomIntInRange()
+
+
+	util._chooseRandom = function ( choiceList ) {
+	/* ( [] ) -> *
+
+	Returns a random value from choiceList
+	*/
+		var self = this;
+
+		var randInt = self._getRandomInt( 0, choiceList.length );
+		return choiceList[ randInt ];
+	};  // end Utilities._chooseRandom()
+
+
 	util._hasSomeOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 

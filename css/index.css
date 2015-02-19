@@ -36,7 +36,7 @@ body, p, h1 {
 	/* For visibility */
 	width: 31rem;  /* game-container width - (otherSpeed * 16) */
 	height: 2rem;
-	/*background-color: darkkhaki;*/
+	background-color: darkkhaki;
 	/*border: 1px solid black;*/
 }
 

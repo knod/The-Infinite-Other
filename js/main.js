@@ -22,9 +22,14 @@ TODO:
 - How to unbind Keypress listeners (to rebind user keys)
 - "Field" class for rows/game-container
 - Make speedModifier into speedMultiplyer and add speedExponent
-- HTML OR DOM
-
-
+- HTML OR DOM?
+- When AI hits the player, end condition is met
+	Make sure AI runs along the bottom of the screen at end
+- Make modular shoot function
+- Stop rows moving after all ai are gone (game over condition)
+- Fix keyup stopping movment in other direction. Only all
+	direction keys up should stop movement
+- Limit shooting speed
 
 MAYBE TODO:
 - Build converters to convert from pixels to rem and maybe to %
@@ -62,10 +67,11 @@ determine its size and position?
 	var otherWidth 	= 1/3;
 	var colPercent  = 100/( (numCols-1) + otherWidth );
 
-	var player1 = Player( 1 );
-	var playerList = [ player1 ];
+	var player1 	= Player( 1 );
+	var playerList 	= [ player1 ];
 
-	var playerBulletList = [];
+	var playerBulletList 	= [];
+	var otherBulletList 	= [];
 	var barrierElementsList = [];
 
 	// THIS IS ALL WRONG, FIX - game containers and their contents should be
@@ -82,7 +88,7 @@ determine its size and position?
 
 	};  // end addPlayers()
 
-	var buildOthersRow = function ( Factory, type, mappedOthers ) {
+	var buildOthersRow = function ( Other, type, mappedOthers ) {
 	/* ( func{}, str, {} ) -> [Other]
 	
 	Returns a list of Other objects to fill a row (based on number of columns)
@@ -95,13 +101,15 @@ determine its size and position?
 			var leftStr = leftVal + "%";
 
 			// Create an Other of this type with this css "left" value
-			var other = Factory( mappedOthers[ type ], leftStr );
+			var other 		= Other( mappedOthers[ type ], leftStr );
 			other._buildHTML();
+			other._column 	= col;
+			// other._row		= rowNum;
 			othersList.push( other );
 		}
 
 		return othersList;
-	}
+	};  // end buildOtherRow()
 
 
 	var buildRow = function ( rowElem, node ) {
@@ -114,7 +122,7 @@ determine its size and position?
 	};  // end buildRow()
 
 
-	var buildRows = function ( rowMap, Factory, mappedOthers ) {
+	var buildOthersGrid = function ( rowMap, Other, mappedOthers ) {
 	/* ( [], func{}, {} ) -> [ [ Other ] ]
 
 	Returns a list of Other's go in each row. Used to then add Other's
@@ -129,13 +137,13 @@ determine its size and position?
 
 		for ( var rowi = 0; rowi < rowMap.length; rowi++ ) {
 			var typeVal = rowMap[ rowi ];
-			var othersList = buildOthersRow( Factory, typeVal, mappedOthers );
+			var othersList = buildOthersRow( Other, typeVal, mappedOthers );
 			rows.push( othersList );
 		}
 
 		return rows;
 
-	};  // end buildRows()
+	};  // end buildOthersGrid()
 
 
 	var appendToRows = function ( htmlRows, toAppend ) {
@@ -214,11 +222,12 @@ determine its size and position?
 
 
 	var moveDownRows = function ( rowsHTMLList, indx ) {
-	/* ( DOM Obj ) -> same
+	/* ( [DOM Obj], int ) -> bool
 
 	Moves row laterally depending on direction then
 	triggers the movement of the next row
 	*/
+		var hitBottom = false;
 
 		// If there are no rows left, stop
 		if ( indx < 0 ) {
@@ -227,10 +236,10 @@ determine its size and position?
 		// Otherwise, cycle through the rows, pausing between each row
 		} else {
 
-
-
-			var rowHTML 	= rowsHTMLList[ indx ];
-
+			var rowHTML 		= rowsHTMLList[ indx ];
+			// TODO: Should end game condition really be in here, or all
+			// of them in one place?
+			hitBottom = Util._doesOverlap( rowHTML, player1._html );
 
 			var top  			= parseFloat(rowHTML.dataset.top);
 			top 				+= otherVertDistance;
@@ -238,7 +247,7 @@ determine its size and position?
 			rowHTML.style.top 	= top + "rem";
 
 			// NEXT LOOP
-			var newIndx = indx - 1;
+			var newIndx 		= indx - 1;
 			
 			// Pause to give that good ye ol' Space Invader feel
 			// otherMovePos is currently in update.js
@@ -250,6 +259,7 @@ determine its size and position?
 
 		}  // end if (no row)
 
+		return hitBottom;
 	};  // end moveDownRows()
 
 	// Also drops on each change of direction
@@ -273,16 +283,12 @@ determine its size and position?
 				rowHTML.dataset.direction = "right";
 			}
 
-			// Move row down
-			// var top  			= parseFloat(rowHTML.dataset.top);
-			// top 				+= otherVertDistance;
-			// rowHTML.dataset.top = top;
-			// rowHTML.style.top 	= top + "rem";
-
 		}  // end for( row )
 
 		// Move rows down in a staggered style
-		moveDownRows( othersRows, (othersRows.length - 1) );
+		// TODO: !!! Right now wrong. An AI (row?) has to overlap player during direction change
+		// TODO: !!! IMPORTANT: DO NOT CHANGE gameOver IN HERE LIKE THIS !!!
+		gameOver = moveDownRows( othersRows, (othersRows.length - 1) );
 
 		// TODO: What to return? Container or rows list or what?
 		return gameContainerHTML;
@@ -348,20 +354,24 @@ determine its size and position?
 // TESTS
 // =============
 
-var rowsA = buildRows( rowMap, Other, othersTypes );
-appendToRows( rowList, rowsA );
+var gridA = buildOthersGrid( rowMap, Other, othersTypes );
+appendToRows( rowList, gridA );
 
-var othersList = [];
-for ( var rowi = 0; rowi < rowsA.length; rowi++ ) {
-	var row = rowsA[ rowi ];
+// THIS WOULD CREATE A REDUNDANT LIST AND OBJ WOULD HAVE TO BE
+// REMOVED FROM ALL LISTS
+// var othersList = [];
+// for ( var rowi = 0; rowi < gridA.length; rowi++ ) {
+// 	var row = gridA[ rowi ];
 
-	for ( var otheri = 0; otheri < row.length; otheri++ ) {
-		othersList.push( row[ otheri ] );
-	}
-}  // end for ( rows in rowA )
+// 	for ( var otheri = 0; otheri < row.length; otheri++ ) {
+// 		othersList.push( row[ otheri ] );
+// 	}
+// }  // end for ( rows in rowA )
 
 var gameCont = document.getElementsByClassName("game-container")[0];
 addPlayers( gameCont, playerList );
+
+var FieldA = Field(1);
 
 update();
 

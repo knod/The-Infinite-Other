@@ -3,7 +3,7 @@
 'use strict'
 
 var Bullet = function ( id, direction ) {
-/* ( int ) -> Bullet
+/* ( int, str ) -> Bullet
 
 */
 	var bullet = {};

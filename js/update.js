@@ -13,6 +13,8 @@ var newTime = Date.now();
 var otherSpeedModifier 	= 2;
 var otherMovePause 		= 1000;
 
+var gameOver = false;
+
 
 var update = function () {
 /* ( none ) -> None
@@ -20,6 +22,8 @@ var update = function () {
 Loop to update the whole game
 */
 	
+	if (gameOver) { return gameOver; }
+
 	// ===================
 	// PLAYER MOVEMENT
 	// ===================
@@ -46,13 +50,13 @@ Loop to update the whole game
 			bullet._move( bullet._direction );
 
 			// Will we need to destroy the bullet?
-			var needDestroy = false;
+			var needDestroyBullet = false;
 			var collidee = null;
 
 			// check for collision with parent
 			var exitee = bullet._goingOutOfBounds( bullet._parent );
 			if ( exitee !== null ) {
-				needDestroy = true; 
+				needDestroyBullet = true; 
 
 			// If parent doesn't destroy, check for other collisions
 			} else {
@@ -68,7 +72,7 @@ Loop to update the whole game
 						// If there was actually a collision with something,
 						// destroy the thing and mark bullet for destruciton
 						if ( collidee !== null ) {
-							needDestroy = true;
+							needDestroyBullet = true;
 							// Destroy collidee, in DOM and in JS
 							var elem = collidee._html;
 							elem.parentNode.removeChild(elem);
@@ -78,14 +82,14 @@ Loop to update the whole game
 				}  // end for ( objList )
 			}  // end if ( exit )
 
-			if ( needDestroy ) {
+			if ( needDestroyBullet ) {
 				// Remove Bullet from DOM
 				var elem = bullet._html;
 				elem.parentNode.removeChild(elem);
 				// Remove from js
 				bulletList.splice( bulleti, 1 );
 
-			}  // end if ( needDestroy )
+			}  // end if ( needDestroyBullet )
 
 		}  // end for( playerBullet )
 
@@ -93,11 +97,13 @@ Loop to update the whole game
 		return bulletList;
 	};  // End updateBullets()
 
-	updateBullets( playerBulletList, [othersList] );
+	updateBullets( playerBulletList, [ gridA[0], gridA[1], gridA[2], gridA[3], gridA[4] ] );
 
-	// ===================
-	// OTHER MOVEMENT
-	// ===================
+
+	// =================
+	// OTHERS
+	// =================
+	// MOVEMENT
 	// Final speed of Others based on number of others left
 
 	// Number of others in this game container (need to make dynamic
@@ -119,6 +125,9 @@ Loop to update the whole game
 		// FOR NEXT LOOP
 		oldTime = newTime;
 	}
+
+	// ATTACK
+	FieldA._update();
 
 	// ====================
 	// FOR NEXT LOOP
