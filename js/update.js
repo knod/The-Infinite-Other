@@ -1,7 +1,6 @@
 /* Created 02/16/15
 
 RESOURCES:
-http://stackoverflow.com/questions/12066870/how-to-check-if-an-element-is-overlapping-other-elements
 
 */
 

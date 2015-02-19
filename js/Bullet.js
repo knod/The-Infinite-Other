@@ -103,9 +103,9 @@ var Bullet = function ( id, direction ) {
 		var self = this;
 
 		var exitedObj = null;
-		var hitsEdge = utilA._doesHitEdge( self._html, bounderHTML );
+		var hitsEdge = Util._edgeHit( self._html, bounderHTML );
 
-		if ( hitsEdge ) { exitedObj = bounderHTML }
+		if ( hitsEdge !== null ) { exitedObj = bounderHTML; }
 
 		return exitedObj;
 	};  // end Bullet.__goingOutOfBounds()
@@ -118,7 +118,7 @@ var Bullet = function ( id, direction ) {
 		var self = this;
 
 		var collidee = null;
-		var collides = utilA._doesOverlap( self._html, obj._html );
+		var collides = Util._doesOverlap( self._html, obj._html );
 		if ( collides ) { collidee = obj; }
 
 		return collidee;

@@ -1,6 +1,7 @@
 /* Created 02/15/15 */
 /*
 TODO:
+---- !!! SOMETHING WRONG WITH ARROW INPUT !!! ----
 - Player input
 - Destroying AI
 	- score
@@ -46,6 +47,8 @@ determine its size and position?
 
 // window.addEventListener( "load", function () {
 
+	var Util = Utilities( 1 );
+
 	// These two need to be the same length
 	// TODO: create data values for rows of their Other type
 	// and use that to get mapped types
@@ -73,8 +76,9 @@ determine its size and position?
 
 	*/
 		var player = playerList[ 0 ];
-		player._buildHTML();
+		// TODO: Need to append player in itself during it's creation?
 		parent.appendChild( player._html );
+		player._speed = player._calcPlayerSpeed( player._parent );
 
 	};  // end addPlayers()
 
@@ -300,7 +304,6 @@ determine its size and position?
 // =============
 // TESTS
 // =============
-var utilA = Utilities( 1 );
 
 var rowsA = buildRows( rowMap, Other, othersTypes );
 appendToRows( rowList, rowsA );

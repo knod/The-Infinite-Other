@@ -1,4 +1,8 @@
-/* Created 02/17/15 */
+/* Created 02/17/15 
+
+TODO:
+- Move player off of the bottom a tad so it doesn't hit the edge all the time
+*/
 
 'use strict'
 
@@ -15,11 +19,37 @@ var Player = function ( parent, id ) {
 	player._fireKeyList 	= [ "space", "return", "up" ];
 	// Possible values: "left", "right", "none"
 	player._direction 		= "none";
-	player._speed 			= 0.75;
+	player._speed 			= 0;
 
 	player._html 			= null;
 
 	player._parent 			= document.getElementsByClassName("game-container")[0];
+
+
+	player._calcPlayerSpeed = function ( element ) {
+	/*
+
+	*/
+		var self = this;
+
+		// Get ratio of player width to element width
+		var selfPixelWidth 	= self._html.clientWidth;
+		var elemPixelWidth 	= element.clientWidth;
+
+		// Ultimate ratio needs to be a multiple of player width
+		// in order for player to not exceed bounds of element
+		var ratio = selfPixelWidth / elemPixelWidth; // reduces to... 1/50
+
+		// Convert to em's
+		var elemEmToPixels = Util._getEmPixels( element );
+		var elemEms = element.clientWidth / elemEmToPixels;
+
+		var speed = elemEms * ratio;
+
+		return speed;
+
+	};  // end Player._calcPlayerSpeed()
+
 
 	player._buildHTML = function () {
 	/*
@@ -36,7 +66,8 @@ var Player = function ( parent, id ) {
 
 		return self;
 
-	};  // end Player._buildHTML
+	};  // end Player._buildHTML()
+
 
 	player._changeDirection = function ( direction ) {
 	/*
@@ -55,11 +86,16 @@ var Player = function ( parent, id ) {
 		var moveVector = 0;
 		var left = parseFloat( self._html.dataset.left );
 
-		// TODO: Limit to inside parent
+		// Limit to inside parent
+		var whichEdgeHit = Util._edgeHit( self._html, self._parent );
 
-		// Decide movement positive, negative, or none
-		if ( direction === "right" ) { moveVector = self._speed; }
-		else if ( direction === "left" ) { moveVector = -1 * self._speed; }
+		// As long as we're not out of bounds
+		if ( direction !== whichEdgeHit ) {
+			// Decide movement positive, negative, or none
+			// (it will be none if it's neither right nor left)
+			if ( direction === "right" ) { moveVector = self._speed; }
+			else if ( direction === "left" ) { moveVector = -1 * self._speed; }
+		}
 
 		// Implement any changes to movement
 		left += moveVector;
@@ -153,6 +189,10 @@ var Player = function ( parent, id ) {
 
 	}; // end for ( fireKey )
 
+	player._buildHTML();
+
+	// IMPORTANT:
+	// PLAYER HAS NOT YET BEEN APPENDED TO THE DOM
 
 	return player;
 };  // end Player()
