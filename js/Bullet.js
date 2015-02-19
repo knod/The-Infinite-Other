@@ -9,7 +9,7 @@ var Bullet = function ( id, direction ) {
 	var bullet = {};
 
 	bullet._html 	= null;
-	bullet._parent 	= null;
+	bullet._field 	= null;
 
 	// Dimensions and positions in pixels
 	bullet._width 	= 4;
@@ -23,18 +23,22 @@ var Bullet = function ( id, direction ) {
 	// MUST BE SMALLER THAN THE DISTANCE BETWEEN TWO AI
 	bullet._destrucitonRadius 	= 5;
 
-	bullet._buildHTML = function ( shooter ) {
+	bullet._buildHTML = function ( shooterElem ) {
 	/* ( HTML ) -> Bullet
 
 	*/
 		var self = this;
 
-		var shooterWidth 	= shooter.offsetWidth,
-			shooterLeft 	= shooter.offsetLeft,
-			shooterTop		= shooter.offsetTop
+		// ( childElem, ancestorElem, offsetType )
+		// TODO: field of shooter or field of self?
+		
+
+		var shooterWidth 		= shooterElem.offsetWidth,
+			shooterFieldLeft 	= Util._getPixelOffsetFromAncestor( shooterElem, self._field, "offsetLeft" ),
+			shooterFieldTop		= Util._getPixelOffsetFromAncestor( shooterElem, self._field, "offsetTop" )
 		;
 
-		var shooterCenter	= shooterLeft + ( shooterWidth/2 ),
+		var shooterCenter	= shooterFieldLeft + ( shooterWidth/2 ),
 			bulletLeft 		= shooterCenter - ( self._width/2 )
 		;
 
@@ -43,8 +47,8 @@ var Bullet = function ( id, direction ) {
 		html.style.width 	= self._width + "px";
 		html.style.height 	= self._height + "px";
 		
-		html.dataset.top 	= shooterTop;
-		html.style.top 		= shooterTop + "px";
+		html.dataset.top 	= shooterFieldTop;
+		html.style.top 		= shooterFieldTop + "px";
 		html.style.left 	= bulletLeft + "px";
 
 		self._left 			= bulletLeft;

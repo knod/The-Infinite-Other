@@ -10,7 +10,7 @@ body, p, h1 {
 }
 
 /* FUNCTION */
-.game-container {
+.field {
 	position: relative;
 	z-index: 0; /* So it won't hide it's <0 z-index kids */
 }
@@ -23,7 +23,7 @@ body, p, h1 {
 
 /* SKIN */
 /* containers */
-.game-container {
+.field {
 	display: inline-block;
 	width: 35rem;
 	height: 30rem;
@@ -34,9 +34,9 @@ body, p, h1 {
 
 .row {
 	/* For visibility */
-	width: 31rem;  /* game-container width - (otherSpeed * 16) */
+	width: 31rem;  /* field width - (otherSpeed * 16) */
 	height: 2rem;
-	background-color: darkkhaki;
+	/*background-color: darkkhaki;*/
 	/*border: 1px solid black;*/
 }
 

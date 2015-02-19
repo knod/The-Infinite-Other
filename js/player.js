@@ -23,7 +23,7 @@ var Player = function ( parent, id ) {
 
 	player._html 			= null;
 
-	player._parent 			= document.getElementsByClassName("game-container")[0];
+	player._field 			= document.getElementsByClassName("field")[0];
 
 
 	player._calcPlayerSpeed = function ( element ) {
@@ -87,7 +87,7 @@ var Player = function ( parent, id ) {
 		var left = parseFloat( self._html.dataset.left );
 
 		// Limit to inside parent
-		var whichEdgeHit = Util._edgeHit( self._html, self._parent );
+		var whichEdgeHit = Util._edgeHit( self._html, self._field );
 
 		// As long as we're not out of bounds
 		if ( direction !== whichEdgeHit ) {
@@ -106,18 +106,18 @@ var Player = function ( parent, id ) {
 	};  // end Player._move()
 
 
-	player._shoot = function ( parent ) {
-	/* ( HTML ) -> Player
+	player._shoot = function () {
+	/* ( none ) -> Player
 
 	*/
 		var self = this;
 
 		var bullet = Bullet( 1, "up" );
-		bullet._parent = parent;
+		bullet._field = self._field;
 		bullet._buildHTML( self._html );
 
 		playerBulletList.push( bullet );
-		parent.appendChild( bullet._html );
+		self._field.appendChild( bullet._html );
 
 		return self;
 	};
@@ -182,7 +182,7 @@ var Player = function ( parent, id ) {
 	for ( var keyi = 0; keyi < player._fireKeyList.length; keyi++ ) {
 
 		player._bindInput( player._fireKeyList[ keyi ],
-			function () { player._shoot( player._parent ); },
+			function () { player._shoot( player._field ); },
 			function () {  },
 			player
 		);

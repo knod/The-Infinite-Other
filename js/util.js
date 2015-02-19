@@ -53,6 +53,7 @@ var Utilities = function ( id ) {
 		return someOverlap;
 	};  // end Utilities._hasSomeOverlap
 
+
 	util._isInside = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 
@@ -157,6 +158,34 @@ var Utilities = function ( id ) {
     };  // end Utilities._getEmPixels()
 
 
+    util._getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
+    /* ( HTML, HTML, str ) -> num
+
+	childElem MUST HAVE ancestorElem AS AN ANCESTOR
+    */
+
+    	var totalOffset 	= 0;
+    	var currElem		= childElem;
+
+    	// Cycle through the ancestors, adding offsets together, until
+    	// the right ancestor is reached
+    	while ( (currElem !== ancestorElem) && (currElem !== document.body) ) {
+
+    		totalOffset += currElem[ offsetType ];
+    		// LOOP
+    		currElem = currElem.parentNode;
+    	}
+
+    	if ( currElem !== ancestorElem ) { totalOffset = "There was no such ancestor!"; }
+
+    	return totalOffset;
+
+    };  // End Utilities._getPixelOffsetFromAncestor()
+
+
+    // ==========
+    // END
+    // ==========
 	return util;
 };  // end Utilities()
 
@@ -166,7 +195,7 @@ var Utilities = function ( id ) {
 02/18/15
 var x = Utilities();
 var dom1 = document.getElementsByClassName( "other" )[0];
-var dom2 = document.getElementsByClassName("game-container")[0];
+var dom2 = document.getElementsByClassName("field")[0];
 console.log(x._doesOverlap( dom1, dom2 ));  // Expected: true
 var dom3 = document.getElementsByClassName("other")[1];
 console.log(x._doesOverlap( dom1, dom3 ));  // Expected: false

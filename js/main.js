@@ -13,14 +13,15 @@ TODO:
 - Top variable score AI
 - Barriers
 - Win/loss conditions
-	2 loss conditions: lose lives, Others reach bottom (barriers? player?)
+	2 loss conditions: lose lives, Others reach bottom
+		(others touch player)
 	2 non-loss conditions: destroy all, not destroy
 - High score
 - Opening & closing screens
 - Unit tests
 - ~ Other movement (partially done)
 - How to unbind Keypress listeners (to rebind user keys)
-- "Field" class for rows/game-container
+- "Field" class for rows/field
 - Make speedModifier into speedMultiplyer and add speedExponent
 - HTML OR DOM?
 - When AI hits the player, end condition is met
@@ -30,6 +31,7 @@ TODO:
 - Fix keyup stopping movment in other direction. Only all
 	direction keys up should stop movement
 - Limit shooting speed
+- Others' bodies destroy barrier
 
 MAYBE TODO:
 - Build converters to convert from pixels to rem and maybe to %
@@ -71,7 +73,7 @@ determine its size and position?
 	var playerList 	= [ player1 ];
 
 	var playerBulletList 	= [];
-	var otherBulletList 	= [];
+	var othersBulletList 	= [];
 	var barrierElementsList = [];
 
 	// THIS IS ALL WRONG, FIX - game containers and their contents should be
@@ -84,7 +86,7 @@ determine its size and position?
 		var player = playerList[ 0 ];
 		// TODO: Need to append player in itself during it's creation?
 		parent.appendChild( player._html );
-		player._speed = player._calcPlayerSpeed( player._parent );
+		player._speed = player._calcPlayerSpeed( player._field );
 
 	};  // end addPlayers()
 
@@ -368,7 +370,7 @@ appendToRows( rowList, gridA );
 // 	}
 // }  // end for ( rows in rowA )
 
-var gameCont = document.getElementsByClassName("game-container")[0];
+var gameCont = document.getElementsByClassName("field")[0];
 addPlayers( gameCont, playerList );
 
 var FieldA = Field(1);

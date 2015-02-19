@@ -33,18 +33,19 @@ Returns an other of type Other in the position indicated with "left"
 
 	var other = {};
 
-	other._classes    = type._classes;
-	other._html 		 = null;
+	other._classes	= type._classes;
+	other._html 	= null;
+	other._field	= document.getElementsByClassName("field")[0];
 
-	other._points 	 = type._points;
-	other._killed 	 = false;
+	other._points	= type._points;
+	other._killed	= false;
 
 	// Position in rem's
-	other._left   	 = left;
-	other._top   	 = 0;
-	other._id     	 = null;  // currently not in use
+	other._left 	= left;
+	other._top		= 0;
+	other._id 		= null;  // currently not in use
 
-	other._column	 = null;
+	other._column 	= null;
 
 
 	// =============
@@ -91,18 +92,18 @@ Returns an other of type Other in the position indicated with "left"
 
 	}; // end other._die()
 
-	other._shoot = function ( parent ) {
+	other._shoot = function () {
 	/* ( HTML ) -> Player
 
 	*/
 		var self = this;
 
 		var bullet = Bullet( 1, "down" );
-		bullet._parent = parent;
+		bullet._field = self._field;
 		bullet._buildHTML( self._html );
 
-		otherBulletList.push( bullet );
-		parent.appendChild( bullet._html );
+		othersBulletList.push( bullet );
+		self._field.appendChild( bullet._html );
 
 		return self;
 

@@ -8,7 +8,7 @@ var Field = function ( id ) {
 */
 	var field = {};
 
-	field._html			= null;
+	field._html			= document.getElementsByClassName("field")[0];
 	field._numCols		= 11;
 
 	field._rows 		= null;
@@ -42,7 +42,8 @@ var Field = function ( id ) {
 		// Get a random column number
 		var randCol 	= Util._getRandomInt( 0, self._numCols );
 
-		// Go from bottom to top row looking for Other with that _column property value
+		// Go from top to bottom row looking for Other with that _column
+		// property value, replacing randomOther with any next iteration
 
 		// TODO: How do we make sure the bottom row is the last on the list?
 		// I mean more securely than trusting that we built the list correctly
@@ -93,6 +94,7 @@ var Field = function ( id ) {
 	*/
 		var self = this;
 		var randomLowestOther = self._getRandomLowestOther( othersGrid );
+		randomLowestOther._shoot( self._html );
 
 		return this;
 	};  // End Field._attack()

@@ -54,7 +54,7 @@ Loop to update the whole game
 			var collidee = null;
 
 			// check for collision with parent
-			var exitee = bullet._goingOutOfBounds( bullet._parent );
+			var exitee = bullet._goingOutOfBounds( bullet._field );
 			if ( exitee !== null ) {
 				needDestroyBullet = true; 
 
@@ -98,7 +98,7 @@ Loop to update the whole game
 	};  // End updateBullets()
 
 	updateBullets( playerBulletList, [ gridA[0], gridA[1], gridA[2], gridA[3], gridA[4] ] );
-
+	updateBullets( othersBulletList, [ [player] ] );
 
 	// =================
 	// OTHERS
@@ -108,7 +108,7 @@ Loop to update the whole game
 
 	// Number of others in this game container (need to make dynamic
 	// with function). Currently 55 (02/17/15)
-	var gameCont = document.getElementsByClassName("game-container")[0];
+	var gameCont = document.getElementsByClassName("field")[0];
 	var numOthers = gameCont
 		.getElementsByClassName("other")
 		.length
