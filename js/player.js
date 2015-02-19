@@ -38,7 +38,7 @@ var Player = function ( parent, id ) {
 
 		// Ultimate ratio needs to be a multiple of player width
 		// in order for player to not exceed bounds of element
-		var ratio = selfPixelWidth / elemPixelWidth; // reduces to... 1/50
+		var ratio = (selfPixelWidth / 2) / elemPixelWidth; // reduces to... 1/50
 
 		// Convert to em's
 		var elemEmToPixels = Util._getEmPixels( element );
