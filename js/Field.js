@@ -14,6 +14,9 @@ var Field = function ( id ) {
 	field._rows 		= null;
 	field._hostile		= true;
 
+	field._oldTime 		= Date.now();
+	field._newTime 		= field._oldTime;
+
 	// ============
 	// OTHERS
 	// ============
@@ -109,16 +112,26 @@ var Field = function ( id ) {
 	*/
 		var self = this;
 
-		if ( self._hostile ) {
-			// TODO: set timeout for random length pausing between each attack
-			// Fix this later to be own grid
-			self._attack( gridA );			
+		var shootTimeDiff = self._newTime - self._oldTime;
+
+		// TODO: set timeout for random length pausing between each attack
+		// Fix this later to be own grid
+		var randomWait = Math.pow( otherMovePause, 2 ) * Math.random();
+
+		if ( self._hostile && (shootTimeDiff > randomWait) ) {
+			self._attack( gridA );
+			self._oldTime = self._newTime;
 		}
 
 		// Game Over if all Others are dead
 		var allGone = false;
 		// If any row is not empty, allGone = true;
 		if ( allGone ) { gameOver = true };
+
+		// ============
+		// FOR NEXT LOOP
+		// ============
+		self._newTime = Date.now()
 
 		return this;
 	};  // End Field._update()
