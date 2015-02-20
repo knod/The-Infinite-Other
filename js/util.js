@@ -241,6 +241,21 @@ var Utilities = function ( id ) {
     };  // End Utilities._getPixelOffsetFromAncestor()
 
 
+	// http://stackoverflow.com/questions/5588465/javascript-parse-time-minutesseconds-from-miliseconds
+    util._msToMMSS = function ( msValue ) {
+    /* ( int or str ) -> str
+
+    */
+    	var msInt	= parseInt( msValue, 10 );
+    	var min 	= parseInt( msInt/1000/60 );
+    	var sec 	= ( msInt/1000 ) % 60;
+
+    	if ( min < 10 ) { min = "0" + min; }
+
+    	return (min + ":" + sec)
+
+	};  // End Utilities._msToMMSS()
+
     // ==========
     // END
     // ==========

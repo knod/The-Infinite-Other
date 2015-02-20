@@ -93,6 +93,8 @@ body, p, h1, div {
 	/*background-image: url('../images/other3.png');*/
 }
 
+.object.mysterious {}
+
 .barrier {
 	bottom: 1.5rem;
 	width: 2rem;

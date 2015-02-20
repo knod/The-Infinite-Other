@@ -28,7 +28,7 @@ page/game
 			updating
 
 			CHILDREN OBJECTS
-			player
+			player  --->  stats?
 					\
 				  bullets
 					/

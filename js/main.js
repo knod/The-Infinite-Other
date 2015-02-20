@@ -376,10 +376,15 @@ appendToRows( rowList, gridA );
 // 	}
 // }  // end for ( rows in rowA )
 
-var gameCont = document.getElementsByClassName("field")[0];
-addPlayers( gameCont, playerList );
+var fieldAElem = document.getElementsByClassName("field")[0];
+addPlayers( fieldAElem, playerList );
 
 var FieldA = Field(1);
+
+var GameContA = document.getElementsByClassName("game-container")[0];
+var StatsA = StatsDisplay( GameContA );
+// GameContA.appendChild( StatsA._topbar );
+GameContA.insertBefore( StatsA._topbar, fieldAElem );
 
 update();
 

@@ -109,8 +109,8 @@ Loop to update the whole game
 
 	// Number of others in this game container (need to make dynamic
 	// with function). Currently 55 (02/17/15)
-	var gameCont = document.getElementsByClassName("field")[0];
-	var numOthers = gameCont
+	var fieldAElem = document.getElementsByClassName("field")[0];
+	var numOthers = fieldAElem
 		.getElementsByClassName("other")
 		.length
 	;
@@ -122,7 +122,7 @@ Loop to update the whole game
 
 	if ( timeDiff > otherMovePause ) {
 		// This will move each row, delaying between each
-		triggerRowMovement( gameCont );
+		triggerRowMovement( fieldAElem );
 		// FOR NEXT LOOP
 		oldTime = newTime;
 	}

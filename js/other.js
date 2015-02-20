@@ -9,17 +9,22 @@ var rowHeight = 2;
 var othersTypes = {
 	1: {
 		_points: 10,
-		_classes: "object other other1"
+		_class: "other1"
 	},
 
 	2: {
 		_points: 20,
-		_classes: "object other other2"
+		_class: "other2"
 	},
 
 	3: {
 		_points: 30,
-		_classes: "object other other3"
+		_class: "other3"
+	},
+
+	x: {
+		_points: 100,
+		_class: "mysterious"
 	}
 };  // end othersTypes{}
 
@@ -33,7 +38,7 @@ Returns an other of type Other in the position indicated with "left"
 
 	var other = {};
 
-	other._classes	= type._classes;
+	other._class	= type._class;
 	other._html 	= null;
 	other._field	= document.getElementsByClassName("field")[0];
 
@@ -60,7 +65,7 @@ Returns an other of type Other in the position indicated with "left"
 		var self = this;
 
 		var html 		= document.createElement("div");
-		html.className 	= self._classes;
+		html.className 	= 'object other ' + self._class;
 		html.style.left = self._left;
 
 		self._html 		= html;
