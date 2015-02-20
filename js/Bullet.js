@@ -20,6 +20,7 @@ var Bullet = function ( id, direction ) {
 	bullet._left 	= 0;
 
 	// MUST BE SMALLER THAN HEIGHT OF AI (MATH.)
+	// Currently in pixels
 	bullet._speed 	= 5;
 
 	bullet._direction 			= direction;
@@ -115,9 +116,9 @@ var Bullet = function ( id, direction ) {
 		var self = this;
 
 		var exitedObj = null;
-		var hitsEdge = Util._edgeHit( self._html, bounderHTML );
+		var hitsEdge = Util._whichEdgeHit( self._html, bounderHTML, self._speed );
 
-		if ( hitsEdge !== null ) { exitedObj = bounderHTML; }
+		if ( hitsEdge !== "none" ) { exitedObj = bounderHTML; }
 
 		return exitedObj;
 	};  // end Bullet.__goingOutOfBounds()

@@ -178,7 +178,7 @@ determine its size and position?
 
 	};  // end appendRows()
 
-	// 
+	// in rem's
 	var otherHorDistance 	= 0.25;  // MUST BE ABLE TO ADD UP TO 1rem
 	var otherVertDistance 	= 0.8;  // Doesn't matter if it overlaps
 
@@ -322,13 +322,11 @@ determine its size and position?
 		for ( var otheri = 0; otheri < allOthers.length; otheri++ ) {
 			var other = allOthers[ otheri ];
 
-			var otherLeft 	= other.getBoundingClientRect().left;
-			var otherRight 	= other.getBoundingClientRect().right;
+			var speedPx = Util._convertEmsToPixels( other, otherHorDistance );
+			var edgeHit = Util._whichEdgeHit( other, gameContainerHTML, speedPx );
 
-			// +1 on the right so it doesn't have to actually cross the boundry to be detected
-			if ( (containerLeft >= otherLeft) || (containerRight <= (otherRight + 1)) ) {
-				needChange = true;
-			}
+			if ( edgeHit === "right" || edgeHit === "left" ) { needChange = true; }
+
 		}  // for (other (HTML) )
 
 		return needChange;

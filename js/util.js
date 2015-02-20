@@ -74,7 +74,7 @@ var Utilities = function ( id ) {
 
 
 	// TODO: ?Change to eventually return object like
-	// _edgeHit triggers in bullet?
+	// _whichEdgeHit triggers in bullet?
 	util._doesOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 
@@ -94,21 +94,33 @@ var Utilities = function ( id ) {
 
 
 	// WARNING: DOES NOT HANDLE MULTIPLE EDGES AT THE SAME TIME
-	util._edgeHit = function ( innerElem, surroundingElem ) {
-	/* ( DOM, DOM ) -> str
+	util._whichEdgeHit = function ( innerElem, surroundingElem, speed ) {
+	/* ( DOM, DOM, int ) -> str
 
+	speed IS GIVEN IN PIXELS
 	If an edge is hit, returns name of that edge. If not, returns null.
+	Add a fraction (how much?) of speed to position of innerElem
+	in each direction to test if the next step could take it out of bounds.
 	*/
 		var self = this;
 
-		var innerRect = innerElem.getBoundingClientRect();
+		var innerRect 		= innerElem.getBoundingClientRect();
 		var surroundingRect = surroundingElem.getBoundingClientRect();
-		var edgeHit = null;
+		var edgeHit 		= "none";
 
-		if ( innerRect.left <= surroundingRect.left ) { edgeHit = "left"; }
-		else if ( innerRect.right >= surroundingRect.right ) { edgeHit = "right"; }
-		else if ( innerRect.top <= surroundingRect.top ) { edgeHit = "top"; }
-		else if ( innerRect.bottom >= surroundingRect.bottom ) { edgeHit = "bottom"; }
+		var bumper			= speed/2;
+
+		var futureLeft 		= innerRect.left - bumper,
+			futureRight 	= innerRect.right + bumper,
+			futureTop		= innerRect.top - bumper,
+			futureBottom	= innerRect.bottom + bumper
+		;  // end vars
+
+
+		if ( futureLeft < surroundingRect.left ) { edgeHit = "left"; }
+		else if ( futureRight > surroundingRect.right ) { edgeHit = "right"; }
+		else if ( futureTop < surroundingRect.top ) { edgeHit = "top"; }
+		else if ( futureBottom > surroundingRect.bottom ) { edgeHit = "bottom"; }
 
 		// Test
 		// if (hitsEdge) {
@@ -116,7 +128,7 @@ var Utilities = function ( id ) {
 		// }
 
 		return edgeHit;
-	};  // end Utilities._edgeHit()
+	};  // end Utilities._whichEdgeHit()
 
 
 	/*! getEmPixels  | Author: Tyson Matanich (http://matanich.com), 2013 | License: MIT */
@@ -158,6 +170,21 @@ var Utilities = function ( id ) {
     };  // end Utilities._getPixelValueOfOneEm()
 
 
+    util._convertEmsToPixels = function ( emElem, emValue ) {
+    /* ( DOM, num ) -> num
+
+	Converts a property in pixels to its value in em's relative to
+	emElem
+    */
+
+    	var pixelsInOneEm 	= Util._getPixelValueOfOneEm( emElem );
+		var pxValue 		= pixelsInOneEm * emValue;
+
+		return pxValue;
+
+    };  // end Utilities._convertEmsToPixels()
+
+
     // Note of interest: attribute is HTML, property is the DOM
     util._convertPixelsToEms = function ( emElem, pxValue ) {
     /* ( DOM, num ) -> num
@@ -166,8 +193,8 @@ var Utilities = function ( id ) {
 	emElem
     */
 
-    	var oneEmToPixels = Util._getPixelValueOfOneEm( emElem );
-		var emValue = pxValue / oneEmToPixels;
+    	var pixelsInOneEm 	= Util._getPixelValueOfOneEm( emElem );
+		var emValue 		= pxValue / pixelsInOneEm;
 
 		return emValue;
 

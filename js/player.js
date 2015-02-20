@@ -47,7 +47,7 @@ var Player = function ( parent, id ) {
 
 		// Ultimate ratio needs to be a multiple of player width
 		// in order for player to not exceed bounds of container
-		var evenlyDivided = (selfPixelWidth / 2) / containerPixelWidth; // reduces to... 1/50
+		var evenlyDivided = (selfPixelWidth / 2) / containerPixelWidth;
 
 		// Convert to em's
 		var elemEmWidth = Util._convertPixelsToEms( container, containerPixelWidth );
@@ -89,13 +89,15 @@ var Player = function ( parent, id ) {
 	/*
 
 	*/
-		var self = this;
+		var self 		= this;
+		var selfHTML 	= self._html;
 		// If nothing else changes, movement will be 0
-		var moveVector = 0;
-		var left = parseFloat( self._html.dataset.left );
+		var moveVector 	= 0;
+		var left 		= parseFloat( selfHTML.dataset.left );
+		var speedPx 	= Util._convertEmsToPixels( selfHTML, self._speed );
 
 		// Limit to inside parent
-		var whichEdgeHit = Util._edgeHit( self._html, self._field );
+		var whichEdgeHit = Util._whichEdgeHit( selfHTML, self._field, speedPx );
 
 		// As long as we're not out of bounds
 		if ( direction !== whichEdgeHit ) {
@@ -107,8 +109,8 @@ var Player = function ( parent, id ) {
 
 		// Implement any changes to movement
 		left += moveVector;
-		self._html.dataset.left = left;
-		self._html.style.left = left + "rem";
+		selfHTML.dataset.left = left;
+		selfHTML.style.left = left + "rem";
 
 		return self;
 	};  // end Player._move()
