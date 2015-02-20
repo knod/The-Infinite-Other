@@ -21,9 +21,12 @@ var Field = function ( id ) {
 	// OTHERS
 	// ============
 	// Update Group
-
+	var count = 0;
 	// TODO: Should this be a method for every field, or should
 	// there just be one function for this, like on Field itself?
+	// TODO: Find out if js can have truely recursive functions
+	// where no stack is created (that is, you don't have to return)
+	// everything.
 	field._getRandomLowestOther = function ( othersGrid ) {
 	/* [[Other]] -> Other
 
@@ -50,7 +53,7 @@ var Field = function ( id ) {
 
 		// TODO: How do we make sure the bottom row is the last on the list?
 		// I mean more securely than trusting that we built the list correctly
-		// for ( var rowi = ( othersGrid.length - 1 ); rowi > 0; rowi++ ) {
+
 		// Because we're going from top to bottom, if an Other is found
 		// in a lower row, it will replace any previous Others found
 		for ( var rowi = 0; rowi < othersGrid.length; rowi++ ) {
@@ -58,9 +61,12 @@ var Field = function ( id ) {
 			// Will allow recursion after for loop
 			if ( row.length > 0 ) { allGone = false; }
 
-			for ( var coli = 0; coli < row.length; coli++ ) {
-				var other = row[ coli ];
-				if ( other._column === randCol ) { randomOther = other; }
+			for ( var otheri = 0; otheri < row.length; otheri++ ) {
+				var other = row[ otheri ];
+				if ( other._column === randCol ) { 
+					console.log(rowi, randCol, other);
+					randomOther = other;
+				}
 			}
 
 		}  // end for ( row )
@@ -71,7 +77,8 @@ var Field = function ( id ) {
 			// If this column value didn't get anything, try again.
 			// Otherwise, return other
 			if ( randomOther === null ) {
-				self._getRandomLowestOther( othersGrid );
+				// MUST return something here or nothing gets returned
+				return self._getRandomLowestOther( othersGrid );
 			} else {
 				return randomOther;
 			}
@@ -94,8 +101,9 @@ var Field = function ( id ) {
 
 	Picks a random Other that has no Others below it and
 	triggers it to shoot
-	*/
+	*/	
 		var self = this;
+
 		var randomLowestOther = self._getRandomLowestOther( othersGrid );
 		randomLowestOther._shoot( self._html );
 
