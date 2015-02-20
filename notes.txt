@@ -1,0 +1,72 @@
+Notes
+
+=======
+MAP
+=======
+Which things interact with the DOM?
+	1) The most granular things change themselves
+	2) Keep it as high level as possible
+
+page/game
+	all updates
+	score comparisons
+
+	board/screen/compartment/container/arcade/machine/arena/table/window/instance/game/solo/individual-game
+		RECIEVES
+		score
+		losing lives
+		end condition
+
+		ACTIONS
+		own update
+		end individual game
+
+		field
+			ACTIONS
+			own building
+			building
+			updating
+
+			CHILDREN OBJECTS
+			player
+					\
+				  bullets
+					/
+			other
+
+			RETURNS
+			score
+			losing lives
+			end condition
+
+		info/hud
+			score <- what does score mean here
+				includes how many killed
+				misses
+				amount of time it took
+				(maybe just a timer)
+			lives
+			player name
+			separators
+
+Each field._update() returns [lostLife, score, whichEnd]. Losing a life happens before losing a game.
+
+=============
+THOUGHTS
+=============
+-- Objects and their stuff:
+
+Should others move themselves? They are individual objects. Sure, they have a parent, but wouldn't it be more game-engine-y to each be individuals? Then again, the DOM is moving each individual one for me and that's kind of what a parent object is supposed to do, right?
+	- I think the DOM should move children
+
+Should rows be objects and Others be their children? Right now rows are the odd man out, being only DOM elements. Then should the field act on the
+children of rows, or should Others only be acted upon by rows?
+
+It seems like a player should own its list of bullets - that would make it really easy to iterate to update the bullets, especially to check for the right collisions. But should Others own their bullets? That seems inefficient because honestly there will only be a couple or a few Others' bullets out there at a time. So should the field own all the bullets? Once the shooters let them go, they should be free agents?
+	Yes. All bullets should be able to collide with any collidable objects on the page!
+
+
+
+-- Other
+It would be cool if agents (Others and Players) had a direction they were facing and bullets went in whatever direction they were facing. It would be an angle or some-such.
+

@@ -46,7 +46,7 @@ var Field = function ( id ) {
 			// a decision not yet made)
 		var allGone		= true;  // Can be refuted later
 		// Get a random column number
-		var randCol 	= Util._getRandomInt( 0, self._numCols );
+		var randCol 	= Util._getRandomIntInRange( 0, self._numCols );
 
 		// Go from top to bottom row looking for Other with that _column
 		// property value, replacing randomOther with any next iteration

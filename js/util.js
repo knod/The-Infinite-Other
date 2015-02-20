@@ -13,13 +13,13 @@ var Utilities = function ( id ) {
 	util.id = id;
 
 
-	util._getRandomInt = function ( min, maxExcluded ) {
+	util._getRandomIntInRange = function ( min, stopBefore ) {
 	/* ( int, int ) -> int
 
 	WARNING: max value is excluded from results
 	Returns an integer between min and max
 	*/
-	  return Math.floor(Math.random() * (maxExcluded - min)) + min;
+	  return Math.floor(Math.random() * (stopBefore - min)) + min;
 	};  // End Utilities._randomIntInRange()
 
 
@@ -30,7 +30,7 @@ var Utilities = function ( id ) {
 	*/
 		var self = this;
 
-		var randInt = self._getRandomInt( 0, choiceList.length );
+		var randInt = self._getRandomIntInRange( 0, choiceList.length );
 		return choiceList[ randInt ];
 	};  // end Utilities._chooseRandom()
 
