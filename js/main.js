@@ -1,37 +1,44 @@
 /* Created 02/15/15 */
 /*
 TODO:
----- !!! SOMETHING WRONG WITH ARROW INPUT !!! ----
-- Player input
-- Destroying AI
-	- score
-	- collision detection with bullets
-- Destroy Player
-- Bullet collision
-- AI bullets (only shoot from lowest)
-- Lives
-- Top variable score AI
-- Barriers
+---- 1 ----
 - Win/loss conditions
 	2 loss conditions: lose lives, Others reach bottom
 		(others touch player)
 	2 non-loss conditions: destroy all, not destroy
-- High score
+	- Stop rows moving after all ai are gone (game over condition)
+	- When AI hits the player, end condition is met
+		Make sure AI runs along the bottom of the screen at end
+	(add lives lost end condition at the very end
+		or don't freeze everything on end condition till done
+		with other stuff)
+- Score
+- Destroying AI
+	- score
+		- each time AI is killed, it adds to the score
+- Destroy Player
+	- lose life
+- Lives
+
+---- 2 ----
+- Limit shooting speed
+- Barriers
+- Others' bodies destroy barrier
+- Top variable score AI
+- "Field" class for rows/field (refactor)
+
+---- 3 ----
 - Opening & closing screens
-- Unit tests
-- ~ Other movement (partially done)
-- How to unbind Keypress listeners (to rebind user keys)
-- "Field" class for rows/field
-- Make speedModifier into speedMultiplyer and add speedExponent
-- HTML OR DOM?
-- When AI hits the player, end condition is met
-	Make sure AI runs along the bottom of the screen at end
-- Make modular shoot function
-- Stop rows moving after all ai are gone (game over condition)
+- Player input
+	- How to unbind Keypress listeners (to rebind user keys)
 - Fix keyup stopping movment in other direction. Only all
 	direction keys up should stop movement
-- Limit shooting speed
-- Others' bodies destroy barrier
+- High score
+- Make modular shoot function
+
+---- ? ----
+- Unit tests
+
 
 MAYBE TODO:
 - Build converters to convert from pixels to rem and maybe to %
@@ -40,6 +47,7 @@ QUESTIONS:
 - Is there a way to change the size and placement
 of the row based on its contents, to have its contents
 determine its size and position?
+- HTML, DOM, or Elem for names?
 
 // Movement
 // left & right arrows
@@ -171,8 +179,8 @@ determine its size and position?
 	};  // end appendRows()
 
 	// 
-	var otherHorDistance 	= 0.25;
-	var otherVertDistance 	= 0.8;
+	var otherHorDistance 	= 0.25;  // MUST BE ABLE TO ADD UP TO 1rem
+	var otherVertDistance 	= 0.8;  // Doesn't matter if it overlaps
 
 	// TODO: needs a different name now that it triggers subsequent rows
 	var moveHorRows = function ( rowsHTMLList, indx ) {

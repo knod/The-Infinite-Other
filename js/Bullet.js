@@ -12,11 +12,11 @@ var Bullet = function ( id, direction ) {
 	bullet._field 	= null;
 
 	// Dimensions and positions in pixels
-	bullet._width 	= 4;
-	bullet._height 	= 7;
+	bullet._width 	= 0.25;
+	bullet._height 	= 0.45;
 	bullet._left 	= 0;
 
-	// MUST BE SMALLER THAN HEIGHT OF AI (currently. MATH.)
+	// MUST BE SMALLER THAN HEIGHT OF AI (MATH.)
 	bullet._speed 	= 5;
 
 	bullet._direction 			= direction;
@@ -34,19 +34,24 @@ var Bullet = function ( id, direction ) {
 		
 
 		var shooterWidth 		= shooterElem.offsetWidth,
-			shooterFieldLeft 	= Util._getPixelOffsetFromAncestor( shooterElem, self._field, "offsetLeft" ),
-			shooterFieldTop		= Util._getPixelOffsetFromAncestor( shooterElem, self._field, "offsetTop" )
-		;
+			shooterFieldLeft 	= Util._getPixelOffsetFromAncestor(
+									shooterElem, self._field, "offsetLeft"
+									),
+			shooterFieldTop		= Util._getPixelOffsetFromAncestor(
+									shooterElem, self._field, "offsetTop"
+									)
+		;  // end vars
 
 		var shooterCenter	= shooterFieldLeft + ( shooterWidth/2 ),
 			bulletLeft 		= shooterCenter - ( self._width/2 )
-		;
+		;  // end vars
 
 		var html 			= document.createElement("div");
 		html.className 		= 'object bullet';
-		html.style.width 	= self._width + "px";
-		html.style.height 	= self._height + "px";
+		html.style.width 	= self._width + "rem";
+		html.style.height 	= self._height + "rem";
 		
+		// TODO: Why is pixel placement and movement working when view zoom is changed?
 		html.dataset.top 	= shooterFieldTop;
 		html.style.top 		= shooterFieldTop + "px";
 		html.style.left 	= bulletLeft + "px";

@@ -11,6 +11,7 @@ var oldTime = Date.now();
 var newTime = Date.now();
 
 var otherSpeedModifier 	= 2;
+var otherSpeedExponent	= 1.55;
 var otherMovePause 		= 1000;
 
 var gameOver = false;
@@ -116,7 +117,7 @@ Loop to update the whole game
 
 	// Pause between the moving of others
 	// Starts at about 1000
-	otherMovePause = otherSpeedModifier * Math.pow(numOthers, 1.55);
+	otherMovePause = otherSpeedModifier * Math.pow(numOthers, otherSpeedExponent);
 	var timeDiff = newTime - oldTime;
 
 	if ( timeDiff > otherMovePause ) {

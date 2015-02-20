@@ -125,7 +125,7 @@ var Utilities = function ( id ) {
     var important = "!important;";
     var style = "position:absolute" + important + "visibility:hidden" + important + "width:1em" + important + "font-size:1em" + important + "padding:0" + important;
 
-    util._getEmPixels = function (element) {
+    util._getPixelValueOfOneEm = function (element) {
 
         var extraBody;
 
@@ -155,7 +155,7 @@ var Utilities = function ( id ) {
 
         // Return the em value in pixels
         return value;
-    };  // end Utilities._getEmPixels()
+    };  // end Utilities._getPixelValueOfOneEm()
 
 
     util._getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
