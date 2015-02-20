@@ -13,40 +13,90 @@
 
 <body>
 	<div class='splash-screen'>
+	</div>
+
+	<header>
 		<h1>The Infinite Other</h1>
 		<p>Some witty quip</p>
+		<hr>
+		<p>Press left and right arrows to move, and space to fire</p>
+		<br>
+	</header>
 
-		<p>Press left and right arrows to move and space to fire</p>
-	</div>
+	<div class='game-container'>
 
-	<div class='hud none'>
-		<h1>The Infinite Other</h1>
-		<div class='score'></div>
-		Lives: <span class='lives'></span>
-	</div>
+		<div class='topbar'> 
+			<div class='stat kill-count mysteriousOther'>
+				<div class='object mysteriousOther'>
+					<div class='dead'>X</div>
+				</div>
+				<div class='count'>0</div>
+			</div>
 
-	<div class='field'>
+			<div class='stat kill-count other1'>
+				<div class='object other1'>
+					<div class='dead'>X</div>
+				</div>
+				<div class='count'>0/11</div>
+			</div>
 
-		<div class='top'></div>
+			<div class='stat kill-count other2'>
+				<div class='object other2'>
+					<div class='dead'>X</div>
+				</div>
+				<div class='count'>0/22</div>
+			</div>
 
-		<!-- <div class='object bullet'></div> -->
-		<!-- <div class='object other1'></div>
-		<div class='object other other2'></div>
-		<div class='object other3'></div>
-		<div class='object barrier'></div>
-		<div class='object player'></div> -->
+			<div class='stat kill-count other3'>
+				<div class='object other3'>
+					<div class='dead'>X</div>
+				</div>
+				<div class='count'>0/22</div>
+			</div>
 
-		<div class='object others row row-1' data-direction='left' data-top='0' data-left='0'></div>
-		<div class='object others row row-2' data-direction='left' data-top='2' data-left='0'></div>
-		<div class='object others row row-3' data-direction='left' data-top='4' data-left='0'></div>
-		<div class='object others row row-4' data-direction='left' data-top='6' data-left='0'></div>
-		<div class='object others row row-5' data-direction='left' data-top='8' data-left='0'></div>
+			<!-- Start time for each field, only one currentTime ( Date.now() ) -->
+			<div class='stat timer'>Time: <span class='time'>00:00</span></div>
+
+			<div class='stat shots'>Shots: <span class='shots-count'>000</span></div>
+
+			<div class='stat hits'>Hits: <span class='hits-count'>00/55</span></div>
+		</div>
 
 
-		<div class='object barriers'></div>
+		<div class='field'>
 
-	</div> <!-- end game-box -->
+			<div class='top'></div>
 
+			<!-- <div class='object bullet'></div> -->
+			<!-- <div class='object other1'></div>
+			<div class='object other other2'></div>
+			<div class='object other3'></div>
+			<div class='object barrier'></div>
+			<div class='object player'></div> -->
+
+			<div class='object others row row-1' data-direction='left' data-top='0' data-left='0'></div>
+			<div class='object others row row-2' data-direction='left' data-top='2' data-left='0'></div>
+			<div class='object others row row-3' data-direction='left' data-top='4' data-left='0'></div>
+			<div class='object others row row-4' data-direction='left' data-top='6' data-left='0'></div>
+			<div class='object others row row-5' data-direction='left' data-top='8' data-left='0'></div>
+
+
+			<div class='object barriers'></div>
+
+		</div> <!-- end .field -->
+
+		<div class='sidebar'>
+			<!-- At the end, score will be closest to bottom is most? -->
+			<!-- Is this in the sidebar? Called score? -->
+			<div class='distance-to-bottom'></div>
+		</div>
+
+
+		<div class='bottombar'>
+			<div class='lives'>Lives: <span class='lives-val'>1000000</span></div>
+		</div>
+
+	</div> <!-- end .game-container -->
 
 </body>
 

@@ -108,7 +108,9 @@ var Bullet = function ( id, direction ) {
 		return self;
 	};  // end Bullet._collide()
 
-
+	// TODO: Probably doesn't need to be here anymore, just do an edge
+	// hit check. Except it returns an object, but the object was
+	// already sent in here, obviously
 	bullet._goingOutOfBounds = function ( bounderHTML ) {
 	/* ( HTML ) -> HTML
 
