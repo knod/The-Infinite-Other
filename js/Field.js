@@ -63,8 +63,7 @@ var Field = function ( id ) {
 
 			for ( var otheri = 0; otheri < row.length; otheri++ ) {
 				var other = row[ otheri ];
-				if ( other._column === randCol ) { 
-					console.log(rowi, randCol, other);
+				if ( other._column === randCol ) {
 					randomOther = other;
 				}
 			}
@@ -125,8 +124,9 @@ var Field = function ( id ) {
 		// TODO: set timeout for random length pausing between each attack
 		// Fix this later to be own grid
 		var randomWait = Math.pow( otherMovePause, 2 ) * Math.random();
+		var cappedWait = Math.max( 3000, randomWait );
 
-		if ( self._hostile && (shootTimeDiff > randomWait) ) {
+		if ( self._hostile && (shootTimeDiff > cappedWait) ) {
 			self._attack( gridA );
 			self._oldTime = self._newTime;
 		}
