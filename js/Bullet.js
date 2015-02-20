@@ -12,8 +12,11 @@ var Bullet = function ( id, direction ) {
 	bullet._field 	= null;
 
 	// Dimensions and positions in pixels
-	bullet._width 	= 0.25;
-	bullet._height 	= 0.45;
+	// Why do the bullets' relative screen space adjust when zoom
+	// is increased? (They get bigger when zoomed. I thought that
+		// was rem's)
+	bullet._width 	= 4;//0.25;
+	bullet._height 	= 7;//0.45;
 	bullet._left 	= 0;
 
 	// MUST BE SMALLER THAN HEIGHT OF AI (MATH.)
@@ -48,8 +51,8 @@ var Bullet = function ( id, direction ) {
 
 		var html 			= document.createElement("div");
 		html.className 		= 'object bullet';
-		html.style.width 	= self._width + "rem";
-		html.style.height 	= self._height + "rem";
+		html.style.width 	= self._width + "px";
+		html.style.height 	= self._height + "px";
 		
 		// TODO: Why is pixel placement and movement working when view zoom is changed?
 		html.dataset.top 	= shooterFieldTop;

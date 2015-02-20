@@ -2,6 +2,10 @@
 
 TODO:
 - Move player off of the bottom a tad so it doesn't hit the edge all the time
+
+NOTES:
+- https://developer.mozilla.org/en-US/docs/Web/API/Element.clientWidth picture
+is incorrect, shows size with margin and border
 */
 
 'use strict'
@@ -26,23 +30,27 @@ var Player = function ( parent, id ) {
 	player._field 			= document.getElementsByClassName("field")[0];
 
 
-	player._calcPlayerSpeed = function ( element ) {
-	/*
+	// TODO: AT 90% AND 110% (OTHERS?) PLAYER GOES HALF OUT OF CONTAINER
+	player._calcPlayerSpeed = function ( container ) {
+	/* ( DOM Obj ) -> num
 
+	Makes sure player can't exit bounds of parent
 	*/
 		var self = this;
 
-		// Get ratio of player width to element width
-		var selfPixelWidth 	= self._html.clientWidth;
-		var elemPixelWidth 	= element.clientWidth;
+		// Get ratio of player width to container width
+		// offsetWidth to get padding and border too
+		var selfPixelWidth 		= self._html.offsetWidth;
+		// clientWidth to have only inside measurements (where
+			// self's left/top 0 sits)
+		var containerPixelWidth = container.clientWidth;
 
 		// Ultimate ratio needs to be a multiple of player width
-		// in order for player to not exceed bounds of element
-		var evenlyDivided = (selfPixelWidth / 2) / elemPixelWidth; // reduces to... 1/50
+		// in order for player to not exceed bounds of container
+		var evenlyDivided = (selfPixelWidth / 2) / containerPixelWidth; // reduces to... 1/50
 
 		// Convert to em's
-		var oneEmToPixels = Util._getPixelValueOfOneEm( element );
-		var elemEmWidth = element.clientWidth / oneEmToPixels;
+		var elemEmWidth = Util._convertPixelsToEms( container, containerPixelWidth );
 
 		var speed = elemEmWidth * evenlyDivided;
 

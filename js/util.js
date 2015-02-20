@@ -158,6 +158,37 @@ var Utilities = function ( id ) {
     };  // end Utilities._getPixelValueOfOneEm()
 
 
+    // Note of interest: attribute is HTML, property is the DOM
+    util._convertPixelsToEms = function ( emElem, pxValue ) {
+    /* ( DOM, num ) -> num
+
+	Converts a property in pixels to its value in em's relative to
+	emElem
+    */
+
+    	var oneEmToPixels = Util._getPixelValueOfOneEm( emElem );
+		var emValue = pxValue / oneEmToPixels;
+
+		return emValue;
+
+    };  // end Utilities._convertPixelsToEms()
+
+
+    // Note of interest: attribute is HTML, property is the DOM
+    util._convertPixelsToRems = function ( pxValue ) {
+    /* ( num ) -> num
+
+	Converts a property in pixels to its value in rem's
+    */
+
+    	var oneRemToPixels = Util._getPixelValueOfOneEm( document.body );
+		var remValue = pxValue / oneRemToPixels;
+
+		return remValue;
+
+    };  // end Utilities._convertPixelsToRems()
+
+
     util._getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
     /* ( HTML, HTML, str ) -> num
 
