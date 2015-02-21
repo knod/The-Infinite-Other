@@ -21,9 +21,11 @@ Stats to be displayed to player as they play the game
 	stats._other2		= null;
 	stats._other3		= null;
 	stats._elapsedTime	= null;
+
+	stats._lives		= null;
 	stats._shots		= null;
 	stats._hits			= null;
-	stats._lives		= null;
+	
 	stats._travelDist	= null;
 
 
@@ -88,7 +90,7 @@ Stats to be displayed to player as they play the game
 		timer.appendChild( timeTextNode );
 		timer.appendChild( timeValSpan );
 
-		self._time = timeValNode
+		self._time = timeValNode;
 
 		return timer;
 
@@ -101,6 +103,9 @@ Stats to be displayed to player as they play the game
 	*/
 		var self = this;
 
+		// ===========
+		// TOPBAR
+		// ===========
 		var topbar 			= document.createElement( "section" );
 		topbar.className 	= "topbar";
 
@@ -120,10 +125,69 @@ Stats to be displayed to player as they play the game
 
 		topbar.appendChild( timer );
 		topbar.appendChild( deathRow );
+		// self._whatever has been taken care of in individual functions
 
-		var bottombar 		= document.createElement( "div" );
+		// ===========
+		// BOTTOMBAR
+		// ===========
+		var bottombar 		= document.createElement( "section" );
 		bottombar.className = "bottombar";
 
+		// --- lives ---
+		var lives 			= document.createElement( "div" );
+		lives.className 	= 'stat lives';
+		var livesText		= document.createTextNode( 'Lives: ' );
+		// Might be images in the end. No text. Or both.
+		var livesCount 		= document.createElement( "span" );
+		var livesCountTxt	= document.createTextNode( '3' );
+		livesCount.appendChild( livesCountTxt );
+
+		lives.appendChild( livesText );
+		lives.appendChild( livesCount );
+
+		// --- bullet things ---
+		var bulletStats 	= document.createElement( "div" );
+		bulletStats.className = 'bullet-stats';
+
+		// - shots -
+		var shots 			= document.createElement( "div" );
+		shots.className 	= 'stat shots';
+		var shotsText		= document.createTextNode( 'Shots: ' );
+
+		var shotsCount 		= document.createElement( "span" );
+		// TODO: Make contingency for >999 (DEATH/DESTROYER)
+		var shotsCountTxt	= document.createTextNode( '000' );  // add 0's onto beginning
+		shotsCount.appendChild( shotsCountTxt );
+
+		shots.appendChild( shotsText );
+		shots.appendChild( shotsCount );
+
+		// - hits -
+		var hits 			= document.createElement( "div" );
+		hits.className 	= 'stat hits';
+		var hitsText		= document.createTextNode( 'Hits: ' );
+
+		var hitsCount 		= document.createElement( "span" );
+		var hitsCountTxt	= document.createTextNode( '00' );  // add 0's onto beginning
+		hitsCount.appendChild( hitsCountTxt );
+
+		hits.appendChild( hitsText );
+		hits.appendChild( hitsCount );
+
+		bulletStats.appendChild( shots );
+		bulletStats.appendChild( hits );
+
+		// --- all three ---
+		bottombar.appendChild( lives );
+		bottombar.appendChild( bulletStats );
+
+		self._lives		= livesCountTxt;
+		self._shots		= shotsCountTxt;
+		self._hits		= hitsCountTxt;
+
+		// ===========
+		// SIDEBAR
+		// ===========
 		var sidebar 		= document.createElement( "div" );
 		sidebar.className 	= "sidebar";
 

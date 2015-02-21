@@ -35,6 +35,7 @@ TODO:
 	direction keys up should stop movement
 - High score
 - Make modular shoot function
+- Make sidebar for progress/score
 
 ---- ? ----
 - Unit tests
@@ -379,12 +380,12 @@ appendToRows( rowList, gridA );
 var fieldAElem = document.getElementsByClassName("field")[0];
 addPlayers( fieldAElem, playerList );
 
+var GameContA = document.getElementsByClassName("game-container")[0];
 var FieldA = Field(1);
 
-var GameContA = document.getElementsByClassName("game-container")[0];
 var StatsA = StatsDisplay( GameContA );
-// GameContA.appendChild( StatsA._topbar );
 GameContA.insertBefore( StatsA._topbar, fieldAElem );
+GameContA.appendChild( StatsA._bottombar, fieldAElem );
 
 update();
 

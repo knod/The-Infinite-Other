@@ -137,13 +137,13 @@ body {text-align: center;}
 	justify-content: space-between;
 }
 
-.death-row {
+.death-row, .bullet-stats {
 	width: 40%;
 	display: flex;
 	justify-content: space-between;
 }
 
-.death-row div {
+.death-row div, .bullet-stats div {
 	/* Hack to get Others' images to sit next to text */
 	position: relative;
 	display: inline-block;
