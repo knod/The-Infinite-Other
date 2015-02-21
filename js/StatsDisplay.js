@@ -101,20 +101,25 @@ Stats to be displayed to player as they play the game
 	*/
 		var self = this;
 
-		var topbar 			= document.createElement( "div" );
+		var topbar 			= document.createElement( "section" );
 		topbar.className 	= "topbar";
 
+		var timer 			= self._buildTimer();
+
+		var deathRow		= document.createElement( "div" );
+		deathRow.className 	= "death-row";
 		var mysterious 		= self._buildKillCount( othersTypes["x"] );
 		var other1 			= self._buildKillCount( othersTypes["1"] );
 		var other2 			= self._buildKillCount( othersTypes["2"] );
 		var other3 			= self._buildKillCount( othersTypes["3"] );
-		var timer 			= self._buildTimer();
 
-		topbar.appendChild( mysterious );
-		topbar.appendChild( other1 );
-		topbar.appendChild( other2 );
-		topbar.appendChild( other3 );
+		deathRow.appendChild( mysterious );
+		deathRow.appendChild( other1 );
+		deathRow.appendChild( other2 );
+		deathRow.appendChild( other3 );
+
 		topbar.appendChild( timer );
+		topbar.appendChild( deathRow );
 
 		var bottombar 		= document.createElement( "div" );
 		bottombar.className = "bottombar";

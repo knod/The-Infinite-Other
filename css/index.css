@@ -23,9 +23,9 @@ body, p, h1, div {
 
 .object { position: absolute; }
 
-.hidden { visibility: hidden; }
+.invisible { visibility: hidden; }
 
-.none { display: none; }
+.hidden { display: none; }
 
 /* SKIN */
 /* containers */
@@ -132,29 +132,26 @@ body {text-align: center;}
 }
 
 .topbar, .bottombar {
-	text-align: justify;
-	height: 1rem;  /* Ensure :after doesn't add space */
 	margin-bottom: 0.2rem;
+	display: flex;
+	justify-content: space-between;
 }
 
-/* To equally space stats */
-.topbar:after {
-  content: '';
-  width: 100%; /* Ensures there are at least 2 lines of text, so justification works */
-  display: inline-block;
+.death-row {
+	width: 40%;
+	display: flex;
+	justify-content: space-between;
 }
 
-.topbar div {
-	display: inline-block;
+.death-row div {
 	/* Hack to get Others' images to sit next to text */
 	position: relative;
+	display: inline-block;
 }
 
-.stat {
-	/*padding-right: 1rem;*/
+.dead-count {
+	margin-left: 0.5rem;
 }
-
-.stat
 
 .lives {
 }

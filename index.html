@@ -25,45 +25,8 @@
 
 	<div class='game-container'>
 
-		<div class='topbar'> 
-			<div class='stat kill-count mysterious'>
-				<div class='object mysteriousOther'>
-					<div class='dead-x'>X</div>
-				</div>
-				<div class='dead-count'>0</div>
-			</div>
 
-			<div class='stat kill-count other1'>
-				<div class='object other1'>
-					<div class='dead-x'>X</div>
-				</div>
-				<div class='dead-count'>0</div>
-			</div>
-
-			<div class='stat kill-count other2'>
-				<div class='object other2'>
-					<div class='dead-x'>X</div>
-				</div>
-				<div class='dead-count'>0</div>
-			</div>
-
-			<div class='stat kill-count other3'>
-				<div class='object other3'>
-					<div class='dead-x'>X</div>
-				</div>
-				<div class='dead-count'>0</div>
-			</div>
-
-			<!-- Start time for each field, only one currentTime ( Date.now() ) -->
-			<div class='stat timer'>Time: <span class='time'>00:00</span></div>
-
-			<div class='stat shots'>Shots: <span class='shots-count'>000</span></div>
-
-			<div class='stat hits'>Hits: <span class='hits-count'>00</span></div>
-		</div>
-
-
-		<div class='field'>
+		<section class='field'>
 
 			<div class='top'></div>
 
@@ -83,18 +46,22 @@
 
 			<div class='object barriers'></div>
 
-		</div> <!-- end .field -->
+		</section> <!-- end .field -->
 
-		<div class='sidebar'>
+		<section class='sidebar'>
 			<!-- At the end, score will be closest to bottom is most? -->
 			<!-- Is this in the sidebar? Called score? -->
 			<div class='distance-to-bottom'></div>
-		</div>
+		</section>
 
 
-		<div class='bottombar'>
+		<section class='bottombar'>
 			<div class='lives'>Lives: <span class='lives-val'>1000000</span></div>
-		</div>
+
+			<div class='stat shots'>Shots: <span class='shots-count'>000</span></div>
+
+			<div class='stat hits'>Hits: <span class='hits-count'>00</span></div>
+		</section>
 
 	</div> <!-- end .game-container -->
 
