@@ -13,29 +13,29 @@ var Utilities = function ( id ) {
 	util.id = id;
 
 
-	util._getRandomIntInRange = function ( min, stopBefore ) {
+	util.getRandomIntInRange = function ( min, stopBefore ) {
 	/* ( int, int ) -> int
 
 	WARNING: max value is excluded from results
 	Returns an integer between min and max
 	*/
 	  return Math.floor(Math.random() * (stopBefore - min)) + min;
-	};  // End Utilities._randomIntInRange()
+	};  // End Utilities.randomIntInRange()
 
 
-	util._chooseRandom = function ( choiceList ) {
+	util.chooseRandom = function ( choiceList ) {
 	/* ( [] ) -> *
 
 	Returns a random value from choiceList
 	*/
 		var self = this;
 
-		var randInt = self._getRandomIntInRange( 0, choiceList.length );
+		var randInt = self.getRandomIntInRange( 0, choiceList.length );
 		return choiceList[ randInt ];
-	};  // end Utilities._chooseRandom()
+	};  // end Utilities.chooseRandom()
 
 
-	util._hasSomeOverlap = function ( DOM1, DOM2 ) {
+	util.hasSomeOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 
 	*/
@@ -51,10 +51,10 @@ var Utilities = function ( id ) {
 	    );
 
 		return someOverlap;
-	};  // end Utilities._hasSomeOverlap
+	};  // end Utilities.hasSomeOverlap
 
 
-	util._isInside = function ( DOM1, DOM2 ) {
+	util.isInside = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 
 	*/
@@ -70,12 +70,12 @@ var Utilities = function ( id ) {
 		);
 
 		return inside;
-	};  // end Utilities._hasSomeOverlap
+	};  // end Utilities.hasSomeOverlap
 
 
 	// TODO: ?Change to eventually return object like
 	// _whichEdgeHit triggers in bullet?
-	util._doesOverlap = function ( DOM1, DOM2 ) {
+	util.doesOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 
 	*/
@@ -86,15 +86,15 @@ var Utilities = function ( id ) {
 
 		// Wish I had a visualization for this logic (like t and f on the edges)
 
-		var someOverlap = self._hasSomeOverlap( DOM1, DOM2 );
-		var inside = self._isInside( DOM1, DOM2 );
+		var someOverlap = self.hasSomeOverlap( DOM1, DOM2 );
+		var inside = self.isInside( DOM1, DOM2 );
 
 		return someOverlap || inside;
-	};  // end Utilities._doesOverlap()
+	};  // end Utilities.doesOverlap()
 
 
 	// WARNING: DOES NOT HANDLE MULTIPLE EDGES AT THE SAME TIME
-	util._whichEdgeHit = function ( innerElem, surroundingElem, speed ) {
+	util.whichEdgeHit = function ( innerElem, surroundingElem, speed ) {
 	/* ( DOM, DOM, int ) -> str
 
 	speed IS GIVEN IN PIXELS
@@ -128,7 +128,7 @@ var Utilities = function ( id ) {
 		// }
 
 		return edgeHit;
-	};  // end Utilities._whichEdgeHit()
+	};  // end Utilities.whichEdgeHit()
 
 
 	/*! getEmPixels  | Author: Tyson Matanich (http://matanich.com), 2013 | License: MIT */
@@ -137,7 +137,7 @@ var Utilities = function ( id ) {
     var important = "!important;";
     var style = "position:absolute" + important + "visibility:hidden" + important + "width:1em" + important + "font-size:1em" + important + "padding:0" + important;
 
-    util._getPixelValueOfOneEm = function (element) {
+    util.getPixelValueOfOneEm = function (element) {
 
         var extraBody;
 
@@ -167,56 +167,56 @@ var Utilities = function ( id ) {
 
         // Return the em value in pixels
         return value;
-    };  // end Utilities._getPixelValueOfOneEm()
+    };  // end Utilities.getPixelValueOfOneEm()
 
 
-    util._convertEmsToPixels = function ( emElem, emValue ) {
+    util.convertEmsToPixels = function ( emElem, emValue ) {
     /* ( DOM, num ) -> num
 
 	Converts a property in pixels to its value in em's relative to
 	emElem
     */
 
-    	var pixelsInOneEm 	= Util._getPixelValueOfOneEm( emElem );
+    	var pixelsInOneEm 	= Util.getPixelValueOfOneEm( emElem );
 		var pxValue 		= pixelsInOneEm * emValue;
 
 		return pxValue;
 
-    };  // end Utilities._convertEmsToPixels()
+    };  // end Utilities.convertEmsToPixels()
 
 
     // Note of interest: attribute is HTML, property is the DOM
-    util._convertPixelsToEms = function ( emElem, pxValue ) {
+    util.convertPixelsToEms = function ( emElem, pxValue ) {
     /* ( DOM, num ) -> num
 
 	Converts a property in pixels to its value in em's relative to
 	emElem
     */
 
-    	var pixelsInOneEm 	= Util._getPixelValueOfOneEm( emElem );
+    	var pixelsInOneEm 	= Util.getPixelValueOfOneEm( emElem );
 		var emValue 		= pxValue / pixelsInOneEm;
 
 		return emValue;
 
-    };  // end Utilities._convertPixelsToEms()
+    };  // end Utilities.convertPixelsToEms()
 
 
     // Note of interest: attribute is HTML, property is the DOM
-    util._convertPixelsToRems = function ( pxValue ) {
+    util.convertPixelsToRems = function ( pxValue ) {
     /* ( num ) -> num
 
 	Converts a property in pixels to its value in rem's
     */
 
-    	var oneRemToPixels = Util._getPixelValueOfOneEm( document.body );
+    	var oneRemToPixels = Util.getPixelValueOfOneEm( document.body );
 		var remValue = pxValue / oneRemToPixels;
 
 		return remValue;
 
-    };  // end Utilities._convertPixelsToRems()
+    };  // end Utilities.convertPixelsToRems()
 
 
-    util._getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
+    util.getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
     /* ( HTML, HTML, str ) -> num
 
 	childElem MUST HAVE ancestorElem AS AN ANCESTOR
@@ -238,11 +238,11 @@ var Utilities = function ( id ) {
 
     	return totalOffset;
 
-    };  // End Utilities._getPixelOffsetFromAncestor()
+    };  // End Utilities.getPixelOffsetFromAncestor()
 
 
 	// http://stackoverflow.com/questions/5588465/javascript-parse-time-minutesseconds-from-miliseconds
-    util._msToMMSS = function ( msValue ) {
+    util.msToMMSS = function ( msValue ) {
     /* ( int or str ) -> str
 
     */
@@ -255,7 +255,7 @@ var Utilities = function ( id ) {
 
     	return (min + ":" + sec)
 
-	};  // End Utilities._msToMMSS()
+	};  // End Utilities.msToMMSS()
 
     // ==========
     // END
@@ -270,8 +270,8 @@ var Utilities = function ( id ) {
 var x = Utilities();
 var dom1 = document.getElementsByClassName( "other" )[0];
 var dom2 = document.getElementsByClassName("field")[0];
-console.log(x._doesOverlap( dom1, dom2 ));  // Expected: true
+console.log(x.doesOverlap( dom1, dom2 ));  // Expected: true
 var dom3 = document.getElementsByClassName("other")[1];
-console.log(x._doesOverlap( dom1, dom3 ));  // Expected: false
+console.log(x.doesOverlap( dom1, dom3 ));  // Expected: false
 */
 

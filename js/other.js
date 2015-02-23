@@ -8,23 +8,23 @@ var rowHeight = 2;
 // Types of Others and their unique properties
 var othersTypes = {
 	1: {
-		_points: 10,
-		_class: "other1"
+		points: 10,
+		class: "other1"
 	},
 
 	2: {
-		_points: 20,
-		_class: "other2"
+		points: 20,
+		class: "other2"
 	},
 
 	3: {
-		_points: 30,
-		_class: "other3"
+		points: 30,
+		class: "other3"
 	},
 
 	x: {
-		_points: 100,
-		_class: "mysterious"
+		points: 100,
+		class: "mysterious"
 	}
 };  // end othersTypes{}
 
@@ -38,56 +38,56 @@ Returns an other of type Other in the position indicated with "left"
 
 	var other = {};
 
-	other._class	= type._class;
-	other._html 	= null;
-	other._field	= document.getElementsByClassName("field")[0];
+	other.class	= type.class;
+	other.html 	= null;
+	other.field	= document.getElementsByClassName("field")[0];
 
-	other._points	= type._points;
-	other._killed	= false;
+	other.points	= type.points;
+	other.killed	= false;
 
 	// Position in rem's
-	other._left 	= left;
-	other._top		= 0;
-	other._id 		= null;  // currently not in use
+	other.left 	= left;
+	other.top		= 0;
+	other.id 		= null;  // currently not in use
 
-	other._column 	= null;
+	other.column 	= null;
 
 
 	// =============
 	// FUNCTIONS
 	// =============
-	other._buildHTML  = function () {
+	other.buildHTML  = function () {
 	/* ( none ) -> Other
 
-	Builds html element and changes self._html to match.
+	Builds html element and changes self.html to match.
 	Returns self.
 	*/
 		var self = this;
 
 		var html 		= document.createElement("div");
-		html.className 	= 'object other ' + self._class;
-		html.style.left = self._left;
+		html.className 	= 'object other ' + self.class;
+		html.style.left = self.left;
 
-		self._html 		= html;
+		self.html 		= html;
 
 		return self;
 	};  // end other.buildHTML()
 
 
 	// TODO: Not needed?
-	other._updateLeft = function ( left ) {
+	other.updateLeft = function ( left ) {
 	/* ( int ) -> Other
 
 	Moves this Other to a new style.left using "left"
 	*/
 
-		self._html.style.left = left;
+		self.html.style.left = left;
 
 		return self;
-	};  // end other._updateLeft()
+	};  // end other.updateLeft()
 
 
-	other._destroy = function () {
+	other.destroy = function () {
 	/*  -> 
 
 	
@@ -95,24 +95,24 @@ Returns an other of type Other in the position indicated with "left"
 
 		console.log("ow");
 
-	}; // end other._die()
+	}; // end other.die()
 
-	other._shoot = function () {
+	other.shoot = function () {
 	/* ( HTML ) -> Player
 
 	*/
 		var self = this;
 
 		var bullet = Bullet( 1, "down" );
-		bullet._field = self._field;
-		bullet._buildHTML( self._html );
+		bullet.field = self.field;
+		bullet.buildHTML( self.html );
 
 		othersBulletList.push( bullet );
-		self._field.appendChild( bullet._html );
+		self.field.appendChild( bullet.html );
 
 		return self;
 
-	}; // end other._shoot()
+	}; // end other.shoot()
 
 	return other;
 

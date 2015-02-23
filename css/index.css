@@ -69,26 +69,23 @@ body, p, h1, div {
 
 
 /* sprites */
-.object.other1 {
+.object.other {
 	top: 0;
 	width: 1rem;
 	height: 1rem;
+}
+
+.object.other1 {
 	background-color: teal;
 	/*background-image: url('../images/other1.png');*/
 }
 
 .object.other2 {
-	top: 0;
-	width: 1rem;
-	height: 1rem;
 	background-color: coral;
 	/*background-image: url('../images/other2.png');*/
 }
 
 .object.other3 {
-	top: 0;
-	width: 1rem;
-	height: 1rem;
 	background-color: firebrick;
 	/*background-image: url('../images/other3.png');*/
 }

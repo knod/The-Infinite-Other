@@ -8,26 +8,26 @@ var Bullet = function ( id, direction ) {
 */
 	var bullet = {};
 
-	bullet._html 	= null;
-	bullet._field 	= null;
+	bullet.html 	= null;
+	bullet.field 	= null;
 
 	// Dimensions and positions in pixels
 	// Why do the bullets' relative screen space adjust when zoom
 	// is increased? (They get bigger when zoomed. I thought that
 		// was rem's)
-	bullet._width 	= 4;//0.25;
-	bullet._height 	= 7;//0.45;
-	bullet._left 	= 0;
+	bullet.width 	= 4;//0.25;
+	bullet.height 	= 7;//0.45;
+	bullet.left 	= 0;
 
 	// MUST BE SMALLER THAN HEIGHT OF AI (MATH.)
 	// Currently in pixels
-	bullet._speed 	= 5;
+	bullet.speed 	= 5;
 
-	bullet._direction 			= direction;
+	bullet.direction 			= direction;
 	// MUST BE SMALLER THAN THE DISTANCE BETWEEN TWO AI
-	bullet._destrucitonRadius 	= 5;
+	bullet.destrucitonRadius 	= 5;
 
-	bullet._buildHTML = function ( shooterElem ) {
+	bullet.buildHTML = function ( shooterElem ) {
 	/* ( HTML ) -> Bullet
 
 	*/
@@ -38,37 +38,37 @@ var Bullet = function ( id, direction ) {
 		
 
 		var shooterWidth 		= shooterElem.offsetWidth,
-			shooterFieldLeft 	= Util._getPixelOffsetFromAncestor(
-									shooterElem, self._field, "offsetLeft"
+			shooterFieldLeft 	= Util.getPixelOffsetFromAncestor(
+									shooterElem, self.field, "offsetLeft"
 									),
-			shooterFieldTop		= Util._getPixelOffsetFromAncestor(
-									shooterElem, self._field, "offsetTop"
+			shooterFieldTop		= Util.getPixelOffsetFromAncestor(
+									shooterElem, self.field, "offsetTop"
 									)
 		;  // end vars
 
 		var shooterCenter	= shooterFieldLeft + ( shooterWidth/2 ),
-			bulletLeft 		= shooterCenter - ( self._width/2 )
+			bulletLeft 		= shooterCenter - ( self.width/2 )
 		;  // end vars
 
 		var html 			= document.createElement("div");
 		html.className 		= 'object bullet';
-		html.style.width 	= self._width + "px";
-		html.style.height 	= self._height + "px";
+		html.style.width 	= self.width + "px";
+		html.style.height 	= self.height + "px";
 		
 		// TODO: Why is pixel placement and movement working when view zoom is changed?
 		html.dataset.top 	= shooterFieldTop;
 		html.style.top 		= shooterFieldTop + "px";
 		html.style.left 	= bulletLeft + "px";
 
-		self._left 			= bulletLeft;
-		self._html 			= html;
+		self.left 			= bulletLeft;
+		self.html 			= html;
 
 		return self;
 
-	};  // end Bullet._buildHTML
+	};  // end Bullet.buildHTML
 
 
-	bullet._move = function ( direction ) {
+	bullet.move = function ( direction ) {
 	/* -> Bullet
 
 	*/
@@ -76,24 +76,24 @@ var Bullet = function ( id, direction ) {
 
 		// If nothing else changes, movement will be 0
 		var moveVector = 0;
-		var top = parseFloat( self._html.dataset.top );
+		var top = parseFloat( self.html.dataset.top );
 
 		// TODO: Limit to inside parent
 
 		// Decide movement positive, negative, or none
-		if ( direction === "down" ) { moveVector = self._speed; }
-		else if ( direction === "up" ) { moveVector = -1 * self._speed; }
+		if ( direction === "down" ) { moveVector = self.speed; }
+		else if ( direction === "up" ) { moveVector = -1 * self.speed; }
 
 		// Implement any changes to movement
 		top += moveVector;
-		self._html.dataset.top = top;
-		self._html.style.top = top + "px";
+		self.html.dataset.top = top;
+		self.html.style.top = top + "px";
 
 		return self;
 
-	};  // end Bullet._move()
+	};  // end Bullet.move()
 
-	bullet._collide = function ( collidee ) {
+	bullet.collide = function ( collidee ) {
 	/* -> 
 
 	*/
@@ -106,38 +106,38 @@ var Bullet = function ( id, direction ) {
 			// be external)
 
 		return self;
-	};  // end Bullet._collide()
+	};  // end Bullet.collide()
 
 	// TODO: Probably doesn't need to be here anymore, just do an edge
 	// hit check. Except it returns an object, but the object was
 	// already sent in here, obviously
-	bullet._goingOutOfBounds = function ( bounderHTML ) {
+	bullet.goingOutOfBounds = function ( bounderHTML ) {
 	/* ( HTML ) -> HTML
 
 	*/
 		var self = this;
 
 		var exitedObj = null;
-		var hitsEdge = Util._whichEdgeHit( self._html, bounderHTML, self._speed );
+		var hitsEdge = Util.whichEdgeHit( self.html, bounderHTML, self.speed );
 
 		if ( hitsEdge !== "none" ) { exitedObj = bounderHTML; }
 
 		return exitedObj;
-	};  // end Bullet.__goingOutOfBounds()
+	};  // end Bullet._goingOutOfBounds()
 
 
-	bullet._collisionTest = function ( obj ) {
+	bullet.collisionTest = function ( obj ) {
 	/* -> 
 
 	*/
 		var self = this;
 
 		var collidee = null;
-		var collides = Util._doesOverlap( self._html, obj._html );
+		var collides = Util.doesOverlap( self.html, obj.html );
 		if ( collides ) { collidee = obj; }
 
 		return collidee;
-	};  // end Bullet._collisionTest()
+	};  // end Bullet.collisionTest()
 
 
 	// =============

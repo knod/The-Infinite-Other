@@ -31,7 +31,7 @@ Loop to update the whole game
 	for ( var playeri = 0; playeri < playerList.length; playeri++ ) {
 
 		var player = playerList[ playeri ];
-		player._move( player._direction );
+		player.move( player.direction );
 
 	}  // end for( player )
 
@@ -48,14 +48,14 @@ Loop to update the whole game
 		for ( var bulleti = 0; bulleti < bulletList.length; bulleti++ ) {
 
 			var bullet = bulletList[ bulleti ];
-			bullet._move( bullet._direction );
+			bullet.move( bullet.direction );
 
 			// Will we need to destroy the bullet?
 			var needDestroyBullet = false;
 			var collidee = null;
 
 			// check for collision with parent
-			var exitee = bullet._goingOutOfBounds( bullet._field );
+			var exitee = bullet.goingOutOfBounds( bullet.field );
 			if ( exitee !== null ) {
 				needDestroyBullet = true; 
 
@@ -69,13 +69,13 @@ Loop to update the whole game
 						var obj = objs[ obji ];
 
 						// Test for collision and act appropriately
-						var collidee = bullet._collisionTest( obj );
+						var collidee = bullet.collisionTest( obj );
 						// If there was actually a collision with something,
 						// destroy the thing and mark bullet for destruciton
 						if ( collidee !== null ) {
 							needDestroyBullet = true;
 							// Destroy collidee, in DOM and in JS
-							var elem = collidee._html;
+							var elem = collidee.html;
 							elem.parentNode.removeChild(elem);
 							objs.splice( obji, 1 );
 						}
@@ -85,7 +85,7 @@ Loop to update the whole game
 
 			if ( needDestroyBullet ) {
 				// Remove Bullet from DOM
-				var elem = bullet._html;
+				var elem = bullet.html;
 				elem.parentNode.removeChild(elem);
 				// Remove from js
 				bulletList.splice( bulleti, 1 );
@@ -128,7 +128,7 @@ Loop to update the whole game
 	}
 
 	// ATTACK
-	FieldA._update();
+	FieldA.update();
 
 	// ====================
 	// FOR NEXT LOOP

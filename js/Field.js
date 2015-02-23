@@ -8,26 +8,71 @@ var Field = function ( id ) {
 */
 	var field = {};
 
-	field._html			= document.getElementsByClassName("field")[0];
-	field._numCols		= 11;
+	field.html			= document.getElementsByClassName("field")[0];
+	field.numCols		= 11;
 
-	field._rows 		= null;
-	field._hostile		= true;
+	field.rows 		= null;
+	field.hostile		= true;
 
-	field._oldTime 		= Date.now();
-	field._newTime 		= field._oldTime;
+	// TODO: Should these be set elsewhere? _init?
+	field.oldTime 			= Date.now();
+	// field.newTime 		= field.oldTime;
+	field.oldTimeAIAttack	= field.oldTime;
+	field.oldTimeAIMove	= field.oldTime;
+	field.oldTimePlayerShot= field.oldTime;
+
+	// For stats
+	field.mysteriousDeadCount	= 0;
+	field.other1DeadCount		= 0;
+	field.other2DeadCount		= 0;
+	field.other3DeadCount		= 0;
+	field.livesCount			= 0;
+	field.shotsCount			= 0;
+	field.hitsCount			= 0;
+	field.travelDistCount		= 0;
+
+
+	// ===========
+	// SETUP
+	// ===========
+
+	field.buildRowsHTML = function () {
+	/*
+
+	*/
+		var self = this;
+
+	};  // end Field.buildRowsHTML()
+
+
+	field.buildHTML = function () {
+	/*
+
+	*/
+		var self = this;
+		var html = document.createElement( "section" );
+		html.className = "field";
+
+
+
+
+		self.html = html;
+		return self;
+
+	};  // end Field.buildHTML()
+
 
 	// ============
 	// OTHERS
 	// ============
 	// Update Group
-	var count = 0;
+
 	// TODO: Should this be a method for every field, or should
 	// there just be one function for this, like on Field itself?
 	// TODO: Find out if js can have truely recursive functions
 	// where no stack is created (that is, you don't have to return)
 	// everything.
-	field._getRandomLowestOther = function ( othersGrid ) {
+	field.getRandomLowestOther = function ( othersGrid ) {
 	/* [[Other]] -> Other
 
 	Calls itself until it returns an Other than is the lowest
@@ -46,7 +91,7 @@ var Field = function ( id ) {
 			// a decision not yet made)
 		var allGone		= true;  // Can be refuted later
 		// Get a random column number
-		var randCol 	= Util._getRandomIntInRange( 0, self._numCols );
+		var randCol 	= Util.getRandomIntInRange( 0, self.numCols );
 
 		// Go from top to bottom row looking for Other with that _column
 		// property value, replacing randomOther with any next iteration
@@ -63,7 +108,7 @@ var Field = function ( id ) {
 
 			for ( var otheri = 0; otheri < row.length; otheri++ ) {
 				var other = row[ otheri ];
-				if ( other._column === randCol ) {
+				if ( other.column === randCol ) {
 					randomOther = other;
 				}
 			}
@@ -77,7 +122,7 @@ var Field = function ( id ) {
 			// Otherwise, return other
 			if ( randomOther === null ) {
 				// MUST return something here or nothing gets returned
-				return self._getRandomLowestOther( othersGrid );
+				return self.getRandomLowestOther( othersGrid );
 			} else {
 				return randomOther;
 			}
@@ -92,10 +137,10 @@ var Field = function ( id ) {
 			// But then other things will have to check for non-null values _and_
 			// end condition can't be no Others ( but maybe it can be no #parent.other )
 
-	};  // End Field._getRandomLowestOther()
+	};  // End Field.getRandomLowestOther()
 
 
-	field._attack = function ( othersGrid ) {
+	field.attack = function ( othersGrid ) {
 	/*
 
 	Picks a random Other that has no Others below it and
@@ -103,32 +148,33 @@ var Field = function ( id ) {
 	*/	
 		var self = this;
 
-		var randomLowestOther = self._getRandomLowestOther( othersGrid );
-		randomLowestOther._shoot( self._html );
+		var randomLowestOther = self.getRandomLowestOther( othersGrid );
+		randomLowestOther.shoot( self.html );
 
 		return this;
-	};  // End Field._attack()
+	};  // End Field.attack()
 
 
-	field._update = function () {
+	field.update = function ( currentTime ) {
 	/*
 
 	Does all the updating of all the things for this field
 	TODO: Will only be called if game is not over? Or does
 	each field have its own game over?
+	Returns whether game is over or not
 	*/
 		var self = this;
 
-		var shootTimeDiff = self._newTime - self._oldTime;
+		var shootTimeDiff = currentTime - self.oldTime;
 
 		// TODO: set timeout for random length pausing between each attack
 		// Fix this later to be own grid
 		var randomWait = Math.pow( otherMovePause, 2 ) * Math.random();
 		var cappedWait = Math.max( 3000, randomWait );
 
-		if ( self._hostile && (shootTimeDiff > cappedWait) ) {
-			self._attack( gridA );
-			self._oldTime = self._newTime;
+		if ( self.hostile && (shootTimeDiff > cappedWait) ) {
+			self.attack( gridA );
+			self.oldTime = currentTime;
 		}
 
 		// Game Over if all Others are dead
@@ -139,10 +185,25 @@ var Field = function ( id ) {
 		// ============
 		// FOR NEXT LOOP
 		// ============
-		self._newTime = Date.now()
+		// self.newTime = Date.now()
 
-		return this;
-	};  // End Field._update()
+		return false;
+	};  // End Field.update()
+
+
+	field.init = function () {
+
+		// build properites
+		// build html
+		// append to parent?
+
+	};  // end Field.init()
+
+
+
+	// ===========
+	// END
+	// ===========
 
 	return field;
 

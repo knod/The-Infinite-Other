@@ -10,26 +10,26 @@ Stats to be displayed to player as they play the game
 
 	var stats = {};
 
-	stats._parent 		= parent;
-	stats._topbar		= null;
-	stats._bottombar	= null;
-	stats._sidebar		= null;
+	stats.parent 		= parent;
+	stats.topbar		= null;
+	stats.bottombar	= null;
+	stats.sidebar		= null;
 
 	// All the numbers and counts, etc. that will need to be updated
-	stats._mysterious	= null;
-	stats._other1		= null;
-	stats._other2		= null;
-	stats._other3		= null;
-	stats._elapsedTime	= null;
+	stats.mysterious	= null;
+	stats.other1		= null;
+	stats.other2		= null;
+	stats.other3		= null;
+	stats.elapsedTime	= null;
 
-	stats._lives		= null;
-	stats._shots		= null;
-	stats._hits			= null;
+	stats.lives		= null;
+	stats.shots		= null;
+	stats.hits			= null;
 	
-	stats._travelDist	= null;
+	stats.travelDist	= null;
 
 
-	stats._buildKillCount = function ( type ) {
+	stats.buildKillCount = function ( type ) {
 	/* ( {} ) -> DOM obj
 
 	Builds a kill counter div for the right type to go in
@@ -37,8 +37,8 @@ Stats to be displayed to player as they play the game
 	*/
 		var self = this;
 
-		var outerClassNames	= 'stat kill-count ' + type._class;
-		var iconClassNames	= 'object ' + type._class
+		var outerClassNames	= 'stat kill-count ' + type.class;
+		var iconClassNames	= 'object ' + type.class
 		// -------
 		var outer			= document.createElement( "div" );
 		outer.className		= outerClassNames;
@@ -63,16 +63,16 @@ Stats to be displayed to player as they play the game
 		outer.appendChild( icon );
 		outer.appendChild( countArea );
 
-		var propName = "_" + type._class;
+		var propName = "" + type.class;
 
 		self[ propName ] = countNode;
-// debugger;
+
 		return outer;
 
-	};  // end StatsDisplay._buildKillCount()
+	};  // end StatsDisplay.buildKillCount()
 
 
-	stats._buildTimer = function () {
+	stats.buildTimer = function () {
 	/* ->
 
 	*/
@@ -82,7 +82,7 @@ Stats to be displayed to player as they play the game
 		var timeTextNode	= document.createTextNode( "Time: " );
 		// -------
 		var timeValSpan		= document.createElement( "span" );
-		var startTime		= Util._msToMMSS( 0 );
+		var startTime		= Util.msToMMSS( 0 );
 		var timeValNode 	= document.createTextNode( startTime );
 		timeValSpan.appendChild( timeValNode );
 
@@ -90,14 +90,14 @@ Stats to be displayed to player as they play the game
 		timer.appendChild( timeTextNode );
 		timer.appendChild( timeValSpan );
 
-		self._time = timeValNode;
+		self.time = timeValNode;
 
 		return timer;
 
-	};  // end StatsDisplay._buildTimer)
+	};  // end StatsDisplay.buildTimer)
 
 
-	stats._buildHTML = function () {
+	stats.buildHTML = function () {
 	/* ->
 
 	*/
@@ -109,14 +109,14 @@ Stats to be displayed to player as they play the game
 		var topbar 			= document.createElement( "section" );
 		topbar.className 	= "topbar";
 
-		var timer 			= self._buildTimer();
+		var timer 			= self.buildTimer();
 
 		var deathRow		= document.createElement( "div" );
 		deathRow.className 	= "death-row";
-		var mysterious 		= self._buildKillCount( othersTypes["x"] );
-		var other1 			= self._buildKillCount( othersTypes["1"] );
-		var other2 			= self._buildKillCount( othersTypes["2"] );
-		var other3 			= self._buildKillCount( othersTypes["3"] );
+		var mysterious 		= self.buildKillCount( othersTypes["x"] );
+		var other1 			= self.buildKillCount( othersTypes["1"] );
+		var other2 			= self.buildKillCount( othersTypes["2"] );
+		var other3 			= self.buildKillCount( othersTypes["3"] );
 
 		deathRow.appendChild( mysterious );
 		deathRow.appendChild( other1 );
@@ -125,7 +125,7 @@ Stats to be displayed to player as they play the game
 
 		topbar.appendChild( timer );
 		topbar.appendChild( deathRow );
-		// self._whatever has been taken care of in individual functions
+		// self.whatever has been taken care of in individual functions
 
 		// ===========
 		// BOTTOMBAR
@@ -181,9 +181,9 @@ Stats to be displayed to player as they play the game
 		bottombar.appendChild( lives );
 		bottombar.appendChild( bulletStats );
 
-		self._lives		= livesCountTxt;
-		self._shots		= shotsCountTxt;
-		self._hits		= hitsCountTxt;
+		self.lives		= livesCountTxt;
+		self.shots		= shotsCountTxt;
+		self.hits		= hitsCountTxt;
 
 		// ===========
 		// SIDEBAR
@@ -192,29 +192,66 @@ Stats to be displayed to player as they play the game
 		sidebar.className 	= "sidebar";
 
 		// All appending goes in game container obj?
-		self._topbar 		= topbar;
-		self._bottombar 	= bottombar;
-		self._sidebar 		= sidebar;
+		self.topbar 		= topbar;
+		self.bottombar 	= bottombar;
+		self.sidebar 		= sidebar;
 
 		return self;
 
-	};  // end StatsDisplay._buildHTML()
+	};  // end StatsDisplay.buildHTML()
 
 
-	stats._update = function () {
+	stats.updateStat = function ( stat, value )  {
 	/* ->
 
 	*/
 		var self = this;
 
-		self._updateTime( Date.now() );
+		if ( stat === "lives" ) {
+			// update lives images too
+			self[ "lives" ].nodeValue = value;
 
-		// node.nodeValue = "";
+		} else if ( stat === "elapsedTime" ) {
+			var newTime = Util.msToMMSS( value );
+			self[ "elapsedTime" ].nodeValue = newTime;
 
-	};  // end StatsDisplay._update()
+		} 
+
+		// else if ( stat === "travelDist" ) {}
+
+		else {
+			self[ stat ].nodeValue = value;
+
+		}
+
+		return self;
+
+	};  // end StatsDisplay.updateStat()
 
 
-	stats._buildHTML();
+	// stats.update = function () {
+	// /* ->
+
+	// */
+	// 	var self = this;
+
+	// 	self.updateTime( Date.now() );
+
+	// 	// node.nodeValue = "";
+
+	// };  // end StatsDisplay.update()
+
+	stats.init = function () {
+	/*
+
+	*/
+		var self = this;
+
+		self.buildHTML();
+
+		return self;
+
+	};  // end StatsDisplay.init()
 
 	return stats;
 }; 

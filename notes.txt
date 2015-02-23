@@ -70,3 +70,21 @@ It seems like a player should own its list of bullets - that would make it reall
 -- Other
 It would be cool if agents (Others and Players) had a direction they were facing and bullets went in whatever direction they were facing. It would be an angle or some-such.
 
+
+
+
+================
+TEMPLATES
+================
+	xxx._buildHTML = function () {
+	/*
+
+	*/
+		var self = this;
+		var html = document.createElement( "yyy" );
+		html.className = "yyy";
+
+		self._html = html;
+		return self;
+
+	};  // end xxx._buildHTML()

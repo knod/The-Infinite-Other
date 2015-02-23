@@ -39,6 +39,16 @@ TODO:
 
 ---- ? ----
 - Unit tests
+- refactor for Field
+- base all sizes on a numerical value instead of on the size of other elements
+- shooting delay of 1/2 sec
+- one currentTime = Date.now()
+- many old___Time = Date.now()'s
+	- AI shooting
+	- Player shooting
+	- Timer
+	- AI Moving
+Chance of AI shooting
 
 
 MAYBE TODO:
@@ -56,6 +66,8 @@ determine its size and position?
 
 // Shooting
 // spacebar, return, up arrow
+
+
 
 */
 
@@ -94,8 +106,8 @@ determine its size and position?
 	*/
 		var player = playerList[ 0 ];
 		// TODO: Need to append player in itself during it's creation?
-		parent.appendChild( player._html );
-		player._speed = player._calcPlayerSpeed( player._field );
+		parent.appendChild( player.html );
+		player.speed = player.calcPlayerSpeed( player.field );
 
 	};  // end addPlayers()
 
@@ -113,9 +125,9 @@ determine its size and position?
 
 			// Create an Other of this type with this css "left" value
 			var other 		= Other( mappedOthers[ type ], leftStr );
-			other._buildHTML();
-			other._column 	= col;
-			// other._row		= rowNum;
+			other.buildHTML();
+			other.column 	= col;
+			// other.row	= rowNum;
 			othersList.push( other );
 		}
 
@@ -171,7 +183,7 @@ determine its size and position?
 			var othersRow = toAppend[ rowi ];
 			// Get each Other object in that row
 			for ( var coli = 0; coli < othersRow.length; coli++ ) {
-				docRow.appendChild( othersRow[ coli ]._html );
+				docRow.appendChild( othersRow[ coli ].html );
 			}
 		}
 
@@ -250,7 +262,8 @@ determine its size and position?
 			var rowHTML 		= rowsHTMLList[ indx ];
 			// TODO: Should end game condition really be in here, or all
 			// of them in one place?
-			hitBottom = Util._doesOverlap( rowHTML, player1._html );
+			// TODO: needs to be overlap with single AI
+			hitBottom = Util.doesOverlap( rowHTML, player1.html );
 
 			var top  			= parseFloat(rowHTML.dataset.top);
 			top 				+= otherVertDistance;
@@ -323,8 +336,8 @@ determine its size and position?
 		for ( var otheri = 0; otheri < allOthers.length; otheri++ ) {
 			var other = allOthers[ otheri ];
 
-			var speedPx = Util._convertEmsToPixels( other, otherHorDistance );
-			var edgeHit = Util._whichEdgeHit( other, gameContainerHTML, speedPx );
+			var speedPx = Util.convertEmsToPixels( other, otherHorDistance );
+			var edgeHit = Util.whichEdgeHit( other, gameContainerHTML, speedPx );
 
 			if ( edgeHit === "right" || edgeHit === "left" ) { needChange = true; }
 
@@ -377,15 +390,20 @@ appendToRows( rowList, gridA );
 // 	}
 // }  // end for ( rows in rowA )
 
-var fieldAElem = document.getElementsByClassName("field")[0];
-addPlayers( fieldAElem, playerList );
+var board_id_count = 1;
 
-var GameContA = document.getElementsByClassName("game-container")[0];
+var BoardA = Board( "board_" + board_id_count );
+BoardA.init();
+
+var fieldAElem = document.getElementsByClassName("field")[0];
+// addPlayers( fieldAElem, playerList );
+
+// var GameContA = document.getElementsByClassName("game-container")[0];
 var FieldA = Field(1);
 
-var StatsA = StatsDisplay( GameContA );
-GameContA.insertBefore( StatsA._topbar, fieldAElem );
-GameContA.appendChild( StatsA._bottombar, fieldAElem );
+// var StatsA = StatsDisplay( GameContA );
+// GameContA.insertBefore( StatsA.topbar, fieldAElem );
+// GameContA.appendChild( StatsA.bottombar, fieldAElem );
 
 update();
 
