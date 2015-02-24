@@ -83,12 +83,11 @@ determine its size and position?
 	var rowList 	= document.getElementsByClassName("row");
 	var rowMap   	= ["1", "2", "2", "3", "3"];
 
+	var rowWidth	= 88;
+	var otherWidth 	= 4;
 	var numCols  	= 11;
-	// TODO: Determine this dynamically
-	// TODO: !!!! THIS MATH IS WRONG !!! FIGURE IT OUT !!!
-	// This determines how the Other elements are laid out in the rows
-	var otherWidth 	= 1/3;
-	var colPercent  = 100/( (numCols-1) + otherWidth );
+
+	var colPercent	= (100 - otherWidth) / (numCols - 1);
 
 	var player1 	= Player( 1 );
 	var playerList 	= [ player1 ];
@@ -192,8 +191,11 @@ determine its size and position?
 	};  // end appendRows()
 
 	// in rem's
-	var otherHorDistance 	= 0.25;  // MUST BE ABLE TO ADD UP TO 1rem
+	// var otherHorDistance 	= 0.25;  // MUST BE ABLE TO ADD UP TO 1rem
 	var otherVertDistance 	= 0.8;  // Doesn't matter if it overlaps
+	// Hor distance must be the remaining width of the field/16
+	// 88% is a row width
+	var otherHorDistance	= ( 100 - rowWidth ) / 16;
 
 	// TODO: needs a different name now that it triggers subsequent rows
 	var moveHorRows = function ( rowsHTMLList, indx ) {
@@ -220,12 +222,14 @@ determine its size and position?
 			if ( direction === "right" ) {
 				left += otherHorDistance;
 				rowHTML.dataset.left = left;
-				rowHTML.style.left = left + "rem" ;
+				// rowHTML.style.left = left + "rem";
+				rowHTML.style.left = left + "%";
 
 			} else {
 				left -= otherHorDistance;
 				rowHTML.dataset.left = left;
-				rowHTML.style.left = left + "rem" ;
+				// rowHTML.style.left = left + "rem";
+				rowHTML.style.left = left + "%";
 			}
 
 			// NEXT LOOP
@@ -336,8 +340,9 @@ determine its size and position?
 		for ( var otheri = 0; otheri < allOthers.length; otheri++ ) {
 			var other = allOthers[ otheri ];
 
-			var speedPx = Util.convertEmsToPixels( other, otherHorDistance );
-			var edgeHit = Util.whichEdgeHit( other, gameContainerHTML, speedPx );
+			// var speedPx = Util.convertEmsToPixels( other, otherHorDistance );
+			// var edgeHit = Util.whichEdgeHit( other, gameContainerHTML, speedPx );
+			var edgeHit = Util.whichEdgeHit( other, gameContainerHTML, otherHorDistance );
 
 			if ( edgeHit === "right" || edgeHit === "left" ) { needChange = true; }
 
@@ -395,15 +400,18 @@ var board_id_count = 1;
 var BoardA = Board( "board_" + board_id_count );
 BoardA.init();
 
-var fieldAElem = document.getElementsByClassName("field")[0];
-// addPlayers( fieldAElem, playerList );
+//------------
 
-// var GameContA = document.getElementsByClassName("game-container")[0];
+var fieldAElem = document.getElementsByClassName("field")[0];
+addPlayers( fieldAElem, playerList );
+
+var GameContA = document.getElementsByClassName("game-container")[0];
 var FieldA = Field(1);
 
-// var StatsA = StatsDisplay( GameContA );
-// GameContA.insertBefore( StatsA.topbar, fieldAElem );
-// GameContA.appendChild( StatsA.bottombar, fieldAElem );
+var StatsA = StatsDisplay( GameContA );
+StatsA.init();
+GameContA.insertBefore( StatsA.topbar, fieldAElem );
+GameContA.appendChild( StatsA.bottombar, fieldAElem );
 
 update();
 

@@ -33,16 +33,11 @@ var Board = function ( id ) {
 
 	board.id 				= id;
 	board.html				= null;
-	board.stats			= null;
-	board.field			= null;
+	board.stats				= null;
+	board.field				= null;
 
-	board.width			= 35;
+	board.width				= 35;
 	board.height			= 30;
-	// field:
-	// width: 100%;
-	// height: 25rem; ( 25/30 = 10/12 = 83.3333% of board height) 30 * (10/12)
-	// 
-	// 
 
 	// TODO: Should this be global? Or maybe in StatsDisplay?
 	board.startTime 		= Date.now();
@@ -51,6 +46,9 @@ var Board = function ( id ) {
 	// board.oldTimeAIMove		= board.startTime;
 	// board.oldTimePlayerShot	= board.startTime;
 
+	// Row width?
+	// self width?
+	// field width?
 
 	// =============
 	// SETUP FUNCTIONS
@@ -60,12 +58,15 @@ var Board = function ( id ) {
 
 	*/
 		var self = this;
-		var html = document.createElement( "div" );
-		html.className = "game-container";
 
-		self.stats = StatsDisplay( html );
-		var stats_ = self.stats
+		var html 		= document.createElement( "div" );
+		html.className 	= "game-container";
+
+		self.stats 		= StatsDisplay( html );
+		var stats_ 		= self.stats;
 		stats_.init();
+
+		self.field 		= Field( 1, { width: 35, height: 30} );
 
 		html.appendChild( stats_.topbar );
 		// append field

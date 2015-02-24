@@ -12,7 +12,7 @@ Stats to be displayed to player as they play the game
 
 	stats.parent 		= parent;
 	stats.topbar		= null;
-	stats.bottombar	= null;
+	stats.bottombar		= null;
 	stats.sidebar		= null;
 
 	// All the numbers and counts, etc. that will need to be updated
@@ -22,8 +22,8 @@ Stats to be displayed to player as they play the game
 	stats.other3		= null;
 	stats.elapsedTime	= null;
 
-	stats.lives		= null;
-	stats.shots		= null;
+	stats.lives			= null;
+	stats.shots			= null;
 	stats.hits			= null;
 	
 	stats.travelDist	= null;
@@ -164,7 +164,7 @@ Stats to be displayed to player as they play the game
 
 		// - hits -
 		var hits 			= document.createElement( "div" );
-		hits.className 	= 'stat hits';
+		hits.className 		= 'stat hits';
 		var hitsText		= document.createTextNode( 'Hits: ' );
 
 		var hitsCount 		= document.createElement( "span" );
@@ -181,9 +181,9 @@ Stats to be displayed to player as they play the game
 		bottombar.appendChild( lives );
 		bottombar.appendChild( bulletStats );
 
-		self.lives		= livesCountTxt;
-		self.shots		= shotsCountTxt;
-		self.hits		= hitsCountTxt;
+		self.lives			= livesCountTxt;
+		self.shots			= shotsCountTxt;
+		self.hits			= hitsCountTxt;
 
 		// ===========
 		// SIDEBAR
@@ -193,7 +193,7 @@ Stats to be displayed to player as they play the game
 
 		// All appending goes in game container obj?
 		self.topbar 		= topbar;
-		self.bottombar 	= bottombar;
+		self.bottombar 		= bottombar;
 		self.sidebar 		= sidebar;
 
 		return self;

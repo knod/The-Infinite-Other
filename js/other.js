@@ -110,6 +110,13 @@ Returns an other of type Other in the position indicated with "left"
 		othersBulletList.push( bullet );
 		self.field.appendChild( bullet.html );
 
+// DIMENSION LINES NOT WORKING
+		// var dimLineTop = document.createElement("div");
+		// dimLineTop.className = "dim-top";
+		// dimLineTop.style.bottom = bullet.html.offsetTop + "px";
+		// dimLineTop.style.left = bullet.html.offsetLeft + "px";
+		// bullet.html.parentNode.insertBefore( dimLineTop, bullet.html );
+console.log("darn");
 		return self;
 
 	}; // end other.shoot()

@@ -49,7 +49,7 @@ page/game
 			player name
 			separators
 
-Each field._update() returns [lostLife, score, whichEnd]. Losing a life happens before losing a game.
+Each field.update() returns [lostLife, score, whichEnd]. Losing a life happens before losing a game.
 
 =============
 THOUGHTS
@@ -76,7 +76,7 @@ It would be cool if agents (Others and Players) had a direction they were facing
 ================
 TEMPLATES
 ================
-	xxx._buildHTML = function () {
+	xxx.buildHTML = function () {
 	/*
 
 	*/
@@ -84,7 +84,13 @@ TEMPLATES
 		var html = document.createElement( "yyy" );
 		html.className = "yyy";
 
-		self._html = html;
+		self.html = html;
 		return self;
 
-	};  // end xxx._buildHTML()
+	};  // end xxx.buildHTML()
+
+
+
+	for ( var rowi = 0; rowi < (numRows - 1); rowi++ ) {
+			
+	}

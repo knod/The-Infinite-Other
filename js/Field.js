@@ -2,7 +2,7 @@
 
 'use strict'
 
-var Field = function ( id ) {
+var Field = function ( id, dimensions ) {
 /* ( int ) -> Field
 
 */
@@ -11,15 +11,18 @@ var Field = function ( id ) {
 	field.html			= document.getElementsByClassName("field")[0];
 	field.numCols		= 11;
 
-	field.rows 		= null;
+	// field.width			= dimensions.width; // 100%
+	// field.height		= dimensions.height;  // 25rem; ( 25/30 = 10/12 = 83.3333% of board height) 30 * (10/12)
+
+	field.rows 			= null;
 	field.hostile		= true;
 
 	// TODO: Should these be set elsewhere? _init?
 	field.oldTime 			= Date.now();
 	// field.newTime 		= field.oldTime;
 	field.oldTimeAIAttack	= field.oldTime;
-	field.oldTimeAIMove	= field.oldTime;
-	field.oldTimePlayerShot= field.oldTime;
+	field.oldTimeAIMove		= field.oldTime;
+	field.oldTimePlayerShot	= field.oldTime;
 
 	// For stats
 	field.mysteriousDeadCount	= 0;
@@ -28,7 +31,7 @@ var Field = function ( id ) {
 	field.other3DeadCount		= 0;
 	field.livesCount			= 0;
 	field.shotsCount			= 0;
-	field.hitsCount			= 0;
+	field.hitsCount				= 0;
 	field.travelDistCount		= 0;
 
 
@@ -53,6 +56,7 @@ var Field = function ( id ) {
 		var html = document.createElement( "section" );
 		html.className = "field";
 
+		// self.rows = Rows( 1, 5, {width: } );
 
 
 

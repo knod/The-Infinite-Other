@@ -37,8 +37,11 @@ body, p, h1, div {
 
 .row {
 	/* For visibility */
-	width: 31rem;  /* field width - (otherSpeed * 16) */
+	/*width: 31rem;   field width - (otherSpeed * 16) */
+	width: 88%;
 	height: 2rem;
+	/*display: flex;*/
+	/*justify-content: space-between;*/
 	/*background-color: darkkhaki;*/
 	/*border: 1px solid black;*/
 }
@@ -69,28 +72,28 @@ body, p, h1, div {
 
 
 /* sprites */
-.object.other {
+.other {
 	top: 0;
-	width: 1rem;
+	width: 4%;
 	height: 1rem;
 }
 
-.object.other1 {
+.other1 {
 	background-color: teal;
 	/*background-image: url('../images/other1.png');*/
 }
 
-.object.other2 {
+.other2 {
 	background-color: coral;
 	/*background-image: url('../images/other2.png');*/
 }
 
-.object.other3 {
+.other3 {
 	background-color: firebrick;
 	/*background-image: url('../images/other3.png');*/
 }
 
-.object.mysterious {}
+.mysterious {}
 
 .barrier {
 	bottom: 1.5rem;
@@ -101,8 +104,9 @@ body, p, h1, div {
 
 .player {
 	bottom: 0;
-	width: 1rem;
-	height: 1rem;
+	width: 4%;  /* percent of field width? */
+	/*width: ( 1/100% );*/
+	height: 4%;
 	background-color: teal;
 }
 
@@ -121,6 +125,7 @@ body {text-align: center;}
 	
 }
 
+/* WIDTH MUST BE AN WHOLE NUMBER OF REM'S FOR PLAYER SPEED TO WORK */
 .game-container {
 	position: relative;
 	display: inline-block;
@@ -155,11 +160,22 @@ body {text-align: center;}
 
 .field {
 	display: inline-block;
-	width: 100%;
+	width: 100%;  /* percent of game-container */
 	height: 25rem;
 }
 
 /* CONTAINERS */
 
 /* CONTENT */
+
+
+
+.dim-top {
+	position: absolute;
+	width: 1px;
+	background-color: black;
+	top:0;
+	/*bottom:0;*/
+}
+
 

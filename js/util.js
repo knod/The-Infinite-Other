@@ -108,12 +108,13 @@ var Utilities = function ( id ) {
 		var surroundingRect = surroundingElem.getBoundingClientRect();
 		var edgeHit 		= "none";
 
-		var bumper			= speed/2;
+		var buffer			= (( speed/2 ) / 100) * surroundingElem.clientWidth;
+		// console.log("bottom: " + innerRect.bottom);
 
-		var futureLeft 		= innerRect.left - bumper,
-			futureRight 	= innerRect.right + bumper,
-			futureTop		= innerRect.top - bumper,
-			futureBottom	= innerRect.bottom + bumper
+		var futureLeft 		= innerRect.left - buffer,
+			futureRight 	= innerRect.right + buffer,
+			futureTop		= innerRect.top - buffer,
+			futureBottom	= innerRect.bottom + buffer
 		;  // end vars
 
 

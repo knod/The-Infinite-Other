@@ -18,10 +18,14 @@ var Bullet = function ( id, direction ) {
 	bullet.width 	= 4;//0.25;
 	bullet.height 	= 7;//0.45;
 	bullet.left 	= 0;
+	// Now as percents!
+	// bullet.width 	= 5;// out of 560px ~.7%
+	// bullet.height 	= 5;// out of 400px ~1.75
+	bullet.left 	= 0;
 
 	// MUST BE SMALLER THAN HEIGHT OF AI (MATH.)
 	// Currently in pixels
-	bullet.speed 	= 5;
+	bullet.speed 	= 1;
 
 	bullet.direction 			= direction;
 	// MUST BE SMALLER THAN THE DISTANCE BETWEEN TWO AI
@@ -32,18 +36,18 @@ var Bullet = function ( id, direction ) {
 
 	*/
 		var self = this;
-
+		var field = self.field;
 		// ( childElem, ancestorElem, offsetType )
 		// TODO: field of shooter or field of self?
-		
 
 		var shooterWidth 		= shooterElem.offsetWidth,
 			shooterFieldLeft 	= Util.getPixelOffsetFromAncestor(
-									shooterElem, self.field, "offsetLeft"
+									shooterElem, field, "offsetLeft"
 									),
 			shooterFieldTop		= Util.getPixelOffsetFromAncestor(
-									shooterElem, self.field, "offsetTop"
-									)
+									shooterElem, field, "offsetTop"
+									),
+			percentageTop		= (shooterFieldTop / field.clientHeight) * 100;
 		;  // end vars
 
 		var shooterCenter	= shooterFieldLeft + ( shooterWidth/2 ),
@@ -54,12 +58,14 @@ var Bullet = function ( id, direction ) {
 		html.className 		= 'object bullet';
 		html.style.width 	= self.width + "px";
 		html.style.height 	= self.height + "px";
+		// html.style.width 	= self.width + "%";
+		// html.style.height 	= self.height + "%";
 		
 		// TODO: Why is pixel placement and movement working when view zoom is changed?
-		html.dataset.top 	= shooterFieldTop;
-		html.style.top 		= shooterFieldTop + "px";
+		html.dataset.top 	= percentageTop ;
+		html.style.top 		= shooterFieldTop + "%";
 		html.style.left 	= bulletLeft + "px";
-
+debugger;
 		self.left 			= bulletLeft;
 		self.html 			= html;
 
@@ -87,7 +93,8 @@ var Bullet = function ( id, direction ) {
 		// Implement any changes to movement
 		top += moveVector;
 		self.html.dataset.top = top;
-		self.html.style.top = top + "px";
+		// self.html.style.top = top + "px";
+		self.html.style.top = top + "%";
 
 		return self;
 
@@ -116,11 +123,12 @@ var Bullet = function ( id, direction ) {
 
 	*/
 		var self = this;
-
+// debugger;
 		var exitedObj = null;
-		var hitsEdge = Util.whichEdgeHit( self.html, bounderHTML, self.speed );
+		var edgeThatWasHit = Util.whichEdgeHit( self.html, bounderHTML, self.speed );
+// console.log(edgeThatWasHit);
 
-		if ( hitsEdge !== "none" ) { exitedObj = bounderHTML; }
+		if ( edgeThatWasHit !== "none" ) { exitedObj = bounderHTML; }
 
 		return exitedObj;
 	};  // end Bullet._goingOutOfBounds()

@@ -46,7 +46,7 @@ Loop to update the whole game
 	collide with something, destroyes anything they collide with
 	*/
 		for ( var bulleti = 0; bulleti < bulletList.length; bulleti++ ) {
-
+// debugger;
 			var bullet = bulletList[ bulleti ];
 			bullet.move( bullet.direction );
 
@@ -57,6 +57,7 @@ Loop to update the whole game
 			// check for collision with parent
 			var exitee = bullet.goingOutOfBounds( bullet.field );
 			if ( exitee !== null ) {
+				// console.log(exitee);
 				needDestroyBullet = true; 
 
 			// If parent doesn't destroy, check for other collisions
@@ -128,7 +129,7 @@ Loop to update the whole game
 	}
 
 	// ATTACK
-	FieldA.update();
+	FieldA.update( newTime );
 
 	// ====================
 	// FOR NEXT LOOP
