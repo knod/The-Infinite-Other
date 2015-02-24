@@ -62,20 +62,22 @@ var Board = function ( id ) {
 		var html 		= document.createElement( "div" );
 		html.className 	= "game-container";
 
-		self.stats 		= StatsDisplay( html );
-		var stats_ 		= self.stats;
-		stats_.init();
+		var stats 		= StatsDisplay( html );
+		var field 		= Field( 1 );
 
-		self.field 		= Field( 1, { width: 35, height: 30} );
+		stats.init();
+		field.init();
 
-		html.appendChild( stats_.topbar );
-		// append field
+		html.appendChild( stats.topbar );
+		html.appendChild( field.html );
 		// append sidebar
-		html.appendChild( stats_.bottombar );
+		html.appendChild( stats.bottombar );
 
 
+		self.stats 	= stats;
+		self.field 	= field;
+		self.html 	= html;
 
-		self.html = html;
 		return self;
 
 	};  // end Board.buildHTML()
@@ -137,8 +139,7 @@ var Board = function ( id ) {
 
 			requestAnimationFrame( self.update );
 
-		}  // end if( gameOver )
-
+		}  // end if( !gameOver )
 	};  // end Board.update()
 
 
@@ -150,7 +151,6 @@ var Board = function ( id ) {
 
 		self.buildHTML( self.id );
 		// var selfHTML = self.html;
-
 
 		document.body.appendChild( self.html );
 		return self;

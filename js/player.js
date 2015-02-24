@@ -23,44 +23,11 @@ var Player = function ( parent, id ) {
 	player.fireKeyList 	= [ "space", "return", "up" ];
 	// Possible values: "left", "right", "none"
 	player.direction 		= "none";
-	player.speed 			= 0;
+	player.speed 			= 1;
 
 	player.html 			= null;
 
 	player.field 			= document.getElementsByClassName("field")[0];
-
-
-	// TODO: AT 90% AND 110% (OTHERS?) PLAYER GOES HALF OUT OF CONTAINER
-	player.calcPlayerSpeed = function ( container ) {
-	/* ( DOM Obj ) -> num
-
-	Makes sure player can't exit bounds of parent
-	*/
-		// var self = this;
-
-		// // Get ratio of player width to container width
-		// // offsetWidth to get padding and border too
-		// var selfPixelWidth 		= self.html.offsetWidth;
-		// // clientWidth to have only inside measurements (where
-		// 	// self's left/top 0 sits)
-		// var containerPixelWidth = container.clientWidth;
-
-		// // Ultimate ratio needs to be a multiple of player width
-		// // in order for player to not exceed bounds of container
-		// var evenlyDivided = (selfPixelWidth / 2) / containerPixelWidth;
-
-		// // Convert to em's
-		// var elemEmWidth = Util.convertPixelsToEms( container, containerPixelWidth );
-
-		// var speed = elemEmWidth * evenlyDivided;
-
-		// return speed;
-
-		return 1;
-		// return 0.5;
-
-	};  // end Player.calcPlayerSpeed()
-
 
 	player.buildHTML = function () {
 	/*

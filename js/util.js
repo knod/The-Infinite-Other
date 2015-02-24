@@ -109,7 +109,6 @@ var Utilities = function ( id ) {
 		var edgeHit 		= "none";
 
 		var buffer			= (( speed/2 ) / 100) * surroundingElem.clientWidth;
-		// console.log("bottom: " + innerRect.bottom);
 
 		var futureLeft 		= innerRect.left - buffer,
 			futureRight 	= innerRect.right + buffer,

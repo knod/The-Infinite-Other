@@ -2,20 +2,47 @@
 
 'use strict'
 
-var Field = function ( id, dimensions ) {
+var Field = function ( id ) {
 /* ( int ) -> Field
 
 */
 	var field = {};
 
-	field.html			= document.getElementsByClassName("field")[0];
-	field.numCols		= 11;
+	field.html				= null;
 
-	// field.width			= dimensions.width; // 100%
+	field.numCols			= 11;
+	var colPercent			= (100 - otherWidth) / (numCols - 1);
+
+	field.rows 				= [];
+
+	// Only needed for setup
+	var numRows				= 5;
+	var rowHeight			= 8;
+	var rowWidth			= 88;
+	var rowMap				= ["1", "2", "2", "3", "3"];
+
+	var otherWidth 			= 4;
+
+	field.player 			= null;
+	field.playerBulletList 	= [];
+
+	field.othersLists 		= [];
+	field.othersBulletList 	= [];
+
+	field.barriers	 		= [];
+
+	// In rem's
+	// Needs to overlap?
+	var otherVertDistance 	= 0.8;
+	// Hor distance must be the remaining width of the field/16
+	// 88% is a row width
+	// In %
+	var otherHorDistance	= ( 100 - rowWidth ) / 16;
+
+
+	// field.width		= dimensions.width; // 100%
 	// field.height		= dimensions.height;  // 25rem; ( 25/30 = 10/12 = 83.3333% of board height) 30 * (10/12)
 
-	field.rows 			= null;
-	field.hostile		= true;
 
 	// TODO: Should these be set elsewhere? _init?
 	field.oldTime 			= Date.now();
@@ -34,18 +61,41 @@ var Field = function ( id, dimensions ) {
 	field.hitsCount				= 0;
 	field.travelDistCount		= 0;
 
+	field.hostile				= true;
 
 	// ===========
 	// SETUP
 	// ===========
 
-	field.buildRowsHTML = function () {
+
+
+
+	field.buildRows = function ( numRows ) {
 	/*
 
 	*/
 		var self = this;
 
-	};  // end Field.buildRowsHTML()
+		var rows = [];
+
+		for ( var rowNum = 0; rowNum < numRows; rowNum++ ) {
+
+			var top 				= rowHeight * rowNum;
+
+			var html 				= document.createElement( "div" );
+			html.className 			= "object others row row-" + (rowNum + 1);
+			html.dataset.direction 	= 'left';
+			html.dataset.left		= 0;
+			html.dataset.top 		= top;
+
+			html.style.top 			= top + "%";
+
+			rows.push( html );
+
+		}  // end for ( rowNum )
+
+		return rows;
+	};  // end Field.buildRows()
 
 
 	field.buildHTML = function () {
@@ -53,14 +103,24 @@ var Field = function ( id, dimensions ) {
 
 	*/
 		var self = this;
-		var html = document.createElement( "section" );
-		html.className = "field";
 
-		// self.rows = Rows( 1, 5, {width: } );
+		var html 		= document.createElement( "section" );
+		html.className 	= "field";
+
+		var rows 		= self.buildRows( numRows );
+
+		for ( var rowi = 0; rowi < rows.length; rowi++ ) {
+			html.appendChild( rows[ rowi ] );
+		}  // end for ( rowi )
+
+		var player 		= Player( 1 );
+		html.appendChild( player.html );
 
 
+		self.rows 	= rows;
+		self.player = player;
+		self.html 	= html;
 
-		self.html = html;
 		return self;
 
 	};  // end Field.buildHTML()
@@ -169,6 +229,14 @@ var Field = function ( id, dimensions ) {
 	*/
 		var self = this;
 
+		// =============
+		// PLAYER
+		// =============
+		self.player.move( self.player.direction );
+
+		// =============
+		// OTHERS
+		// =============
 		var shootTimeDiff = currentTime - self.oldTime;
 
 		// TODO: set timeout for random length pausing between each attack
@@ -196,11 +264,14 @@ var Field = function ( id, dimensions ) {
 
 
 	field.init = function () {
+	/*
 
-		// build properites
-		// build html
-		// append to parent?
+	*/
+		var self = this;
 
+		self.buildHTML();
+
+		return self
 	};  // end Field.init()
 
 

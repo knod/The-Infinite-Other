@@ -106,7 +106,6 @@ determine its size and position?
 		var player = playerList[ 0 ];
 		// TODO: Need to append player in itself during it's creation?
 		parent.appendChild( player.html );
-		player.speed = player.calcPlayerSpeed( player.field );
 
 	};  // end addPlayers()
 
@@ -399,6 +398,7 @@ var board_id_count = 1;
 
 var BoardA = Board( "board_" + board_id_count );
 BoardA.init();
+console.log(BoardA.field);
 
 //------------
 
@@ -407,6 +407,7 @@ addPlayers( fieldAElem, playerList );
 
 var GameContA = document.getElementsByClassName("game-container")[0];
 var FieldA = Field(1);
+FieldA.init();
 
 var StatsA = StatsDisplay( GameContA );
 StatsA.init();
@@ -414,4 +415,5 @@ GameContA.insertBefore( StatsA.topbar, fieldAElem );
 GameContA.appendChild( StatsA.bottombar, fieldAElem );
 
 update();
-
+console.log(BoardA.field);
+BoardA.update();

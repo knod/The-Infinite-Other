@@ -116,7 +116,7 @@ Returns an other of type Other in the position indicated with "left"
 		// dimLineTop.style.bottom = bullet.html.offsetTop + "px";
 		// dimLineTop.style.left = bullet.html.offsetLeft + "px";
 		// bullet.html.parentNode.insertBefore( dimLineTop, bullet.html );
-console.log("darn");
+		
 		return self;
 
 	}; // end other.shoot()

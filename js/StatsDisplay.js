@@ -90,8 +90,8 @@ Stats to be displayed to player as they play the game
 		timer.appendChild( timeTextNode );
 		timer.appendChild( timeValSpan );
 
-		self.time = timeValNode;
-
+		self.elapsedTime = timeValNode;
+debugger;
 		return timer;
 
 	};  // end StatsDisplay.buildTimer)

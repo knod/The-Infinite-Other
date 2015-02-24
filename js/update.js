@@ -57,7 +57,6 @@ Loop to update the whole game
 			// check for collision with parent
 			var exitee = bullet.goingOutOfBounds( bullet.field );
 			if ( exitee !== null ) {
-				// console.log(exitee);
 				needDestroyBullet = true; 
 
 			// If parent doesn't destroy, check for other collisions

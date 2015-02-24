@@ -65,7 +65,7 @@ var Bullet = function ( id, direction ) {
 		html.dataset.top 	= percentageTop ;
 		html.style.top 		= shooterFieldTop + "%";
 		html.style.left 	= bulletLeft + "px";
-debugger;
+
 		self.left 			= bulletLeft;
 		self.html 			= html;
 
@@ -123,10 +123,9 @@ debugger;
 
 	*/
 		var self = this;
-// debugger;
+
 		var exitedObj = null;
 		var edgeThatWasHit = Util.whichEdgeHit( self.html, bounderHTML, self.speed );
-// console.log(edgeThatWasHit);
 
 		if ( edgeThatWasHit !== "none" ) { exitedObj = bounderHTML; }
 

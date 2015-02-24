@@ -2,88 +2,50 @@
 
 'use strict'
 
-var rowTypes = {
-
-	1: {
-		class 		: "row-1",
-		direction 	: "left",
-		left 		: "0" 
-	},
-
-	2: {
-		class 		: "row-2",
-		direction 	: "left",
-		left 		: "0" 
-	},
-
-	3: {
-		class 		: "row-3",
-		direction 	: "left",
-		left 		: "0" 
-	},
-
-	4: {
-		class 		: "row-4",
-		direction 	: "left",
-		left 		: "0" 
-	},
-
-	5: {
-		class 		: "row-5",
-		direction 	: "left",
-		left 		: "0" 
-	},
-
-
-};
-
-var Rows = function ( id, numRows, dimensions ) {
+var Rows = function ( id, numRows ) {
 /* ( int ) -> Field
-
+2/25
 */
 	var rows = {};
 
 	// In rem's
-	rows.width 	= dimensions.width;
-	rows.height = dimsions.height;
-	// width: 31rem;  /* field width - (otherSpeed * 16) */
-	// height: 2rem;
+	// rows.width 	= dimensions.width;
+	rows.rowHeight 	= 8;
+	// width: 88%;
+	// height: 8%;
 
-
-	rows.html 	= null;
+	rows.list 		= [];
 
 	// ===========
 	// SETUP
 	// ===========
-	rows.buildHTML = function () {
+	rows.buildHTMLList = function () {
 	/*
 
 	*/
 		var self = this;
 
-		for ( var rowi = 0; rowi < (numRows - 1); rowi++ ) {
+		for ( var rowNum = 0; rowNum < numRows; rowNum++ ) {
 
-			var top = self.height * rowi;
+			var top 				= self.rowHeight * rowNum;
 
+			var html 				= document.createElement( "div" );
+			html.className 			= "object others row row-" + (rowNum + 1);
+			html.dataset.direction 	= 'left';
+			html.dataset.left		= 0;
+			html.dataset.top 		= top;
 
-		}
+			html.style.top 			= top + "%";
 
-		// Row 1
-		var row1 				= document.createElement( "div" );
-		row1.className 			= "object others row row-1";
-		row1.dataset.direction 	= 'left';
-		row1.dataset.top 		= 0;
+			self.list.push( html );
 
+		}  // end for ( rowNum )
 
+		return self.list;
 
-	};  // end Rows.buildHTML()
+	};  // end Rows.buildHTMLList()
 
-	// <div class='object others row row-1' data-direction='left' data-top='0' data-left='0'></div>
-	// 		<div class='object others row row-2' data-direction='left' data-top='2' data-left='0'></div>
-	// 		<div class='object others row row-3' data-direction='left' data-top='4' data-left='0'></div>
-	// 		<div class='object others row row-4' data-direction='left' data-top='6' data-left='0'></div>
-	// 		<div class='object others row row-5' data-direction='left' data-top='8' data-left='0'></div>
-
+	rows.buildHTMLList();
 
 	// ========
 	// END
