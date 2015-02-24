@@ -106,20 +106,7 @@ var Field = function ( id ) {
 
 		var html 		= document.createElement( "section" );
 		html.className 	= "field";
-
-		// var rows 		= self.buildRows( numRows );
-
-		// for ( var rowi = 0; rowi < rows.length; rowi++ ) {
-		// 	html.appendChild( rows[ rowi ] );
-		// }  // end for ( rowi )
-
-		// var player 		= Player( self.html, 1 );
-		// html.appendChild( player.html );
-
-
-		// self.rows 	= rows;
-		// self.player = player;
-		self.html 	= html;
+		self.html 		= html;
 
 		return self;
 

@@ -34,7 +34,7 @@ var Board = function ( id ) {
 	board.id 				= id;
 	board.html				= null;
 	board.stats				= null;
-	board.fieldHTML				= null;
+	board.field 			= null;
 
 	board.width				= 35;
 	board.height			= 30;
@@ -62,25 +62,46 @@ var Board = function ( id ) {
 		var html 		= document.createElement( "div" );
 		html.className 	= "game-container";
 
-		var stats 		= StatsDisplay( html );
-		var field 		= Field( 1 );
+		self.html 	= html;
+
+		return self;
+	};  // end Board.buildHTML()
+
+
+	board.addObjects = function () {
+	/*
+
+	*/
+		var self = this;
+
+		var stats 	= StatsDisplay( self.html );
+		var field 	= Field( 1 );
 
 		stats.init();
 		field.init();
 
-		html.appendChild( stats.topbar );
-		html.appendChild( field.html );
-		// append sidebar
-		html.appendChild( stats.bottombar );
-
-
 		self.stats 	= stats;
-		self.fieldHTML 	= field;
-		self.html 	= html;
+		self.field 	= field;
 
 		return self;
+	};  // end Board.addObjects()
 
-	};  // end Board.buildHTML()
+
+	board.appendChildren = function () {
+	/*
+
+	*/
+		var self 		= this;
+		var selfHTML_ 	= this.html;
+		var stats_ 		= self.stats;
+
+		selfHTML_.appendChild( stats_.topbar );
+		selfHTML_.appendChild( self.field.html );
+		// append sidebar
+		selfHTML_.appendChild( stats_.bottombar );
+
+		return self;
+	};  // end Board.appendChildren()
 
 
 	// =============
@@ -107,7 +128,7 @@ var Board = function ( id ) {
 	*/
 		var self = this;
 
-		var field_ 		 = self.fieldHTML;
+		var field_ 		 = self.field;
 		var stats_ 		 = self.stats;
 		var currentTime_ = self.currentTime;
 
@@ -150,6 +171,8 @@ var Board = function ( id ) {
 		var self = this;
 
 		self.buildHTML( self.id );
+		self.addObjects();
+		self.appendChildren();
 		// var selfHTML = self.html;
 
 		document.body.appendChild( self.html );

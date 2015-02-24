@@ -395,7 +395,6 @@ var board_id_count = 1;
 
 var BoardA = Board( "board_" + board_id_count );
 BoardA.init();
-console.log(BoardA.fieldHTML);
 
 //------------
 
@@ -414,5 +413,4 @@ GameContA.insertBefore( StatsA.topbar, fieldAElem );
 GameContA.appendChild( StatsA.bottombar, fieldAElem );
 
 update();
-console.log(BoardA.fieldHTML);
 BoardA.update();
