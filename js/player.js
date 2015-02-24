@@ -10,7 +10,7 @@ is incorrect, shows size with margin and border
 
 'use strict'
 
-var Player = function ( parent, id ) {
+var Player = function ( fieldHTML, id ) {
 /*
 
 */
@@ -18,16 +18,16 @@ var Player = function ( parent, id ) {
 
 	// player.state = {};
 
-	player.leftKeyList 	= [ "a", "left" ];
+	player.leftKeyList 		= [ "a", "left" ];
 	player.rightKeyList 	= [ "d", "right" ];
-	player.fireKeyList 	= [ "space", "return", "up" ];
+	player.fireKeyList 		= [ "space", "return", "up" ];
 	// Possible values: "left", "right", "none"
 	player.direction 		= "none";
 	player.speed 			= 1;
 
 	player.html 			= null;
 
-	player.field 			= document.getElementsByClassName("field")[0];
+	player.fieldHTML 		= fieldHTML;
 
 	player.buildHTML = function () {
 	/*
@@ -60,15 +60,15 @@ var Player = function ( parent, id ) {
 
 	*/
 		var self 		= this;
-		var selfHTML 	= self.html;
+		var selfHTML_ 	= self.html;
 		// If nothing else changes, movement will be 0
 		var moveVector 	= 0;
-		var left 		= parseFloat( selfHTML.dataset.left );
-		var speedPx 	= Util.convertEmsToPixels( selfHTML, self.speed );
+		var left 		= parseFloat( selfHTML_.dataset.left );
+		var speedPx 	= Util.convertEmsToPixels( selfHTML_, self.speed );
 
 		// Limit to inside parent
-		// var whichEdgeHit = Util.whichEdgeHit( selfHTML, self.field, speedPx );
-		var whichEdgeHit = Util.whichEdgeHit( selfHTML, self.field, self.speed );
+		// var whichEdgeHit = Util.whichEdgeHit( selfHTML_, self.fieldHTML, speedPx );
+		var whichEdgeHit = Util.whichEdgeHit( selfHTML_, self.fieldHTML, self.speed );
 
 		// As long as we're not out of bounds
 		if ( direction !== whichEdgeHit ) {
@@ -80,9 +80,9 @@ var Player = function ( parent, id ) {
 
 		// Implement any changes to movement
 		left += moveVector;
-		selfHTML.dataset.left = left;
-		selfHTML.style.left = left + "%";
-		// selfHTML.style.left = left + "rem";
+		selfHTML_.dataset.left = left;
+		selfHTML_.style.left = left + "%";
+		// selfHTML_.style.left = left + "rem";
 
 		return self;
 	};  // end Player.move()
@@ -95,11 +95,11 @@ var Player = function ( parent, id ) {
 		var self = this;
 
 		var bullet = Bullet( 1, "up" );
-		bullet.field = self.field;
+		bullet.fieldHTML = self.fieldHTML;
 		bullet.buildHTML( self.html );
 
 		playerBulletList.push( bullet );
-		self.field.appendChild( bullet.html );
+		self.fieldHTML.appendChild( bullet.html );
 
 		return self;
 	};
@@ -164,7 +164,7 @@ var Player = function ( parent, id ) {
 	for ( var keyi = 0; keyi < player.fireKeyList.length; keyi++ ) {
 
 		player.bindInput( player.fireKeyList[ keyi ],
-			function () { player.shoot( player.field ); },
+			function () { player.shoot( player.fieldHTML ); },
 			function () {  },
 			player
 		);

@@ -40,7 +40,7 @@ Returns an other of type Other in the position indicated with "left"
 
 	other.class	= type.class;
 	other.html 	= null;
-	other.field	= document.getElementsByClassName("field")[0];
+	other.fieldHTML	= document.getElementsByClassName("field")[0];
 
 	other.points	= type.points;
 	other.killed	= false;
@@ -104,11 +104,11 @@ Returns an other of type Other in the position indicated with "left"
 		var self = this;
 
 		var bullet = Bullet( 1, "down" );
-		bullet.field = self.field;
+		bullet.fieldHTML = self.fieldHTML;
 		bullet.buildHTML( self.html );
 
 		othersBulletList.push( bullet );
-		self.field.appendChild( bullet.html );
+		self.fieldHTML.appendChild( bullet.html );
 
 // DIMENSION LINES NOT WORKING
 		// var dimLineTop = document.createElement("div");

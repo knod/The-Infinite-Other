@@ -34,7 +34,7 @@ var Board = function ( id ) {
 	board.id 				= id;
 	board.html				= null;
 	board.stats				= null;
-	board.field				= null;
+	board.fieldHTML				= null;
 
 	board.width				= 35;
 	board.height			= 30;
@@ -75,7 +75,7 @@ var Board = function ( id ) {
 
 
 		self.stats 	= stats;
-		self.field 	= field;
+		self.fieldHTML 	= field;
 		self.html 	= html;
 
 		return self;
@@ -107,7 +107,7 @@ var Board = function ( id ) {
 	*/
 		var self = this;
 
-		var field_ 		 = self.field;
+		var field_ 		 = self.fieldHTML;
 		var stats_ 		 = self.stats;
 		var currentTime_ = self.currentTime;
 
@@ -137,7 +137,7 @@ var Board = function ( id ) {
 			// ===========
 			self.currentTime = Date.now();
 
-			requestAnimationFrame( self.update );
+			requestAnimationFrame( self.update.bind( self ) );
 
 		}  // end if( !gameOver )
 	};  // end Board.update()

@@ -89,9 +89,6 @@ determine its size and position?
 
 	var colPercent	= (100 - otherWidth) / (numCols - 1);
 
-	var player1 	= Player( 1 );
-	var playerList 	= [ player1 ];
-
 	var playerBulletList 	= [];
 	var othersBulletList 	= [];
 	var barrierElementsList = [];
@@ -398,11 +395,13 @@ var board_id_count = 1;
 
 var BoardA = Board( "board_" + board_id_count );
 BoardA.init();
-console.log(BoardA.field);
+console.log(BoardA.fieldHTML);
 
 //------------
 
 var fieldAElem = document.getElementsByClassName("field")[0];
+var player1 	= Player( fieldAElem, 1 );
+var playerList 	= [ player1 ];
 addPlayers( fieldAElem, playerList );
 
 var GameContA = document.getElementsByClassName("game-container")[0];
@@ -415,5 +414,5 @@ GameContA.insertBefore( StatsA.topbar, fieldAElem );
 GameContA.appendChild( StatsA.bottombar, fieldAElem );
 
 update();
-console.log(BoardA.field);
+console.log(BoardA.fieldHTML);
 BoardA.update();

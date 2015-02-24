@@ -107,23 +107,54 @@ var Field = function ( id ) {
 		var html 		= document.createElement( "section" );
 		html.className 	= "field";
 
-		var rows 		= self.buildRows( numRows );
+		// var rows 		= self.buildRows( numRows );
 
-		for ( var rowi = 0; rowi < rows.length; rowi++ ) {
-			html.appendChild( rows[ rowi ] );
-		}  // end for ( rowi )
+		// for ( var rowi = 0; rowi < rows.length; rowi++ ) {
+		// 	html.appendChild( rows[ rowi ] );
+		// }  // end for ( rowi )
 
-		var player 		= Player( 1 );
-		html.appendChild( player.html );
+		// var player 		= Player( self.html, 1 );
+		// html.appendChild( player.html );
 
 
-		self.rows 	= rows;
-		self.player = player;
+		// self.rows 	= rows;
+		// self.player = player;
 		self.html 	= html;
 
 		return self;
 
 	};  // end Field.buildHTML()
+
+	
+	field.addObjects = function () {
+	/*
+
+	*/
+		var self = this;
+
+		self.rows 	= self.buildRows( numRows );
+		self.player = Player( self.html, 1 );
+
+		return self;
+	};  // end Field.addObjects()
+
+
+	field.appendChildren = function () {
+	/*
+
+	*/
+		var self 		= this;
+		var selfHTML_ 	= this.html;
+		var rows_ 		= self.rows;
+
+		for ( var rowi = 0; rowi < rows_.length; rowi++ ) {
+			selfHTML_.appendChild( rows_[ rowi ] );
+		}  // end for ( rowi )
+
+		selfHTML_.appendChild( self.player.html );
+
+		return self;
+	};  // end Field.appendChildren()
 
 
 	// ============
@@ -270,6 +301,8 @@ var Field = function ( id ) {
 		var self = this;
 
 		self.buildHTML();
+		self.addObjects();
+		self.appendChildren();
 
 		return self
 	};  // end Field.init()

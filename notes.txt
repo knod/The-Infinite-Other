@@ -91,6 +91,63 @@ TEMPLATES
 
 
 
-	for ( var rowi = 0; rowi < (numRows - 1); rowi++ ) {
-			
+	for ( var rowi = 0; rowi < things.length; rowi++ ) {
+		var thing = thins[ rowi ];
+
+
 	}
+
+
+
+
+	console.trace()
+
+
+============
+Possibly Useful
+============
+
+Making sure the "this" is correct
+Does this.Bind have to be called every time you want to make sure of
+	the "this"?
+// Define the base class for all object classes.
+function BaseObject()
+{
+// Class properties.
+}
+ 
+// Method returns a class-bound vesion of the passed-in
+// function; this will execute in the context of the
+// originating object (this).
+BaseObject.prototype.Bind = function( fnMethod, arguments_ )
+{
+    var objSelf = this;
+ 
+    // Return a method that will call the given method
+    // in the context of THIS object.
+    return( function()
+        {
+            if (arguments_ === undefined)
+                return( fnMethod.apply( objSelf, arguments ) );
+            else
+                return( fnMethod.apply( objSelf, arguments_ ) );
+        } );
+} ;
+
+// this.Bind( func, arguments );
+
+
+
+
+
+	util.callWithThis = function ( objSelf, fnMethod, fnArguments ) {
+	/* ( {}, func, [] ) -> func
+
+	Make sure the "this" in the function is the object that you want
+	*/
+		return ( function () {
+			return ( fnMethod.apply( objSelf, fnArguments ) );
+		} );
+
+	};  // end Utilities.bind()
+

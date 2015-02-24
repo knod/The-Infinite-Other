@@ -9,7 +9,7 @@ var Bullet = function ( id, direction ) {
 	var bullet = {};
 
 	bullet.html 	= null;
-	bullet.field 	= null;
+	bullet.fieldHTML 	= null;
 
 	// Dimensions and positions in pixels
 	// Why do the bullets' relative screen space adjust when zoom
@@ -36,7 +36,7 @@ var Bullet = function ( id, direction ) {
 
 	*/
 		var self = this;
-		var field = self.field;
+		var field = self.fieldHTML;
 		// ( childElem, ancestorElem, offsetType )
 		// TODO: field of shooter or field of self?
 
