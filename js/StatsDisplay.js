@@ -91,7 +91,7 @@ Stats to be displayed to player as they play the game
 		timer.appendChild( timeValSpan );
 
 		self.elapsedTime = timeValNode;
-debugger;
+
 		return timer;
 
 	};  // end StatsDisplay.buildTimer)
