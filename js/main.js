@@ -96,6 +96,7 @@ determine its size and position?
 	// THIS IS ALL WRONG, FIX - game containers and their contents should be
 	// created at the same time. Perhaps updates should be for containers as
 	// well.
+	// -------- MOVED -------------
 	var addPlayers = function ( parent, playerList ) {
 	/*
 
@@ -128,16 +129,6 @@ determine its size and position?
 
 		return othersList;
 	};  // end buildOtherRow()
-
-
-	var buildRow = function ( rowElem, node ) {
-	/* ( HTML, HTML ) -> HTML
-	 Given a row element and a set of classes (??),
-	 creates a row full of elements with that class
-	*/
-
-
-	};  // end buildRow()
 
 
 	var buildOthersGrid = function ( rowMap, Other, mappedOthers ) {
@@ -405,7 +396,6 @@ addPlayers( fieldAElem, playerList );
 
 var GameContA = document.getElementsByClassName("game-container")[0];
 var FieldA = Field(1);
-FieldA.init();
 
 var StatsA = StatsDisplay( GameContA );
 StatsA.init();

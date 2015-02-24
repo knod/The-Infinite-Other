@@ -14,7 +14,6 @@ var Field = function ( id ) {
 	var colPercent			= (100 - otherWidth) / (numCols - 1);
 
 	field.rows 				= [];
-
 	// Only needed for setup
 	var numRows				= 5;
 	var rowHeight			= 8;
@@ -66,11 +65,31 @@ var Field = function ( id ) {
 	// ===========
 	// SETUP
 	// ===========
+	field.buildOthersGrid = function ( rowMap, Other, mappedOthers ) {
+	/* ( [], func{}, {} ) -> [ [ Other ] ]
+
+	Returns a list of Other's go in each row. Used to then add Other's
+	html to the currently empty row elements
+
+	rowMap: list of which types of objects go in which row. Those strings will
+		be used to get objects from mappedOthers
+	mappedOthers: object of objects containing the values for the Others to be generated
+	*/
+		var self = this;
+		var rows = [];
+
+		for ( var rowi = 0; rowi < rowMap.length; rowi++ ) {
+			var typeVal 	= rowMap[ rowi ];
+			var othersList 	= buildOthersRow( Other, typeVal, mappedOthers );
+			rows.push( othersList );
+		}
+
+		return rows;
+
+	};  // end Field.buildOthersGrid()
 
 
-
-
-	field.buildRows = function ( numRows ) {
+	field.buildRowsHTML = function ( numRows ) {
 	/*
 
 	*/
@@ -95,7 +114,7 @@ var Field = function ( id ) {
 		}  // end for ( rowNum )
 
 		return rows;
-	};  // end Field.buildRows()
+	};  // end Field.buildRowsHTML()
 
 
 	field.buildHTML = function () {
@@ -119,8 +138,11 @@ var Field = function ( id ) {
 	*/
 		var self = this;
 
-		self.rows 	= self.buildRows( numRows );
+		self.rows 	= self.buildRowsHTML( numRows );
 		self.player = Player( self.html, 1 );
+
+		// OTHERS
+
 
 		return self;
 	};  // end Field.addObjects()
@@ -281,18 +303,11 @@ var Field = function ( id ) {
 	};  // End Field.update()
 
 
-	field.init = function () {
-	/*
-
-	*/
-		var self = this;
-
-		self.buildHTML();
-		self.addObjects();
-		self.appendChildren();
-
-		return self
-	};  // end Field.init()
+	// rowMap is temporary, it can't be in here...
+	// field.buildOthersGrid( rowMap );
+	field.buildHTML();
+	field.addObjects();
+	field.appendChildren();
 
 
 

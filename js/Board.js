@@ -78,7 +78,6 @@ var Board = function ( id ) {
 		var field 	= Field( 1 );
 
 		stats.init();
-		field.init();
 
 		self.stats 	= stats;
 		self.field 	= field;
