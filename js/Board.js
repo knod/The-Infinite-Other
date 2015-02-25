@@ -61,6 +61,7 @@ var Board = function ( id ) {
 
 		var html 		= document.createElement( "div" );
 		html.className 	= "game-container";
+		html.id			= self.id;
 
 		self.html 	= html;
 

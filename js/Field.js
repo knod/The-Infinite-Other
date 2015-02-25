@@ -18,12 +18,11 @@ var Field = function ( id, boardHTML ) {
 	field.rowWidth			= 88;
 	field.rowMap			= ["1", "2", "2", "3", "3"];
 
+	field.otherWidth 		= 4;
 	field.numCols			= 11;
-	field.colPercent		= (100 - otherWidth) / (numCols - 1);
+	field.colPercent		= (100 - field.otherWidth) / (field.numCols - 1);
 
 	field.numOthers			= field.numCols * field.rowMap.length;
-
-	field.otherWidth 		= 4;
 	field.othersGrid		= [];
 
 	field.player 			= null;
@@ -40,7 +39,7 @@ var Field = function ( id, boardHTML ) {
 	// Hor distance must be the remaining width of the field/16
 	// 88% is a row width
 	// In %'s
-	field.otherHorSpeed			= ( 100 - rowWidth ) / 16;
+	field.otherHorSpeed			= ( 100 - field.rowWidth ) / 16;
 	// Pause between movement
 	field.otherPauseModifier 	= 2;
 	field.otherPauseExponent	= 1.55;
@@ -633,7 +632,7 @@ debugger;
 		// Taken care of by currentTime passed in
 		// self.newTime = Date.now()
 
-		return gameOver;
+		return self.gameOver;
 	};  // End Field.update()
 
 	// ================
