@@ -36,6 +36,7 @@ TODO:
 - High score
 - Make modular shoot function
 - Make sidebar for progress/score
+- Current time can be global
 
 ---- ? ----
 - Unit tests
@@ -107,6 +108,7 @@ determine its size and position?
 
 	};  // end addPlayers()
 
+	// -------- MOVED -------------
 	var buildOthersRow = function ( Other, type, mappedOthers ) {
 	/* ( func{}, str, {} ) -> [Other]
 	
@@ -130,7 +132,7 @@ determine its size and position?
 		return othersList;
 	};  // end buildOtherRow()
 
-
+	// -------- MOVED -------------
 	var buildOthersGrid = function ( rowMap, Other, mappedOthers ) {
 	/* ( [], func{}, {} ) -> [ [ Other ] ]
 
@@ -154,7 +156,7 @@ determine its size and position?
 
 	};  // end buildOthersGrid()
 
-
+	// -------- MOVED -------------
 	var appendToRows = function ( htmlRows, toAppend ) {
 	/* ( [HTML], [[ HTML ]] ) -> [HTML]
 
@@ -177,6 +179,7 @@ determine its size and position?
 
 	};  // end appendRows()
 
+	// -------- MOVED -------------
 	// in rem's
 	// var otherHorDistance 	= 0.25;  // MUST BE ABLE TO ADD UP TO 1rem
 	var otherVertDistance 	= 0.8;  // Doesn't matter if it overlaps
@@ -184,6 +187,7 @@ determine its size and position?
 	// 88% is a row width
 	var otherHorDistance	= ( 100 - rowWidth ) / 16;
 
+	// -------- MOVED -------------
 	// TODO: needs a different name now that it triggers subsequent rows
 	var moveHorRows = function ( rowsHTMLList, indx ) {
 	/* ( DOM Obj, int ) -> same

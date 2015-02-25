@@ -51,6 +51,14 @@ page/game
 
 Each field.update() returns [lostLife, score, whichEnd]. Losing a life happens before losing a game.
 
+
+=========================
+CODE SPECIFIC QUESTIONS
+=========================
+- One long list of Others? Or collision digs until it reaches a non-list object then works its way out again.
+- .collide returns whether object should be destroyed or not, then it gets removed from the list of not.
+
+
 =============
 THOUGHTS
 =============

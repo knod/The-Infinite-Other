@@ -30,13 +30,17 @@ var Field = function ( id ) {
 
 	field.barriers	 		= [];
 
-	// In rem's
+	// In %'s
 	// Needs to overlap?
-	var otherVertDistance 	= 0.8;
+	field.otherVertSpeed 	= 3.2; 
 	// Hor distance must be the remaining width of the field/16
 	// 88% is a row width
-	// In %
-	var otherHorDistance	= ( 100 - rowWidth ) / 16;
+	// In %'s
+	field.otherHorSpeed			= ( 100 - rowWidth ) / 16;
+	// Pause between movement
+	field.otherPauseModifier 	= 2;
+	field.otherPauseExponent	= 1.55;
+	field.otherBasePause 		= 1000;
 
 
 	// field.width		= dimensions.width; // 100%
@@ -143,6 +147,105 @@ var Field = function ( id ) {
 		return htmlRows;
 
 	};  // end Field.appendRows()
+
+
+
+	// TODO: needs a different name now that it triggers subsequent rows
+	field.moveHorRows = function ( rowsHTMLList, indx ) {
+	/* ( DOM Obj, int ) -> same
+
+	Moves row laterally depending on direction then
+	triggers the movement of the next row
+	*/
+		var self = this;
+
+		// If there are no rows left, stop
+		if ( indx < 0 ) {
+			return rowsHTMLList
+
+		// Otherwise, cycle through the rows, pausing between each row
+		} else {
+
+			var rowHTML 	= rowsHTMLList[ indx ];
+
+			// get the row's current direction and position
+			var direction 	= rowHTML.dataset.direction;
+			var left 		= parseFloat(rowHTML.dataset.left);
+
+			// Move accordingly
+			if ( direction === "right" ) {
+				left += self.otherHorSpeed;
+				rowHTML.dataset.left = left;
+				// rowHTML.style.left = left + "rem";
+				rowHTML.style.left = left + "%";
+
+			} else {
+				left -= self.otherHorSpeed;
+				rowHTML.dataset.left = left;
+				// rowHTML.style.left = left + "rem";
+				rowHTML.style.left = left + "%";
+			}
+
+			// NEXT LOOP
+			var newIndx = indx - 1;
+			
+			// Pause to give that good ye ol' Space Invader feel
+			// otherMovePos is currently in update.js
+			setTimeout( function() { self.moveHorRows( rowsHTMLList, newIndx ); },
+				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
+				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
+				// Start at about 100
+				self.otherBasePause/10 );
+
+		}  // end if (no row)
+
+	};  // end Field.moveHorRows()
+
+
+	field.moveDownRows = function ( rowsHTMLList, indx ) {
+	/* ( [DOM Obj], int ) -> bool
+
+	Moves row laterally depending on direction then
+	triggers the movement of the next row
+	*/
+		var self = this;
+		// TODO: Fix to proper end condition
+		var hitBottom = false;
+
+		// If there are no rows left, stop
+		if ( indx < 0 ) {
+			return rowsHTMLList
+
+		// Otherwise, cycle through the rows, pausing between each row
+		} else {
+
+			var rowHTML 		= rowsHTMLList[ indx ];
+			// TODO: Should end game condition really be in here, or all
+			// of them in one place?
+			// TODO: needs to be overlap with single AI
+			hitBottom = Util.doesOverlap( rowHTML, player1.html );
+
+			var top  			= parseFloat(rowHTML.dataset.top);
+			top 				+= self.otherVertSpeed;
+			rowHTML.dataset.top = top;
+			// TODO: Fix to percent
+			rowHTML.style.top 	= top + "%";
+
+			// NEXT LOOP
+			var newIndx 		= indx - 1;
+			
+			// Pause to give that good ye ol' Space Invader feel
+			// otherMovePos is currently in update.js
+			setTimeout( function() { self.moveDownRows( rowsHTMLList, newIndx ); },
+				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
+				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
+				// Start at about 100
+				self.otherBasePause/10 );
+
+		}  // end if (no row)
+
+		return hitBottom;
+	};  // end field.moveDownRows()
 
 
 	field.buildRowsHTML = function ( numRows, rowHeight ) {
