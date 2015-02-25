@@ -2,13 +2,14 @@
 
 'use strict'
 
-var Field = function ( id ) {
+var Field = function ( id, boardHTML ) {
 /* ( int ) -> Field
 
 */
 	var field = {};
 
 	field.html				= null;
+	field.boardHTML 		= boardHTML;
 
 	field.rows 				= [];
 	// vars only needed for setup, used once
@@ -20,7 +21,10 @@ var Field = function ( id ) {
 	field.numCols			= 11;
 	field.colPercent		= (100 - otherWidth) / (numCols - 1);
 
+	field.numOthers			= field.numCols * field.rowMap.length;
+
 	field.otherWidth 		= 4;
+	field.othersGrid		= [];
 
 	field.player 			= null;
 	field.playerBulletList 	= [];
@@ -50,9 +54,9 @@ var Field = function ( id ) {
 	// TODO: Should these be set elsewhere? _init?
 	field.oldTime 			= Date.now();
 	// field.newTime 		= field.oldTime;
-	field.oldTimeAIAttack	= field.oldTime;
-	field.oldTimeAIMove		= field.oldTime;
-	field.oldTimePlayerShot	= field.oldTime;
+	field.lastTimeAIMoved	= field.oldTime;
+	field.lastTimeAIShot	= field.oldTime;
+	field.lastTimePlShot	= field.oldTime;
 
 	// For stats
 	field.mysteriousDeadCount	= 0;
@@ -89,7 +93,7 @@ var Field = function ( id ) {
 			var leftStr 	= leftVal + "%";
 
 			// Create an Other of this type with this css "left" value
-			var other 		= Other( mappedTypes[ type ], leftStr );
+			var other 		= Other( self.html, mappedTypes[ type ], leftStr );
 			other.buildHTML();
 			other.column 	= col;
 			// other.row	= rowNum;
@@ -112,7 +116,7 @@ var Field = function ( id ) {
 	*/
 		var self = this;
 		var grid = [];
-
+debugger;
 		// Build and add each row for the grid
 		for ( var rowi = 0; rowi < self.rowMap.length; rowi++ ) {
 			var typeVal 	= self.rowMap[ rowi ];
@@ -147,105 +151,6 @@ var Field = function ( id ) {
 		return htmlRows;
 
 	};  // end Field.appendRows()
-
-
-
-	// TODO: needs a different name now that it triggers subsequent rows
-	field.moveHorRows = function ( rowsHTMLList, indx ) {
-	/* ( DOM Obj, int ) -> same
-
-	Moves row laterally depending on direction then
-	triggers the movement of the next row
-	*/
-		var self = this;
-
-		// If there are no rows left, stop
-		if ( indx < 0 ) {
-			return rowsHTMLList
-
-		// Otherwise, cycle through the rows, pausing between each row
-		} else {
-
-			var rowHTML 	= rowsHTMLList[ indx ];
-
-			// get the row's current direction and position
-			var direction 	= rowHTML.dataset.direction;
-			var left 		= parseFloat(rowHTML.dataset.left);
-
-			// Move accordingly
-			if ( direction === "right" ) {
-				left += self.otherHorSpeed;
-				rowHTML.dataset.left = left;
-				// rowHTML.style.left = left + "rem";
-				rowHTML.style.left = left + "%";
-
-			} else {
-				left -= self.otherHorSpeed;
-				rowHTML.dataset.left = left;
-				// rowHTML.style.left = left + "rem";
-				rowHTML.style.left = left + "%";
-			}
-
-			// NEXT LOOP
-			var newIndx = indx - 1;
-			
-			// Pause to give that good ye ol' Space Invader feel
-			// otherMovePos is currently in update.js
-			setTimeout( function() { self.moveHorRows( rowsHTMLList, newIndx ); },
-				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
-				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
-				// Start at about 100
-				self.otherBasePause/10 );
-
-		}  // end if (no row)
-
-	};  // end Field.moveHorRows()
-
-
-	field.moveDownRows = function ( rowsHTMLList, indx ) {
-	/* ( [DOM Obj], int ) -> bool
-
-	Moves row laterally depending on direction then
-	triggers the movement of the next row
-	*/
-		var self = this;
-		// TODO: Fix to proper end condition
-		var hitBottom = false;
-
-		// If there are no rows left, stop
-		if ( indx < 0 ) {
-			return rowsHTMLList
-
-		// Otherwise, cycle through the rows, pausing between each row
-		} else {
-
-			var rowHTML 		= rowsHTMLList[ indx ];
-			// TODO: Should end game condition really be in here, or all
-			// of them in one place?
-			// TODO: needs to be overlap with single AI
-			hitBottom = Util.doesOverlap( rowHTML, player1.html );
-
-			var top  			= parseFloat(rowHTML.dataset.top);
-			top 				+= self.otherVertSpeed;
-			rowHTML.dataset.top = top;
-			// TODO: Fix to percent
-			rowHTML.style.top 	= top + "%";
-
-			// NEXT LOOP
-			var newIndx 		= indx - 1;
-			
-			// Pause to give that good ye ol' Space Invader feel
-			// otherMovePos is currently in update.js
-			setTimeout( function() { self.moveDownRows( rowsHTMLList, newIndx ); },
-				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
-				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
-				// Start at about 100
-				self.otherBasePause/10 );
-
-		}  // end if (no row)
-
-		return hitBottom;
-	};  // end field.moveDownRows()
 
 
 	field.buildRowsHTML = function ( numRows, rowHeight ) {
@@ -284,8 +189,8 @@ var Field = function ( id ) {
 
 		var html 		= document.createElement( "section" );
 		html.className 	= "field";
+		debugger;
 		self.html 		= html;
-
 		return self;
 
 	};  // end Field.buildHTML()
@@ -329,7 +234,192 @@ var Field = function ( id ) {
 	// ============
 	// OTHERS
 	// ============
-	// Update Group
+	// ---- MOVEMENT ----
+	// TODO: needs a different name now that it triggers subsequent rows
+	field.moveHorRows = function ( rowsHTMLList, indx ) {
+	/* ( DOM Obj, int ) -> same
+
+	Moves row laterally depending on direction then
+	triggers the movement of the next row
+	*/
+		var self = this;
+
+		// If there are no rows left, stop
+		if ( indx < 0 ) {
+			return rowsHTMLList
+
+		// Otherwise, cycle through the rows, pausing between each row
+		} else {
+
+			var rowHTML 	= rowsHTMLList[ indx ];
+
+			// get the row's current direction and position
+			var direction 	= rowHTML.dataset.direction;
+			var left 		= parseFloat(rowHTML.dataset.left);
+
+			// Move accordingly
+			if ( direction === "right" ) {
+				left += self.otherHorSpeed;
+				rowHTML.dataset.left = left;
+				rowHTML.style.left = left + "%";
+
+			} else {
+				left -= self.otherHorSpeed;
+				rowHTML.dataset.left = left;
+				rowHTML.style.left = left + "%";
+			}
+
+			// NEXT LOOP
+			var newIndx = indx - 1;
+			
+			// Pause to give that good ye ol' Space Invader feel
+			// otherMovePos is currently in update.js
+			setTimeout( function() { self.moveHorRows( rowsHTMLList, newIndx ); },
+				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
+				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
+				// Start at about 100
+				self.otherBasePause/10 );
+
+		}  // end if (no row)
+
+	};  // end Field.moveHorRows()
+
+
+	field.moveDownRows = function ( rowsHTMLList, indx ) {
+	/* ( [DOM Obj], int ) -> bool
+
+	Moves row laterally depending on direction then
+	triggers the movement of the next row
+	*/
+		var self = this;
+		// TODO: Fix to proper end condition
+		var hitBottom = false;
+
+		// If there are no rows left, stop
+		if ( indx < 0 ) {
+			return rowsHTMLList
+
+		// Otherwise, cycle through the rows, pausing between each row
+		} else {
+
+			var rowHTML 		= rowsHTMLList[ indx ];
+			// TODO: Should end game condition really be in here, or all
+			// of them in one place?
+			// TODO: needs to be overlap with single AI
+			hitBottom = Util.doesOverlap( rowHTML, self.player.html );
+
+			var top  			= parseFloat(rowHTML.dataset.top);
+			top 				+= self.otherVertSpeed;
+			rowHTML.dataset.top = top;
+			// TODO: Fix to percent
+			rowHTML.style.top 	= top + "%";
+
+			// NEXT LOOP
+			var newIndx 		= indx - 1;
+			
+			// Pause to give that good ye ol' Space Invader feel
+			// otherMovePos is currently in update.js
+			setTimeout( function() { self.moveDownRows( rowsHTMLList, newIndx ); },
+				// WARNING!!: THIS INTERVAL ALWAYS HAS TO BE SMALLER
+				// THAN THE ONE THAT CALLS THE MOVEMENT OF ALL THE ROWS
+				// Start at about 100
+				self.otherBasePause/10 );
+
+		}  // end if (no row)
+
+		return hitBottom;
+	};  // end field.moveDownRows()
+
+
+	field.changeDirection = function ( rowsHTMLList ) {
+	/* ( DOM Obj ) -> same
+
+	Changes ai row direction dataset value to its opposite.
+	Lowers ai rows on each change of direction.
+	*/
+		var self = this;
+
+		for ( var rowi = 0; rowi < rowsHTMLList.length; rowi++ ) {
+			var rowHTML = rowsHTMLList[ rowi ];
+
+			// Change direction data value to opposite
+			var direction = rowHTML.dataset.direction;
+			if ( direction === "right" ) {
+				rowHTML.dataset.direction = "left";
+			} else {
+				rowHTML.dataset.direction = "right";
+			}
+
+		}  // end for( row )
+
+		// Move rows down in a staggered style
+		// TODO: !!! IMPORTANT: DO NOT CHANGE gameOver IN HERE LIKE THIS !!!
+		self.gameOver = self.moveDownRows( rowsHTMLList, (rowsHTMLList.length - 1) );
+
+		// TODO: What to return? Container or rows list or what?
+		return rowsHTMLList;
+	};  // end Field.changeDirection();
+
+
+
+	field.needDirectionChange = function ( boardHTML ) {
+	/* ( DOM Obj ) -> bool
+
+	Determines if the ai rows need to change direction.
+	*/
+		var self = this;
+
+		var needChange = false;
+
+		// TODO: Change to individual others so can just check individual positions
+		// TODO: Shouldn't "game engines" have the ability to have parent objects?
+		// TODO: Check position between any two objects
+		// var leftmost 	= 0;
+		// var rightmost	= 100 - field.otherWidth;
+
+		var containerLeft 	= boardHTML.getBoundingClientRect().left;
+		var containerRight 	= boardHTML.getBoundingClientRect().right;
+		var allOthers 		= boardHTML.getElementsByClassName( "other" );
+
+		// If any "other"s are out of their game container, true will be returned
+		for ( var otheri = 0; otheri < allOthers.length; otheri++ ) {
+			var other = allOthers[ otheri ];
+
+			var edgeHit = Util.whichEdgeHit( other, boardHTML, self.otherHorSpeed );
+
+			if ( edgeHit === "right" || edgeHit === "left" ) { needChange = true; }
+
+		}  // for (other (HTML) )
+
+		return needChange;
+
+	};  // end Field.needDirectionChange()
+
+
+	field.triggerRowMovement = function ( boardHTML ) {
+	// TODO: Add pause between the movement of each row
+	/* ( [HTML] ) -> same
+
+	Changes direction if needed then triggers the movement of
+	all rows in the boardHTML
+	*/
+		var self = this;
+
+		var othersRows = boardHTML.getElementsByClassName( "row" );
+
+		var needChange = self.needDirectionChange( boardHTML );
+		if ( needChange ) {
+			self.changeDirection( othersRows );
+		}
+
+		// Start with the first row
+		self.moveHorRows( othersRows, (othersRows.length - 1) );
+
+		return boardHTML;
+	};  // end Field.triggerRowMovement()
+
+	
+	// ---- ATTACKING ----
 
 	// TODO: Should this be a method for every field, or should
 	// there just be one function for this, like on Field itself?
@@ -413,10 +503,71 @@ var Field = function ( id ) {
 		var self = this;
 
 		var randomLowestOther = self.getRandomLowestOther( othersGrid );
-		randomLowestOther.shoot( self.html );
+		self.othersBulletList.push( randomLowestOther.shoot( self.html ) );
 
 		return this;
 	};  // End Field.attack()
+
+
+
+	// TODO: Do collisions in one place and movement in another place?
+	field.updateBullets = function ( bulletList, objLists ) {
+	/* ( [], [[{}]] ) -> 
+
+	Moves bullets in the bulletList, destroys them if they git a wall or
+	collide with something, destroyes anything they collide with
+	*/
+		for ( var bulleti = 0; bulleti < bulletList.length; bulleti++ ) {
+
+			var bullet = bulletList[ bulleti ];
+			bullet.move( bullet.direction );
+
+			// Will we need to destroy the bullet?
+			var needDestroyBullet = false;
+			var collidee = null;
+
+			// check for collision with parent
+			var exitee = bullet.goingOutOfBounds( bullet.fieldHTML );
+			if ( exitee !== null ) {
+				needDestroyBullet = true; 
+
+			// If parent doesn't destroy, check for other collisions
+			} else {
+
+				for ( var objListi = 0; objListi < objLists.length; objListi++ ) {
+					var objs = objLists[ objListi ];
+
+					for ( var obji = 0; obji < objs.length; obji++ ) {
+						var obj = objs[ obji ];
+
+						// Test for collision and act appropriately
+						var collidee = bullet.collisionTest( obj );
+						// If there was actually a collision with something,
+						// destroy the thing and mark bullet for destruciton
+						if ( collidee !== null ) {
+							needDestroyBullet = true;
+							// Destroy collidee, in DOM and in JS
+							var elem = collidee.html;
+							elem.parentNode.removeChild(elem);
+							objs.splice( obji, 1 );
+						}
+					}  // end for ( obj )
+				}  // end for ( objList )
+			}  // end if ( exit )
+
+			if ( needDestroyBullet ) {
+				// Remove Bullet from DOM
+				var elem = bullet.html;
+				elem.parentNode.removeChild(elem);
+				// Remove from js
+				bulletList.splice( bulleti, 1 );
+
+			}  // end if ( needDestroyBullet )
+		}  // end for( bullet )
+		// TODO: return collisions?
+		return bulletList;
+	};  // End updateBullets()
+
 
 
 	field.update = function ( currentTime ) {
@@ -432,22 +583,44 @@ var Field = function ( id ) {
 		// =============
 		// PLAYER
 		// =============
-		self.player.move( self.player.direction );
+		var player_ = self.player;
+
+		field.lastTimePlShot;
+		player_.move( player_.direction );
 
 		// =============
 		// OTHERS
 		// =============
-		var shootTimeDiff = currentTime - self.oldTime;
 
+		// ---- MOVEMENT ----
+		// Pause between the moving of Others
+		// Starts at about 1000
+		var movePause 		= self.otherPauseModifier * Math.pow( self.numOthers, self.otherPauseExponent);
+		var moveTimeDiff 	= currentTime - self.lastTimeAIMoved;
+
+		if ( moveTimeDiff > movePause ) {
+			// This will move each row, delaying between each
+			self.triggerRowMovement( self.html );
+			// FOR NEXT LOOP
+			self.lastTimeAIMoved = currentTime;
+		}
+
+		// ---- ATTACKING ----
+		var othersGrid_		= self.othersGrid;
+		var shootTimeDiff 	= currentTime - self.lastTimeAIShot;
 		// TODO: set timeout for random length pausing between each attack
 		// Fix this later to be own grid
-		var randomWait = Math.pow( otherMovePause, 2 ) * Math.random();
-		var cappedWait = Math.max( 3000, randomWait );
+		var randomWait 		= Math.pow( movePause, 2 ) * Math.random();
+		var cappedWait 		= Math.max( 3000, randomWait );
 
 		if ( self.hostile && (shootTimeDiff > cappedWait) ) {
-			self.attack( gridA );
-			self.oldTime = currentTime;
+			self.attack( othersGrid_ );
+			// FOR NEXT LOOP
+			self.lastTimeAIShot = currentTime;
 		}
+
+		self.updateBullets( self.player.bulletList, [ othersGrid_[0], othersGrid_[1], othersGrid_[2], othersGrid_[3], othersGrid_[4] ] );
+		self.updateBullets( self.othersBulletList, [ [self.player] ] );
 
 		// Game Over if all Others are dead
 		var allGone = false;
@@ -457,17 +630,18 @@ var Field = function ( id ) {
 		// ============
 		// FOR NEXT LOOP
 		// ============
+		// Taken care of by currentTime passed in
 		// self.newTime = Date.now()
 
-		return false;
+		return gameOver;
 	};  // End Field.update()
 
 	// ================
 	// CREATE OWN VALUES/PROPERTIES
 	// ================
-	// rowMap is temporary, it can't be in here...
-	field.buildObjectGrid( Other, othersTypes );
 	field.buildHTML();
+	// rowMap is temporary, it can't be in here...
+	field.othersGrid = field.buildObjectGrid( Other, othersTypes );
 	field.addObjects();
 	field.appendChildren();
 

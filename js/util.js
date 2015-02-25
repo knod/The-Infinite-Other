@@ -35,6 +35,10 @@ var Utilities = function ( id ) {
 	};  // end Utilities.chooseRandom()
 
 
+	// ================
+	// COMPARE
+	// ================
+
 	util.hasSomeOverlap = function ( DOM1, DOM2 ) {
 	/* ( DOM, DOM ) -> bool
 
@@ -94,10 +98,12 @@ var Utilities = function ( id ) {
 
 
 	// WARNING: DOES NOT HANDLE MULTIPLE EDGES AT THE SAME TIME
+	// WARNING: ONLY FOR CHECKING ELEMENTS CONTAINED IN OTHER ELEMENTS
+	// TODO: Should this be called "outsideOfWhichEdge"? "pastWhichEdge"?
 	util.whichEdgeHit = function ( innerElem, surroundingElem, speed ) {
 	/* ( DOM, DOM, int ) -> str
 
-	speed IS GIVEN IN PIXELS
+	speed IS GIVEN IN %
 	If an edge is hit, returns name of that edge. If not, returns null.
 	Add a fraction (how much?) of speed to position of innerElem
 	in each direction to test if the next step could take it out of bounds.
@@ -116,7 +122,6 @@ var Utilities = function ( id ) {
 			futureBottom	= innerRect.bottom + buffer
 		;  // end vars
 
-
 		if ( futureLeft < surroundingRect.left ) { edgeHit = "left"; }
 		else if ( futureRight > surroundingRect.right ) { edgeHit = "right"; }
 		else if ( futureTop < surroundingRect.top ) { edgeHit = "top"; }
@@ -130,6 +135,76 @@ var Utilities = function ( id ) {
 		return edgeHit;
 	};  // end Utilities.whichEdgeHit()
 
+
+    util.getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
+    /* ( HTML, HTML, str ) -> num
+
+	childElem MUST HAVE ancestorElem AS AN ANCESTOR
+    */
+
+    	var totalOffset 	= 0;
+    	var currElem		= childElem;
+
+    	// Cycle through the ancestors, adding offsets together, until
+    	// the right ancestor is reached
+    	while ( (currElem !== ancestorElem) && (currElem !== document.body) ) {
+
+    		totalOffset += currElem[ offsetType ];
+    		// LOOP
+    		currElem = currElem.parentNode;
+    	}
+
+    	if ( currElem !== ancestorElem ) { totalOffset = "There was no such ancestor!"; }
+
+    	return totalOffset;
+
+    };  // End Utilities.getPixelOffsetFromAncestor()
+
+
+    // TODO: I suspect this isn't really very effective
+    util.distanceBetweenSides = function ( elem1, elem2, side1, side2 ) {
+    /* ( DOM obj, DOM obj, str, str ) -> int
+
+	Returns the distance between the two elements and their given sides
+	*/
+
+    	var side1 	= elem1.getBoundingClientRect()[ side1 ];
+    	var side2	= elem2.getBoundingClientRect()[ side2 ];
+
+    	return (side1 - side2);
+
+    };  // end Utilities.distanceBetweenSides()
+
+
+    // TODO: I suspect this isn't really very effective either
+    util.pastWhichEdge = function ( sideDiff, alongAxis ) {
+    /*
+
+	Parses int distance difference into which side the element is on
+    */
+    	var self = this;
+
+    	var passedSide = "none";
+
+    	if ( alongAxis === "y" ) {
+	    	if ( sideDiff < 0 ) { passedSide = "top"; }
+	    	else if ( sideDiff > 0 ) { passedSide = "bottom"; }
+    	} else if ( alongAxis === "x" ) {
+	    	if ( sideDiff < 0 ) { passedSide = "left"; }
+	    	else if ( sideDiff > 0 ) { passedSide = "right"; }
+    	} else {
+    		// Will this show the stack trace?
+    		console.error( "No axis has been given, so there's no way to tell if the difference is between the top and bottom, or the left and right." );
+    	}
+
+    	return passedSide;
+
+    };  // end Utilities.pastWhichEdge()
+
+
+	// ===============
+	// CONVERTING
+	// ===============
 
 	/*! getEmPixels  | Author: Tyson Matanich (http://matanich.com), 2013 | License: MIT */
 
@@ -216,29 +291,30 @@ var Utilities = function ( id ) {
     };  // end Utilities.convertPixelsToRems()
 
 
-    util.getPixelOffsetFromAncestor = function ( childElem, ancestorElem, offsetType ) {
-    /* ( HTML, HTML, str ) -> num
+    util.percentToPx = function ( percentVal, referenceElem, property ) {
+    /*  ( num, DOM obj, str ) ->
 
-	childElem MUST HAVE ancestorElem AS AN ANCESTOR
+	Convert's a percentage value into pixels based on the property of the 
+	give reference element.
+
+	WARNING: Should be based on the client property (the inside of the element),
+	which, I think, is what percent widths are based off. Don't use the offset
+	property. Should specifically be either clientWidth or clientHeight
+	WARNING: property must return a numerical value
+
+	TODO: build property based off of string by parsing property string (or
+	just check for the correct type of property and warn)
     */
 
-    	var totalOffset 	= 0;
-    	var currElem		= childElem;
+    	if( property.indexOf('client') === -1) {
+		  console.warn( "In percentToPx, the property given was not a client based property. Client based properties, like clientWidth or client Height are what html percent values are based off of." );
+		}
 
-    	// Cycle through the ancestors, adding offsets together, until
-    	// the right ancestor is reached
-    	while ( (currElem !== ancestorElem) && (currElem !== document.body) ) {
+    	var referenceProp 	= referenceElem[ property ];
+    	var pxVal 			= referenceProp * ( percentVal / 100 );
 
-    		totalOffset += currElem[ offsetType ];
-    		// LOOP
-    		currElem = currElem.parentNode;
-    	}
-
-    	if ( currElem !== ancestorElem ) { totalOffset = "There was no such ancestor!"; }
-
-    	return totalOffset;
-
-    };  // End Utilities.getPixelOffsetFromAncestor()
+    	return pxVal;
+    };  // end Utilities.percentToPx()
 
 
 	// http://stackoverflow.com/questions/5588465/javascript-parse-time-minutesseconds-from-miliseconds
@@ -254,7 +330,6 @@ var Utilities = function ( id ) {
     	if ( sec < 10 ) { sec = "0" + sec; }
 
     	return (min + ":" + sec)
-
 	};  // End Utilities.msToMMSS()
 
 

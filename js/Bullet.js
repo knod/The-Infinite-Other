@@ -2,14 +2,14 @@
 
 'use strict'
 
-var Bullet = function ( id, direction ) {
+var Bullet = function ( id, fieldHTML, direction ) {
 /* ( int, str ) -> Bullet
 
 */
 	var bullet = {};
 
 	bullet.html 	= null;
-	bullet.fieldHTML 	= null;
+	bullet.fieldHTML 	= fieldHTML;
 
 	// Dimensions and positions in pixels
 	// Why do the bullets' relative screen space adjust when zoom
@@ -24,7 +24,7 @@ var Bullet = function ( id, direction ) {
 	bullet.left 	= 0;
 
 	// MUST BE SMALLER THAN HEIGHT OF AI (MATH.)
-	// Currently in pixels
+	// Currently in %
 	bullet.speed 	= 1;
 
 	bullet.direction 			= direction;

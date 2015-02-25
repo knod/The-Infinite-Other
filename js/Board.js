@@ -75,7 +75,7 @@ var Board = function ( id ) {
 		var self = this;
 
 		var stats 	= StatsDisplay( self.html );
-		var field 	= Field( 1 );
+		var field 	= Field( 1, self.html );
 
 		stats.init();
 

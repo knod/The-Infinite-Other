@@ -117,18 +117,18 @@ Loop to update the whole game
 
 	// Pause between the moving of others
 	// Starts at about 1000
-	otherMovePause = otherSpeedModifier * Math.pow(numOthers, otherSpeedExponent);
-	var timeDiff = newTime - oldTime;
+	// otherMovePause = otherSpeedModifier * Math.pow(numOthers, otherSpeedExponent);
+	// var timeDiff = newTime - oldTime;
 
-	if ( timeDiff > otherMovePause ) {
-		// This will move each row, delaying between each
-		triggerRowMovement( fieldAElem );
-		// FOR NEXT LOOP
-		oldTime = newTime;
-	}
+	// if ( timeDiff > otherMovePause ) {
+	// 	// This will move each row, delaying between each
+	// 	triggerRowMovement( fieldAElem );
+	// 	// FOR NEXT LOOP
+	// 	oldTime = newTime;
+	// }
 
-	// ATTACK
-	FieldA.update( newTime );
+	// // ATTACK
+	// FieldA.update( newTime );
 
 	// ====================
 	// FOR NEXT LOOP

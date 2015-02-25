@@ -238,7 +238,7 @@ determine its size and position?
 
 	};  // end moveHorRows()
 
-
+	// -------- MOVED -------------
 	var moveDownRows = function ( rowsHTMLList, indx ) {
 	/* ( [DOM Obj], int ) -> bool
 
@@ -281,6 +281,7 @@ determine its size and position?
 		return hitBottom;
 	};  // end moveDownRows()
 
+	// -------- MOVED -------------
 	// Also drops on each change of direction
 	var changeDirection = function ( gameContainerHTML ) {
 	/* ( DOM Obj ) -> same
@@ -305,7 +306,6 @@ determine its size and position?
 		}  // end for( row )
 
 		// Move rows down in a staggered style
-		// TODO: !!! Right now wrong. An AI (row?) has to overlap player during direction change
 		// TODO: !!! IMPORTANT: DO NOT CHANGE gameOver IN HERE LIKE THIS !!!
 		gameOver = moveDownRows( othersRows, (othersRows.length - 1) );
 
@@ -372,8 +372,8 @@ determine its size and position?
 // TESTS
 // =============
 
-var gridA = buildOthersGrid( rowMap, Other, othersTypes );
-appendToRows( rowList, gridA );
+// var gridA = buildOthersGrid( rowMap, Other, othersTypes );
+// appendToRows( rowList, gridA );
 
 // THIS WOULD CREATE A REDUNDANT LIST AND OBJ WOULD HAVE TO BE
 // REMOVED FROM ALL LISTS
@@ -391,20 +391,20 @@ var board_id_count = 1;
 var BoardA = Board( "board_" + board_id_count );
 BoardA.init();
 
-//------------
+// //------------
 
-var fieldAElem = document.getElementsByClassName("field")[0];
-var player1 	= Player( fieldAElem, 1 );
-var playerList 	= [ player1 ];
-addPlayers( fieldAElem, playerList );
+// var fieldAElem = document.getElementsByClassName("field")[0];
+// var player1 	= Player( fieldAElem, 1 );
+// var playerList 	= [ player1 ];
+// addPlayers( fieldAElem, playerList );
 
-var GameContA = document.getElementsByClassName("game-container")[0];
-var FieldA = Field(1);
+// var GameContA = document.getElementsByClassName("game-container")[0];
+// var FieldA = Field(1);
 
-var StatsA = StatsDisplay( GameContA );
-StatsA.init();
-GameContA.insertBefore( StatsA.topbar, fieldAElem );
-GameContA.appendChild( StatsA.bottombar, fieldAElem );
+// var StatsA = StatsDisplay( GameContA );
+// StatsA.init();
+// GameContA.insertBefore( StatsA.topbar, fieldAElem );
+// GameContA.appendChild( StatsA.bottombar, fieldAElem );
 
-update();
+// update();
 BoardA.update();

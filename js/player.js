@@ -23,11 +23,16 @@ var Player = function ( fieldHTML, id ) {
 	player.fireKeyList 		= [ "space", "return", "up" ];
 	// Possible values: "left", "right", "none"
 	player.direction 		= "none";
+	// In %
 	player.speed 			= 1;
 
 	player.html 			= null;
 
 	player.fieldHTML 		= fieldHTML;
+
+	// Add bullet list! Duh!
+	player.bulletList 		= [];
+
 
 	player.buildHTML = function () {
 	/*
@@ -89,19 +94,19 @@ var Player = function ( fieldHTML, id ) {
 
 
 	player.shoot = function () {
-	/* ( none ) -> Player
+	/* ( none ) -> Bullet
 
 	*/
 		var self = this;
 
-		var bullet = Bullet( 1, "up" );
-		bullet.fieldHTML = self.fieldHTML;
+		var bullet = Bullet( 1, self.fieldHTML, "up" );
+		// bullet.fieldHTML = self.fieldHTML;
 		bullet.buildHTML( self.html );
 
-		playerBulletList.push( bullet );
+		self.bulletList.push( bullet );
 		self.fieldHTML.appendChild( bullet.html );
 
-		return self;
+		return bullet;
 	};
 
 

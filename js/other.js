@@ -30,28 +30,27 @@ var othersTypes = {
 
 // Other Obj
 // ( JS Obj ) -> Other
-var Other = function ( type, left ) {
+var Other = function ( fieldHTML, type, left ) {
 /* ( {}, int ) -> Other
 
 Returns an other of type Other in the position indicated with "left"
 */
-
+debugger;
 	var other = {};
 
 	other.class	= type.class;
 	other.html 	= null;
-	other.fieldHTML	= document.getElementsByClassName("field")[0];
+	other.fieldHTML	= fieldHTML;
 
 	other.points	= type.points;
 	other.killed	= false;
 
 	// Position in rem's
-	other.left 	= left;
+	other.left 		= left;
 	other.top		= 0;
 	other.id 		= null;  // currently not in use
 
 	other.column 	= null;
-
 
 	// =============
 	// FUNCTIONS
@@ -98,16 +97,16 @@ Returns an other of type Other in the position indicated with "left"
 	}; // end other.die()
 
 	other.shoot = function () {
-	/* ( HTML ) -> Player
+	/* ( HTML ) -> Bullet
 
 	*/
 		var self = this;
-
-		var bullet = Bullet( 1, "down" );
-		bullet.fieldHTML = self.fieldHTML;
+debugger;
+		var bullet = Bullet( 1, self.fieldHTML, "down" );
+		// bullet.fieldHTML = self.fieldHTML;
 		bullet.buildHTML( self.html );
 
-		othersBulletList.push( bullet );
+		// self.bulletList.push( bullet );
 		self.fieldHTML.appendChild( bullet.html );
 
 // DIMENSION LINES NOT WORKING
@@ -116,8 +115,8 @@ Returns an other of type Other in the position indicated with "left"
 		// dimLineTop.style.bottom = bullet.html.offsetTop + "px";
 		// dimLineTop.style.left = bullet.html.offsetLeft + "px";
 		// bullet.html.parentNode.insertBefore( dimLineTop, bullet.html );
-		
-		return self;
+
+		return bullet;
 
 	}; // end other.shoot()
 
