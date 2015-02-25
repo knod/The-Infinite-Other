@@ -10,22 +10,22 @@ var Field = function ( id ) {
 
 	field.html				= null;
 
-	field.numCols			= 11;
-	var colPercent			= (100 - otherWidth) / (numCols - 1);
-
 	field.rows 				= [];
-	// Only needed for setup
-	var numRows				= 5;
-	var rowHeight			= 8;
-	var rowWidth			= 88;
-	var rowMap				= ["1", "2", "2", "3", "3"];
+	// vars only needed for setup, used once
+	field.numRows			= 5;
+	field.rowHeight			= 8;
+	field.rowWidth			= 88;
+	field.rowMap			= ["1", "2", "2", "3", "3"];
 
-	var otherWidth 			= 4;
+	field.numCols			= 11;
+	field.colPercent		= (100 - otherWidth) / (numCols - 1);
+
+	field.otherWidth 		= 4;
 
 	field.player 			= null;
 	field.playerBulletList 	= [];
 
-	field.othersLists 		= [];
+	field.othersGrid 		= [];
 	field.othersBulletList 	= [];
 
 	field.barriers	 		= [];
@@ -65,31 +65,87 @@ var Field = function ( id ) {
 	// ===========
 	// SETUP
 	// ===========
-	field.buildOthersGrid = function ( rowMap, Other, mappedOthers ) {
+	field.buildObjsRow = function ( Other, type, mappedTypes ) {
+	/* ( func{}, str, {} ) -> [Other]
+	
+	// TODO: Is it better to use globals, internal globals (object scope),
+	// object properties, or arguments passsed in? There would be a lot of
+	// excess properties.
+
+	Returns a list of Other objects to fill a row (based on number of columns)
+	mappedTypes: object of objects containing the values for the Others to be generated
+	*/
+		var self = this;
+
+		var othersList = [];
+
+		for ( var col = 0; col < self.numCols; col++ ) {
+
+			var leftVal 	= col * self.colPercent;
+			var leftStr 	= leftVal + "%";
+
+			// Create an Other of this type with this css "left" value
+			var other 		= Other( mappedTypes[ type ], leftStr );
+			other.buildHTML();
+			other.column 	= col;
+			// other.row	= rowNum;
+			othersList.push( other );
+		}
+
+		return othersList;
+	};  // end Field.buildOtherRow()
+
+
+	field.buildObjectGrid = function ( Other, mappedTypes ) {
 	/* ( [], func{}, {} ) -> [ [ Other ] ]
 
 	Returns a list of Other's go in each row. Used to then add Other's
 	html to the currently empty row elements
 
 	rowMap: list of which types of objects go in which row. Those strings will
-		be used to get objects from mappedOthers
-	mappedOthers: object of objects containing the values for the Others to be generated
+		be used to get objects from mappedTypes
+	mappedTypes: object of objects containing the values for the Others to be generated
 	*/
 		var self = this;
-		var rows = [];
+		var grid = [];
 
-		for ( var rowi = 0; rowi < rowMap.length; rowi++ ) {
-			var typeVal 	= rowMap[ rowi ];
-			var othersList 	= buildOthersRow( Other, typeVal, mappedOthers );
-			rows.push( othersList );
+		// Build and add each row for the grid
+		for ( var rowi = 0; rowi < self.rowMap.length; rowi++ ) {
+			var typeVal 	= self.rowMap[ rowi ];
+			var othersList 	= self.buildObjsRow( Other, typeVal, mappedTypes );
+			grid.push( othersList );
 		}
 
-		return rows;
+		self.othersGrid = grid;
+		return grid;
 
-	};  // end Field.buildOthersGrid()
+	};  // end Field.buildObjectGrid()
 
 
-	field.buildRowsHTML = function ( numRows ) {
+	field.appendToRows = function ( htmlRows, toAppend ) {
+	/* ( [HTML], [[ HTML ]] ) -> [HTML]
+
+	Makes the Others appear on the page in the correct rows.
+	Returns the original rows handed in.
+	*/
+
+		// Get each row element
+		for ( var rowi = 0; rowi < htmlRows.length; rowi++ ) {
+			var docRow = htmlRows[ rowi ];
+			// Get the corresponding row in toAppend,
+			var othersRow = toAppend[ rowi ];
+			// Get each Other object in that row
+			for ( var coli = 0; coli < othersRow.length; coli++ ) {
+				docRow.appendChild( othersRow[ coli ].html );
+			}
+		}
+
+		return htmlRows;
+
+	};  // end Field.appendRows()
+
+
+	field.buildRowsHTML = function ( numRows, rowHeight ) {
 	/*
 
 	*/
@@ -138,12 +194,13 @@ var Field = function ( id ) {
 	*/
 		var self = this;
 
-		self.rows 	= self.buildRowsHTML( numRows );
-		self.player = Player( self.html, 1 );
-
 		// OTHERS
+		var rows 	= self.buildRowsHTML( self.numRows, self.rowHeight );
+		// TODO: Needs a clearer name
+		self.appendToRows( rows, self.othersGrid );
 
-
+		self.player = Player( self.html, 1 );
+		self.rows 	= rows;
 		return self;
 	};  // end Field.addObjects()
 
@@ -302,14 +359,14 @@ var Field = function ( id ) {
 		return false;
 	};  // End Field.update()
 
-
+	// ================
+	// CREATE OWN VALUES/PROPERTIES
+	// ================
 	// rowMap is temporary, it can't be in here...
-	// field.buildOthersGrid( rowMap );
+	field.buildObjectGrid( Other, othersTypes );
 	field.buildHTML();
 	field.addObjects();
 	field.appendChildren();
-
-
 
 	// ===========
 	// END
