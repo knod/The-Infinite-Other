@@ -159,3 +159,71 @@ BaseObject.prototype.Bind = function( fnMethod, arguments_ )
 
 	};  // end Utilities.bind()
 
+
+
+
+
+
+
+================
+Parking Lot
+================
+
+	// One big list of Others. Using this means getting lowest
+	// Other is less straightforward. Until there's a row object
+	// with its own Others to cycle through, this might be shelved
+	field.buildRows = function ( numRows, rowHeight ) {
+	/*
+
+	Makes row html, Other objects, and adds the Others to the row
+	It feels better to hand in othersTypes as a parameter rather
+	than using self.othersTypes, but I don't know why.
+	*/
+		var self = this;
+
+		var rows 		= [];
+		var othersList 	= [];
+
+		for ( var rowNum = 0; rowNum < numRows; rowNum++ ) {
+
+			var top 					= rowHeight * rowNum;
+
+			var rowHTML 				= document.createElement( "div" );
+			rowHTML.className 			= "object others row row-" + (rowNum + 1);
+			rowHTML.dataset.direction 	= 'left';
+			rowHTML.dataset.left		= 0;
+			rowHTML.dataset.top 		= top;
+
+			rowHTML.style.top 			= top + "%";
+
+			// Add row Others
+			var other;
+			for ( var col = 0; col < self.numCols; col++ ) {
+
+				var otherType 	= self.rowMap[ rowNum ];
+				// var leftVal 	= col * self.colPercent;
+				// var leftStr 	= leftVal + "%";
+
+				// // Create an Other of this type with this css "left" value
+				// var other 		= Other( self.html, self.othersTypes[ type ], leftStr );
+				var other 		= Other( self.html, self.othersTypes[ otherType ], col, self.colPercent );
+				other.buildHTML();
+				other.column 	= col;
+
+				othersList.push( other );
+				rowHTML.appendChild( other.html );
+
+			}  // end for ( column )
+
+			rows.push( rowHTML );
+
+		}  // end for ( rowNum )
+
+		self.rows 		= rows
+		self.othersList = othersList;
+
+		return rows;
+
+	};  // end Field.buildRows()
+
+

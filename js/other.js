@@ -7,35 +7,20 @@ var rowHeight = 2;
 
 // Types of Others and their unique properties
 var othersTypes = {
-	1: {
-		points: 10,
-		class: "other1"
-	},
-
-	2: {
-		points: 20,
-		class: "other2"
-	},
-
-	3: {
-		points: 30,
-		class: "other3"
-	},
-
-	x: {
-		points: 100,
-		class: "mysterious"
-	}
+	1: { points: 10, class: "other1" },
+	2: { points: 20, class: "other2" },
+	3: { points: 30, class: "other3" },
+	x: { points: 100, class: "mysterious" }
 };  // end othersTypes{}
 
 // Other Obj
 // ( JS Obj ) -> Other
-var Other = function ( fieldHTML, type, left ) {
+var Other = function ( fieldHTML, type, colNum, colPercent ) {
 /* ( {}, int ) -> Other
 
 Returns an other of type Other in the position indicated with "left"
 */
-debugger;
+
 	var other = {};
 
 	other.class	= type.class;
@@ -45,12 +30,12 @@ debugger;
 	other.points	= type.points;
 	other.killed	= false;
 
-	// Position in rem's
-	other.left 		= left;
-	other.top		= 0;
-	other.id 		= null;  // currently not in use
+	other.column 	= colNum;
 
-	other.column 	= null;
+	// Position in %'s
+	other.left 		= colNum * colPercent;
+	other.top		= 0;  // Individual Others instead of in rows?
+	other.id 		= null;  // currently not in use
 
 	// =============
 	// FUNCTIONS
@@ -65,7 +50,7 @@ debugger;
 
 		var html 		= document.createElement("div");
 		html.className 	= 'object other ' + self.class;
-		html.style.left = self.left;
+		html.style.left = self.left + "%";
 
 		self.html 		= html;
 
@@ -101,7 +86,7 @@ debugger;
 
 	*/
 		var self = this;
-debugger;
+
 		var bullet = Bullet( 1, self.fieldHTML, "down" );
 		// bullet.fieldHTML = self.fieldHTML;
 		bullet.buildHTML( self.html );

@@ -11,11 +11,16 @@ var Field = function ( id, boardHTML ) {
 	field.html				= null;
 	field.boardHTML 		= boardHTML;
 
+	field.barriers	 		= [];
+
+	field.player 			= null;
+	field.playerBulletList 	= [];
+
 	field.rows 				= [];
 	// vars only needed for setup, used once
 	field.numRows			= 5;
-	field.rowHeight			= 8;
-	field.rowWidth			= 88;
+	field.rowHeight			= 8;  // %
+	field.rowWidth			= 88;  // %
 	field.rowMap			= ["1", "2", "2", "3", "3"];
 
 	field.otherWidth 		= 4;
@@ -23,15 +28,17 @@ var Field = function ( id, boardHTML ) {
 	field.colPercent		= (100 - field.otherWidth) / (field.numCols - 1);
 
 	field.numOthers			= field.numCols * field.rowMap.length;
-	field.othersGrid		= [];
 
-	field.player 			= null;
-	field.playerBulletList 	= [];
+	field.othersTypes 		= {
+		1: { points: 10, class: "other1" },
+		2: { points: 20, class: "other2" },
+		3: { points: 30, class: "other3" },
+		x: { points: 100, class: "mysterious" }
+	};  // end othersTypes{}
 
+	field.othersList 		= [];
 	field.othersGrid 		= [];
 	field.othersBulletList 	= [];
-
-	field.barriers	 		= [];
 
 	// In %'s
 	// Needs to overlap?
@@ -72,7 +79,7 @@ var Field = function ( id, boardHTML ) {
 	// ===========
 	// SETUP
 	// ===========
-	field.buildObjsRow = function ( Other, type, mappedTypes ) {
+	field.buildOthersRow = function ( Other, type, mappedTypes ) {
 	/* ( func{}, str, {} ) -> [Other]
 	
 	// TODO: Is it better to use globals, internal globals (object scope),
@@ -92,7 +99,7 @@ var Field = function ( id, boardHTML ) {
 			var leftStr 	= leftVal + "%";
 
 			// Create an Other of this type with this css "left" value
-			var other 		= Other( self.html, mappedTypes[ type ], leftStr );
+			var other 		= Other( self.html, mappedTypes[ type ], col, self.colPercent );
 			other.buildHTML();
 			other.column 	= col;
 			// other.row	= rowNum;
@@ -115,11 +122,11 @@ var Field = function ( id, boardHTML ) {
 	*/
 		var self = this;
 		var grid = [];
-debugger;
+
 		// Build and add each row for the grid
 		for ( var rowi = 0; rowi < self.rowMap.length; rowi++ ) {
 			var typeVal 	= self.rowMap[ rowi ];
-			var othersList 	= self.buildObjsRow( Other, typeVal, mappedTypes );
+			var othersList 	= self.buildOthersRow( Other, typeVal, mappedTypes );
 			grid.push( othersList );
 		}
 
@@ -188,13 +195,14 @@ debugger;
 
 		var html 		= document.createElement( "section" );
 		html.className 	= "field";
-		debugger;
+
 		self.html 		= html;
 		return self;
 
 	};  // end Field.buildHTML()
 
 	
+	// Can probably just be var, but keeping it accessible could be interesting
 	field.addObjects = function () {
 	/*
 
@@ -205,6 +213,7 @@ debugger;
 		var rows 	= self.buildRowsHTML( self.numRows, self.rowHeight );
 		// TODO: Needs a clearer name
 		self.appendToRows( rows, self.othersGrid );
+		// var rows 	= self.buildRows( self.numRows, self.rowHeight );
 
 		self.player = Player( self.html, 1 );
 		self.rows 	= rows;
@@ -508,7 +517,9 @@ debugger;
 	};  // End Field.attack()
 
 
-
+	// ==============
+	// UPDATES
+	// ==============
 	// TODO: Do collisions in one place and movement in another place?
 	field.updateBullets = function ( bulletList, objLists ) {
 	/* ( [], [[{}]] ) -> 
@@ -587,6 +598,7 @@ debugger;
 		field.lastTimePlShot;
 		player_.move( player_.direction );
 
+		var gameOver;
 		// =============
 		// OTHERS
 		// =============

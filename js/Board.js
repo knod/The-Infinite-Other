@@ -137,7 +137,7 @@ var Board = function ( id ) {
 		if ( !self.gameOver ) {
 
 			// field checks for end conditions?
-			var gameOver = field_.update( currentTime_ );
+			self.gameOver = field_.update( currentTime_ );
 
 			// stats.updateStat( "mysterious", field.mysteriousDeadCount );
 			// stats.updateStat( "other1"	, field.other1DeadCount );
@@ -151,7 +151,7 @@ var Board = function ( id ) {
 			stats_.updateStat( "elapsedTime", elapsedTime );
 
 			// Only end game after everything's been updated
-			if ( gameOver ) { self.endGame; }
+			if ( self.gameOver ) { self.endGame; }
 
 			// ===========
 			// LOOP

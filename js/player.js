@@ -63,6 +63,7 @@ var Player = function ( fieldHTML, id ) {
 	player.move = function ( direction ) {
 	/*
 
+	Should this be called .update()?
 	*/
 		var self 		= this;
 		var selfHTML_ 	= self.html;

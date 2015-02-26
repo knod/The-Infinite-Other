@@ -76,13 +76,14 @@ determine its size and position?
 
 
 var Util = Utilities( 1 );
-
+var BoardA;
 
 window.addEventListener( "load", function () {
 
 	var board_id_count = 1;
 
-	var BoardA = Board( "board_" + board_id_count );
+	// var 
+	BoardA = Board( "board_" + board_id_count );
 	BoardA.init();
 
 	// update();
