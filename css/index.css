@@ -76,22 +76,22 @@ body, p, h1, div {
 	height: 50%;
 }
 
-.other1 {
+.object.other1 {
 	background-color: teal;
 	/*background-image: url('../images/other1.png');*/
 }
 
-.other2 {
+.object.other2 {
 	background-color: coral;
 	/*background-image: url('../images/other2.png');*/
 }
 
-.other3 {
+.object.other3 {
 	background-color: firebrick;
 	/*background-image: url('../images/other3.png');*/
 }
 
-.mysterious {}
+.object.mysterious {}
 
 .barrier {
 	bottom: 1.5rem;
