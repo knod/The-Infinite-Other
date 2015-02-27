@@ -153,7 +153,7 @@ var Player = function ( fieldHTML, id ) {
 			}
 
 		// Other collision
-		} else if ( collidee.objType = "other" ) {
+		} else if ( collidee.objType === "other" ) {
 			// Don't die so the player can see what happened
 			returnAction = "endGame"
 

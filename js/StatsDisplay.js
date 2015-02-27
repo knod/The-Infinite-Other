@@ -59,7 +59,6 @@ Stats to be displayed to player as they play the game
 
 		// -------
 		icon.appendChild( exOut );
-		icon.appendChild( exOut );
 		outer.appendChild( icon );
 		outer.appendChild( countArea );
 

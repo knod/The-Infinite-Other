@@ -651,10 +651,6 @@ var Field = function ( id, boardHTML ) {
 								var colliderAction = collider.collide( collidee, self.hostile );
 
 								if ( colliderAction === "killThis" ) {
-									if ( collider === "other" ) {
-										// Why isn't a dead other being taken off of its list?
-										debugger;
-									}
 
 									self.countDeadOthers( collider );
 									colliders.splice( collideri, 1 );
