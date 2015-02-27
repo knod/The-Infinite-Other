@@ -789,6 +789,7 @@ var Field = function ( id, boardHTML ) {
 		// STATE VALUES
 		// =============
 		self.livesCount = player_.lives;
+		self.shotsCount = player_.shots;
 
 		// Game Over if all Others are dead
 		var allGone = false;
