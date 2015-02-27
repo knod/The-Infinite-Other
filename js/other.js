@@ -15,7 +15,7 @@ var othersTypes = {
 
 // Other Obj
 // ( JS Obj ) -> Other
-var Other = function ( fieldHTML, type, colNum, colPercent ) {
+var Other = function ( fieldHTML, type, colNum, colPercent, vertSpeed, horSpeed ) {
 /* ( {}, int ) -> Other
 
 Returns an other of type Other in the position indicated with "left"
@@ -23,9 +23,12 @@ Returns an other of type Other in the position indicated with "left"
 
 	var other = {};
 
-	other.class	= type.class;
-	other.html 	= null;
+	other.objType 	= "other";
+	other.class		= type.class;
+	other.html 		= null;
 	other.fieldHTML	= fieldHTML;
+	other.vertSpeed	= vertSpeed;
+	other.horSpeed 	= horSpeed;
 
 	other.points	= type.points;
 	other.killed	= false;
@@ -36,6 +39,9 @@ Returns an other of type Other in the position indicated with "left"
 	other.left 		= colNum * colPercent;
 	other.top		= 0;  // Individual Others instead of in rows?
 	other.id 		= null;  // currently not in use
+
+	// Once it has died, it can't collide with anything else
+	other.dead 		= false;
 
 	// =============
 	// FUNCTIONS
@@ -71,16 +77,6 @@ Returns an other of type Other in the position indicated with "left"
 	};  // end other.updateLeft()
 
 
-	other.destroy = function () {
-	/*  -> 
-
-	
-	*/
-
-		console.log("ow");
-
-	}; // end other.die()
-
 	other.shoot = function () {
 	/* ( HTML ) -> Bullet
 
@@ -89,7 +85,7 @@ Returns an other of type Other in the position indicated with "left"
 
 		var bullet = Bullet( 1, self.fieldHTML, "down" );
 		// bullet.fieldHTML = self.fieldHTML;
-		bullet.buildHTML( self.html );
+		bullet.buildHTML( self );
 
 		// self.bulletList.push( bullet );
 		self.fieldHTML.appendChild( bullet.html );
@@ -103,8 +99,74 @@ Returns an other of type Other in the position indicated with "left"
 
 		return bullet;
 
-	}; // end other.shoot()
+	}; // end Other.shoot()
 
+
+	// For now, just pretend there is only horizontal movement and collision
+	other.checkOutOfBounds = function ( bounderHTML ) {
+	/* ( HTML ) -> HTML
+
+	*/
+		var self = this;
+
+		// Only checks with horizontal speed because I messed up big time
+		var edgeThatWasHit = Util.whichEdgeHit( self.html, bounderHTML, self.horSpeed );
+		// Function caller will take action based on edge that was hit
+		var returnAction = "none";
+		if ( edgeThatWasHit === "bottom" ) {
+			returnAction === "endGame";
+		} else if ( edgeThatWasHit === "right" ) {
+			returnAction = "moveRowsLeft";
+		} else if ( edgeThatWasHit === "left" ) {
+			returnAction = "moveRowsRight";
+		}
+
+		return returnAction;
+	};  // end Other.checkOutOfBounds()
+
+
+	other.collide = function ( collidee, areHostile ) {
+	/*  -> 
+
+	Decide what to do with the collision
+	*/
+		var self = this;
+
+		var returnAction = "none";
+
+		// Player
+		if ( collidee.objType === "player" ) {
+			// Other never dies on contact with player, regardless of hostility
+			returnAciton = "endGame";
+
+		// Bullet
+		} else if ( collidee.parentType && (collidee.parentType === "player") ) {
+			self.die();
+			returnAction = "killThis";
+		}
+
+		return returnAction;
+	}; // end Other.collide()
+
+
+	other.die = function () {
+	/*  -> 
+
+	Do a dance and then die	
+	*/
+		var self = this;
+		var selfHTML_ = self.html;
+
+		selfHTML_.parentNode.removeChild(selfHTML_);
+
+		self.dead = true;
+		return self;
+	}; // end Other.die()
+
+
+	// =========
+	// END
+	// =========
 	return other;
 
 };  // end other{}

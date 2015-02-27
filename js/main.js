@@ -26,6 +26,7 @@ TODO:
 - Others' bodies destroy barrier
 - Top variable score AI
 - "Field" class for rows/field (refactor)
+- Add pause button (esc) (and clickable button?)
 
 ---- 3 ----
 - Opening & closing screens
@@ -37,6 +38,11 @@ TODO:
 - Make modular shoot function
 - Make sidebar for progress/score
 - Current time can be global
+- Make master die()
+- Make master object with master die() master fieldHTML, etc.
+- Change edgeHit detection to detecting based on direction of travel
+- Have "boundry" objects that elements can collide with instead of
+	checking fo exiting field?
 
 ---- ? ----
 - Unit tests

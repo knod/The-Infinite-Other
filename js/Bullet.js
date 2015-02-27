@@ -8,15 +8,20 @@ var Bullet = function ( id, fieldHTML, direction ) {
 */
 	var bullet = {};
 
-	bullet.html 	= null;
+	bullet.objType 		= "bullet";
+	bullet.class 		= "bullet";
+	bullet.parentType 	= null;
+
+	bullet.html 		= null;
 	bullet.fieldHTML 	= fieldHTML;
 
 	// Dimensions and positions in pixels
 	// Why do the bullets' relative screen space adjust when zoom
 	// is increased? (They get bigger when zoomed. I thought that
 		// was rem's)
-	bullet.width 	= 4;//0.25;
-	bullet.height 	= 7;//0.45;
+	bullet.width 	= 10;//4;//0.25;
+	bullet.height 	= 10;//7;//0.45;
+	bullet.top 		= 0;
 	bullet.left 	= 0;
 	// Now as percents!
 	// bullet.width 	= 5;// out of 560px ~.7%
@@ -31,7 +36,10 @@ var Bullet = function ( id, fieldHTML, direction ) {
 	// MUST BE SMALLER THAN THE DISTANCE BETWEEN TWO AI
 	bullet.destrucitonRadius 	= 5;
 
-	bullet.buildHTML = function ( shooterElem ) {
+	// Once it has died, it can't collide with anything else
+	bullet.dead	= false;
+
+	bullet.buildHTML = function ( shooter ) {
 	/* ( HTML ) -> Bullet
 
 	*/
@@ -39,6 +47,7 @@ var Bullet = function ( id, fieldHTML, direction ) {
 		var field = self.fieldHTML;
 		// ( childElem, ancestorElem, offsetType )
 		// TODO: field of shooter or field of self?
+		var shooterElem 		= shooter.html;
 
 		var shooterWidth 		= shooterElem.offsetWidth,
 			shooterFieldLeft 	= Util.getPixelOffsetFromAncestor(
@@ -62,10 +71,12 @@ var Bullet = function ( id, fieldHTML, direction ) {
 		// html.style.height 	= self.height + "%";
 		
 		// TODO: Why is pixel placement and movement working when view zoom is changed?
-		html.dataset.top 	= percentageTop ;
-		html.style.top 		= shooterFieldTop + "%";
+		// html.dataset.top 	= percentageTop ;
+		html.style.top 		= percentageTop + "%";
 		html.style.left 	= bulletLeft + "px";
 
+		self.parentType		= shooter.objType;
+		self.top 			= percentageTop;
 		self.left 			= bulletLeft;
 		self.html 			= html;
 
@@ -81,8 +92,8 @@ var Bullet = function ( id, fieldHTML, direction ) {
 		var self = this;
 
 		// If nothing else changes, movement will be 0
-		var moveVector = 0;
-		var top = parseFloat( self.html.dataset.top );
+		var moveVector 	= 0;
+		var top 		=  self.top; //parseFloat( self.html.dataset.top );
 
 		// TODO: Limit to inside parent
 
@@ -92,45 +103,34 @@ var Bullet = function ( id, fieldHTML, direction ) {
 
 		// Implement any changes to movement
 		top += moveVector;
-		self.html.dataset.top = top;
+		// self.html.dataset.top = top;
 		// self.html.style.top = top + "px";
 		self.html.style.top = top + "%";
 
+		self.top = top;
 		return self;
 
 	};  // end Bullet.move()
 
-	bullet.collide = function ( collidee ) {
-	/* -> 
-
-	*/
-		var self = this;
-
-		// Get all elements within the destruction radius
-			// If they're not ancestor, destroy them
-
-		// Destroy self visually (removal from js list will
-			// be external)
-
-		return self;
-	};  // end Bullet.collide()
 
 	// TODO: Probably doesn't need to be here anymore, just do an edge
 	// hit check. Except it returns an object, but the object was
 	// already sent in here, obviously
-	bullet.goingOutOfBounds = function ( bounderHTML ) {
+	bullet.checkOutOfBounds = function ( bounderHTML ) {
 	/* ( HTML ) -> HTML
 
 	*/
 		var self = this;
 
-		var exitedObj = null;
 		var edgeThatWasHit = Util.whichEdgeHit( self.html, bounderHTML, self.speed );
+		var returnAction = "none"
+		if ( edgeThatWasHit !== "none" ) {
+			self.die()
+			returnAction = "killThis";
+		}
 
-		if ( edgeThatWasHit !== "none" ) { exitedObj = bounderHTML; }
-
-		return exitedObj;
-	};  // end Bullet._goingOutOfBounds()
+		return returnAction;
+	};  // end Bullet.checkOutOfBounds()
 
 
 	bullet.collisionTest = function ( obj ) {
@@ -145,6 +145,43 @@ var Bullet = function ( id, fieldHTML, direction ) {
 
 		return collidee;
 	};  // end Bullet.collisionTest()
+
+
+	bullet.collide = function ( collidee, areHostile ) {
+	/*  -> 
+
+	Decide what to do with the collision
+	*/
+		var self = this;
+
+		var returnAction = "none";
+
+		// Always dies on collision
+		if (   ( (self.parentType === "player") && (collidee.objType === "other") )
+			|| ( (self.parentType === "other") && (collidee.objType === "player") )
+			||   (collidee.objType === "bullet")  ) {
+		
+			self.die();
+			returnAction = "killThis"
+		} 
+
+		return returnAction;
+	}; // end Bullet.collide()
+
+
+	bullet.die = function () {
+	/*  -> 
+
+	Do a dance and then die	
+	*/
+		var self = this;
+		var selfHTML_ = self.html;
+
+		selfHTML_.parentNode.removeChild(selfHTML_);
+
+		self.dead = true;
+		return self;
+	}; // end Bullet.die()
 
 
 	// =============

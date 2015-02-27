@@ -1,4 +1,11 @@
-/* Created 02/19/15 */
+/* Created 02/19/15 
+
+Resources:
+- Arranging Others in rows
+	http://jsfiddle.net/3sox1v3h/
+	http://jsfiddle.net/3sox1v3h/1/
+	http://i.imgur.com/j00VTJh.png
+*/
 
 'use strict'
 
@@ -7,6 +14,8 @@ var Field = function ( id, boardHTML ) {
 
 */
 	var field = {};
+
+	field.gameOver 			= false;
 
 	field.html				= null;
 	field.boardHTML 		= boardHTML;
@@ -99,7 +108,7 @@ var Field = function ( id, boardHTML ) {
 			var leftStr 	= leftVal + "%";
 
 			// Create an Other of this type with this css "left" value
-			var other 		= Other( self.html, mappedTypes[ type ], col, self.colPercent );
+			var other 		= Other( self.html, mappedTypes[ type ], col, self.colPercent, self.otherHorSpeed, self.otherVertSpeed );
 			other.buildHTML();
 			other.column 	= col;
 			// other.row	= rowNum;
@@ -486,6 +495,10 @@ var Field = function ( id, boardHTML ) {
 				// MUST return something here or nothing gets returned
 				return self.getRandomLowestOther( othersGrid );
 			} else {
+				if ( randomOther.dead === true ) {
+					// Other is dead, but it's apparently still in the grid
+					debugger;
+				}
 				return randomOther;
 			}
 
@@ -521,63 +534,199 @@ var Field = function ( id, boardHTML ) {
 	// UPDATES
 	// ==============
 	// TODO: Do collisions in one place and movement in another place?
-	field.updateBullets = function ( bulletList, objLists ) {
+	// TODO: Do all collision tests at the same time, matching up rows
+	// one by one
+
+	field.moveBullets = function ( bulletList ) {
 	/* ( [], [[{}]] ) -> 
 
-	Moves bullets in the bulletList, destroys them if they git a wall or
-	collide with something, destroyes anything they collide with
+	Moves bullets in the Field
 	*/
+		var self = this;
 		for ( var bulleti = 0; bulleti < bulletList.length; bulleti++ ) {
 
 			var bullet = bulletList[ bulleti ];
 			bullet.move( bullet.direction );
+		}
 
-			// Will we need to destroy the bullet?
-			var needDestroyBullet = false;
-			var collidee = null;
-
-			// check for collision with parent
-			var exitee = bullet.goingOutOfBounds( bullet.fieldHTML );
-			if ( exitee !== null ) {
-				needDestroyBullet = true; 
-
-			// If parent doesn't destroy, check for other collisions
-			} else {
-
-				for ( var objListi = 0; objListi < objLists.length; objListi++ ) {
-					var objs = objLists[ objListi ];
-
-					for ( var obji = 0; obji < objs.length; obji++ ) {
-						var obj = objs[ obji ];
-
-						// Test for collision and act appropriately
-						var collidee = bullet.collisionTest( obj );
-						// If there was actually a collision with something,
-						// destroy the thing and mark bullet for destruciton
-						if ( collidee !== null ) {
-							needDestroyBullet = true;
-							// Destroy collidee, in DOM and in JS
-							var elem = collidee.html;
-							elem.parentNode.removeChild(elem);
-							objs.splice( obji, 1 );
-						}
-					}  // end for ( obj )
-				}  // end for ( objList )
-			}  // end if ( exit )
-
-			if ( needDestroyBullet ) {
-				// Remove Bullet from DOM
-				var elem = bullet.html;
-				elem.parentNode.removeChild(elem);
-				// Remove from js
-				bulletList.splice( bulleti, 1 );
-
-			}  // end if ( needDestroyBullet )
-		}  // end for( bullet )
-		// TODO: return collisions?
 		return bulletList;
-	};  // End updateBullets()
+	};  // End Field.moveBullets
 
+
+	field.countDeadOthers = function ( potentialOther ) {
+	/* ( {} ) -> Field
+
+	If potentialOther is actually an Other, progress the correct
+	DeadCount for that Other, and progress the hit count
+	*/
+		var self = this;
+		var type = potentialOther.objType
+
+		if ( potentialOther.objType === "other" ) {
+
+			var propName = potentialOther.class + "DeadCount";
+			self[ propName ] 	+= 1;
+			self.hitsCount 		+= 1;
+
+		}
+
+		return self;
+
+	};  // End Field.countDeadOthers()
+
+
+	field.collideArrays = function ( colliders, collidees ) {
+	/*
+
+	Returns whether game is ended or not
+
+	TODO: Afterwards, if all others are gone, end game
+	Obj collision has to be done here because we need the list index
+	to use to take them off their list
+
+	TODO: Wait till all collisions are done before removing colliders and
+	collidees from the list because otherwise we're changing the list we're
+	removing from, but not changing the list we're iterating with, so we
+	could be using the wrong index number for whatever we want to splice
+	*/
+		var self = this;
+		// Kind of wish we could tell it to call itself
+		var returnAction 	= "none";
+
+		// Use copies to iterate through items so we can change original arrays without trouble
+		var collideRsCopy 	= colliders.slice(),
+			collideEsCopy 	= collidees.slice()
+		;
+
+		// If one of these is already dead, don't do anything
+		// TODO: Call it "collisionLock"? Can things other than death stop further collisions?
+		for ( var collideri = 0; collideri < collideRsCopy.length; collideri++ ) {
+			var collider = collideRsCopy[ collideri ];
+
+			// TODO: If any are already dead, don't calculate further collisions? (No html)
+			// TODO: Want object to kill itself in case it needs to die differently based on collision?
+			if ( collider.dead === false ) {
+				var killCollider = false; // may be changed further down
+
+				// Check if object goes out of its allotted area
+				// Someday, actions will be used to call field functions
+				var exitAction = collider.checkOutOfBounds( collider.fieldHTML );
+				if ( exitAction === "killThis" ) {
+					colliders.splice( collideri, 1 );
+				}
+
+				// Have to check again if it's dead
+				if ( collider.dead === false ) {
+					// Check other collisions
+					for ( var collideei = 0; collideei < collideEsCopy.length; collideei++ ) { 
+						var collidee = collideEsCopy[ collideei ];
+						
+						// Same question as above
+						if ( collidee.dead === false ) {
+
+							// Check if they collide
+							var haveCollided = Util.doesOverlap( collider.html, collidee.html );
+							// if they do, dole out consequences
+							if ( haveCollided === true ) {
+
+									// if ( collidee.objType === "other" ) {
+									// 	collidee.html.style["background-color"] = "black";
+									// 	// Why isn't a dead other being taken off of its list?
+									// 	debugger;
+									// }
+								// --- CollideE's consequences ---
+								var collideeAction = collidee.collide( collider, self.hostile );
+
+								// If the collidee died, take it off its own list
+								if ( collideeAction === "killThis" ) {
+
+									self.countDeadOthers( collidee );
+									collidees.splice( collideei, 1 );
+									
+								} else if ( collideeAction === "endGame" ) {
+									returnAction = "endGame";
+								}
+
+								// --- CollideR's consequences ---
+								var colliderAction = collider.collide( collidee, self.hostile );
+
+								if ( colliderAction === "killThis" ) {
+									if ( collider === "other" ) {
+										// Why isn't a dead other being taken off of its list?
+										debugger;
+									}
+
+									self.countDeadOthers( collider );
+									colliders.splice( collideri, 1 );
+									// Sorry about this, couldn't think of a better way
+									// to not keep cycling through the collidees when dead
+									break;
+
+								} else if ( colliderAction === "endGame" ) {
+									returnAction = "endGame";
+								}
+
+							}  // end if ( haveCollided )
+						}  // end if ( collidee not dead )
+					}  // end for ( collidee )
+				}  // end if ( collider not dead ) (2)
+			}  // end if ( collider not dead ) (1)
+		}  // end for ( collider )
+
+		// TODO: Doing this means collisions may happen after the game has ended,
+		// but the alternative is to end the game in many different places, which is messy
+		return returnAction;
+	};  // end Field.collideArrays()
+
+
+	field.updateCollisions = function ( Arrays ) {
+	/* ( [[]] ) -> 
+
+	Returns whether game has to be over or not
+
+	Collide everything with everything else
+	TODO: How to return gameOver from collisions while still
+	removing objects from their lists sometimes
+
+	Recursively pit rows of objects against each other till all
+	arrays have interacted with each other.
+
+	Master array will alwas have the same length, but for now we'll copy
+	it because I'm not a whiz kid and don't know everything
+	*/
+		var self = this;
+		var returnAction 	= "none";
+
+		// Dig down through each list until no list has any Arrays
+		var masterArray 	= Util.unwrapArray( Arrays );
+
+		// Make a copy to use for iteration while the master lists are changed
+		var masterForIteration = [];
+		for ( var arrayi = 0; arrayi < masterArray.length; arrayi++ ) {
+			var arrayCopy = masterArray[ arrayi ].slice();
+			masterForIteration.push( arrayCopy );
+		}
+
+		// Run collisions between every list and every other list while
+		// using copies to run the iteration
+		for ( var currArrayi = 0; currArrayi < masterForIteration.length; currArrayi++ ) {
+
+			// Make sure there's another item left in the array to collide with
+			var nextArrayi = currArrayi + 1;
+			if ( nextArrayi < masterForIteration.length ) {
+
+				for ( nextArrayi; nextArrayi < masterForIteration.length; nextArrayi++ ) {
+					
+					var thisAction = self.collideArrays( masterArray[ currArrayi ], masterArray[ nextArrayi ] );
+					// If any action triggers the end of the game, trigger the end of the game
+					if ( thisAction === "endGame") { returnAction = "endGame"; }
+
+				}  // end for ( nextArray )
+			}
+		}  // end for ( first array )
+
+		return returnAction;
+	};  // End Field.updateCollisions()
 
 
 	field.update = function ( currentTime ) {
@@ -589,6 +738,7 @@ var Field = function ( id, boardHTML ) {
 	Returns whether game is over or not
 	*/
 		var self = this;
+		var gameOver = false;
 
 		// =============
 		// PLAYER
@@ -598,12 +748,11 @@ var Field = function ( id, boardHTML ) {
 		field.lastTimePlShot;
 		player_.move( player_.direction );
 
-		var gameOver;
 		// =============
 		// OTHERS
 		// =============
 
-		// ---- MOVEMENT ----
+		// ---- MOVEMENT (Others) ----
 		// Pause between the moving of Others
 		// Starts at about 1000
 		var movePause 		= self.otherPauseModifier * Math.pow( self.numOthers, self.otherPauseExponent);
@@ -630,8 +779,20 @@ var Field = function ( id, boardHTML ) {
 			self.lastTimeAIShot = currentTime;
 		}
 
-		self.updateBullets( self.player.bulletList, [ othersGrid_[0], othersGrid_[1], othersGrid_[2], othersGrid_[3], othersGrid_[4] ] );
-		self.updateBullets( self.othersBulletList, [ [self.player] ] );
+		// ---- MOVEMENT (Bullets) ----
+		self.moveBullets( self.othersBulletList );
+		self.moveBullets( player_.bulletList );
+
+		// =============
+		// COLLISIONS
+		// =============
+
+		self.updateCollisions( [ player_.bulletList, self.othersBulletList, othersGrid_, [player_] ] );
+
+		// =============
+		// STATE VALUES
+		// =============
+		self.livesCount = player_.lives;
 
 		// Game Over if all Others are dead
 		var allGone = false;

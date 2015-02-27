@@ -12,6 +12,9 @@ var Utilities = function ( id ) {
 	var util = {};
 	util.id = id;
 
+	// ================
+	// MATH
+	// ================
 
 	util.getRandomIntInRange = function ( min, stopBefore ) {
 	/* ( int, int ) -> int
@@ -33,6 +36,52 @@ var Utilities = function ( id ) {
 		var randInt = self.getRandomIntInRange( 0, choiceList.length );
 		return choiceList[ randInt ];
 	};  // end Utilities.chooseRandom()
+
+
+	// ================
+	// ??
+	// ================
+
+	util.unwrapArray = function ( ourArray ) {
+	/* ( [ [ [...] or atomict item ] or atomic item ] ) -> [[]]
+
+	WARMING: all arrays presented must be made up of
+	EITHER arrays or atomic items, NOT A COMBINATION
+
+	Recurse through all arrays presented, finally putting them together
+	into a list of arrays that only have atomic items.
+	Flattening is similar, but gives back only attomic items
+
+	Example:
+	var list1 = [ [[5], [12], [1]], [4, 3], [89, 9] ];
+	var list2 = [ [7, "bleh"], [15, true], ["twa", "bop"] ];
+	var combo = [ list1, list2 ];
+	var listOfLists = flatten( combo );
+	// Desired result: [ [5], [12], [1], [4, 3], [89, 9], [7, "bleh"], [15, true], ["twa", "bop"] ]
+	*/
+		var self = this;
+
+		var arrayOfArrays = [];
+
+		// A non-array object should never get in here, it'll make a mess
+		if ( !Array.isArray( ourArray ) ) {
+			console.error( "unwrapArray recieved a non-array object." );
+
+		} else {
+			// Check if the contents are going to be arrays
+			if ( Array.isArray( ourArray[0] ) ) {
+				// if so, iterate through them as well and tack them onto the accumulating array
+				for ( var arrayi = 0; arrayi < ourArray.length; arrayi++ ) {
+					arrayOfArrays = arrayOfArrays.concat( self.unwrapArray( ourArray[ arrayi ] ) );
+				} // end for ( array )
+			} else {
+				// if not, go ahead and just add this array to the accumulating array
+				arrayOfArrays.push( ourArray );
+			}  // end if ( Array )
+		}  // end if ( Array )
+
+		return arrayOfArrays;
+	};  // End Utilities.unwrapArray
 
 
 	// ================
@@ -325,6 +374,7 @@ var Utilities = function ( id ) {
     	var msInt	= parseInt( msValue, 10 );
     	var min 	= parseInt( msInt/1000/60 );
     	var sec 	= ( msInt/1000 ) % 60;
+    	sec 		= sec.toFixed(2);  // turns it into a string?
 
     	if ( min < 10 ) { min = "0" + min; }
     	if ( sec < 10 ) { sec = "0" + sec; }

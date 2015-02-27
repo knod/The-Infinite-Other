@@ -17,6 +17,9 @@ var Player = function ( fieldHTML, id ) {
 	var player = {};
 
 	// player.state = {};
+	player.objType 			= "player";
+	player.class 			= "player";
+	player.lives			= 3;
 
 	player.leftKeyList 		= [ "a", "left" ];
 	player.rightKeyList 	= [ "d", "right" ];
@@ -32,6 +35,10 @@ var Player = function ( fieldHTML, id ) {
 
 	// Add bullet list! Duh!
 	player.bulletList 		= [];
+	player.shots			= 0;
+
+	// Once it has died, it can't collide with anything else
+	player.dead 			= false;
 
 
 	player.buildHTML = function () {
@@ -102,13 +109,73 @@ var Player = function ( fieldHTML, id ) {
 
 		var bullet = Bullet( 1, self.fieldHTML, "up" );
 		// bullet.fieldHTML = self.fieldHTML;
-		bullet.buildHTML( self.html );
+		bullet.buildHTML( self );
 
 		self.bulletList.push( bullet );
 		self.fieldHTML.appendChild( bullet.html );
 
+		self.shots += 1;
 		return bullet;
 	};
+
+	player.checkOutOfBounds = function ( bounderHTML ) {
+	/* ( HTML ) -> HTML
+
+	*/
+		var self = this;
+
+		var edgeThatWasHit = Util.whichEdgeHit( self.html, bounderHTML, self.speed );
+		// Function caller will take action based on which edge was hit
+		var returnAction = "none";
+
+		return returnAction;
+	};  // end Player.checkOutOfBounds()
+
+
+	player.collide = function ( collidee, areHostile ) {
+	/*  -> 
+
+	Decide what to do with the collision
+	*/
+		var self = this;
+
+		var returnAction = "none";
+
+		// Bullet collision
+		if ( collidee.parentType && (collidee.parentType === "other") ) {
+
+			self.lives -= 1;
+
+			if ( self.lives <= 0 ) {
+				// Its object isn't removed, though
+				self.die()
+				returnAction = "endGame";
+			}
+
+		// Other collision
+		} else if ( collidee.objType = "other" ) {
+			// Don't die so the player can see what happened
+			returnAction = "endGame"
+
+		}  // end if ( collidee objType )
+
+		return returnAction;
+	}; // end Player.collide()
+
+
+	player.die = function () {
+	/*  -> 
+
+	Do a dance and then die	
+	*/
+		var self = this;
+		var selfHTML_ = self.html;
+
+		selfHTML_.parentNode.removeChild(selfHTML_);
+
+		self.dead = true;
+		return self;
+	}; // end Player.die()
 
 
 	// ============

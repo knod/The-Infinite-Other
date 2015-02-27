@@ -1,4 +1,8 @@
-/* Created 02/23/15 */
+/* Created 02/23/15 
+
+TODO: If I make a rows object, give it the death count of its
+Others for field to fetch.
+*/
 
 'use strict'
 

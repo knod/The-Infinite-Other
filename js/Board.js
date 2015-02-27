@@ -139,14 +139,15 @@ var Board = function ( id ) {
 			// field checks for end conditions?
 			self.gameOver = field_.update( currentTime_ );
 
-			// stats.updateStat( "mysterious", field.mysteriousDeadCount );
-			// stats.updateStat( "other1"	, field.other1DeadCount );
-			// stats.updateStat( "other2"	, field.other2DeadCount );
-			// stats.updateStat( "other3"	, field.other3DeadCount );
-			// stats.updateStat( "lives"		, field.livesCount );
-			// stats.updateStat( "shots"		, field.shotsCount );
-			// stats.updateStat( "hits"		, field.hitsCount );
-			// stats.updateStat( "travelDist", field.travelDistCount );
+			stats_.updateStat( "mysterious", field_.mysteriousDeadCount );
+			stats_.updateStat( "other1"	, field_.other1DeadCount );
+			stats_.updateStat( "other2"	, field_.other2DeadCount );
+			stats_.updateStat( "other3"	, field_.other3DeadCount );
+
+			stats_.updateStat( "lives"		, field_.livesCount );
+			// stats_.updateStat( "shots"		, field_.shotsCount );
+			// stats_.updateStat( "hits"		, field_.hitsCount );
+			// stats_.updateStat( "travelDist", field_.travelDistCount );
 			// TODO: in StatsDisplay?
 			stats_.updateStat( "elapsedTime", elapsedTime );
 

@@ -227,3 +227,89 @@ Parking Lot
 	};  // end Field.buildRows()
 
 
+	-- Examine at some future date --
+	(Not working)
+	util.unwrapArray = function ( ourArray, count ) {
+	/* ( [[*]] ) -> [[]]
+
+	Open up ourArray to make sure contents are not lists
+	If they are, continue to peel back until only 
+	lists without their own lists remain.
+
+	Count should always start as 0
+	*/
+		var self = this;
+
+		var arrayOfArrays = [];
+// debugger;
+		// A non-array object should never get in here, it'll make a mess
+		if ( ourArray.constructor !== Array ) {
+			console.error( "unwrapArray recieved a non-array object." );
+
+		// If an item of the array isn't an array itself, we've reached the
+		// end, start returning
+		} else if ( ourArray[0].constructor !== Array ) {
+
+			if ( count !== 0 ) { return ourArray; }
+			else { return [ ourArray ] }
+
+		} else {
+
+			for ( var arrayi = 0; arrayi < ourArray.length; arrayi++ ) {
+				arrayOfArrays.push(  self.unwrapArray(ourArray[ arrayi ])  );
+			}
+
+		}
+
+		return arrayOfArrays;
+	};  // End Utilities.unwrapArray
+
+vs.
+
+(Not working)
+function flatten(a) {
+    var out = [];
+    for (var i=0; i<a.length; i++) {
+        if (Array.isArray(a[i])) {
+            out = out.concat(flatten(a[i]));
+        } else {
+            out.push(a[i]);
+        }
+    }
+    return out;
+}
+
+(Working)
+function flatten2( thisArray ) {
+    var out = [];
+    if (Array.isArray( thisArray[0] )) {
+        for (var i = 0; i < thisArray.length; i++) {
+            out = out.concat( flatten2( thisArray[i] ));
+        }
+    } else {
+        out.push( thisArray );
+    }
+    return out;
+}
+(Working)
+function flatten3( thisArray ) {
+    var out = [];
+    for (var i = 0; i < thisArray.length; i++) {
+        debugger;
+        if (Array.isArray( thisArray[i])) {
+            out = out.concat( flatten3( thisArray[i] ) );
+        } else if ( i === (thisArray.length - 1) ) {
+            out.push( thisArray );
+        }
+    }
+    return out;
+}
+(Working)
+function flatten4( thisArray ) {
+    if (!Array.isArray( thisArray[0] )) {
+        return [thisArray];
+    }
+    return thisArray.reduce(function(p, c) {
+        return p.concat(flatten4(c));
+    }, []);
+}
