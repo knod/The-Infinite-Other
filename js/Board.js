@@ -42,6 +42,14 @@ var Board = function ( id ) {
 	// TODO: Should this be global? Or maybe in StatsDisplay?
 	board.startTime 		= Date.now();
 	board.currentTime		= board.startTime;
+	// should be true to start in future
+	board.paused			= false;
+	board.startingPause 	= false;
+	// board.needEndPause		= false;
+	board.elapsedPause		= 0;
+	board.oldPauseTime		= 0;
+	// board.pauseEndTime		= 0;
+
 	// board.oldTimeAIAttack	= board.startTime;
 	// board.oldTimeAIMove		= board.startTime;
 	// board.oldTimePlayerShot	= board.startTime;
@@ -113,7 +121,7 @@ var Board = function ( id ) {
 	*/
 		var self = this;
 
-		self.gameOver = false;
+		self.gameOver = true;
 
 		// End screen
 
@@ -122,19 +130,42 @@ var Board = function ( id ) {
 	};  // end Board.endGame()
 
 
+	board.togglePause = function () {
+	/*
+
+	*/
+		var self = this;
+
+		if ( self.paused === true ) {
+			self.paused = false;
+		} else {
+			self.paused = true;
+		}
+
+		return self;
+
+	};  // end Board.togglePause()
+
+
 	board.update = function () {
 	/*
 
 	*/
 		var self = this;
 
-		var field_ 		 = self.field;
-		var stats_ 		 = self.stats;
-		var currentTime_ = self.currentTime;
+		if ( !self.paused && !self.gameOver ) {
+			self.startingPause = false;
 
-		var elapsedTime  = currentTime_ - self.startTime;
+			// if ( self.needEndPause === true ) {
+			// 	self.pauseEndTime = Date.now();
+			// 	self.needEndPause = false;
+			// }
 
-		if ( !self.gameOver ) {
+			var field_ 		 = self.field;
+			var stats_ 		 = self.stats;
+			var currentTime_ = self.currentTime;
+
+			var elapsedTime  = currentTime_ - self.startTime;
 
 			// field checks for end conditions?
 			self.gameOver = field_.update( currentTime_ );
@@ -154,14 +185,27 @@ var Board = function ( id ) {
 			// Only end game after everything's been updated
 			if ( self.gameOver ) { self.endGame; }
 
+		}  // end if( !gameOver )
+
+		if ( self.paused ) {
+
+			// Just keep adding up the time
+			self.elapsedPause += Date.now() - self.oldPauseTime;
+			self.oldPauseTime = Date.now();
+			// For test, add a div with this id into the DOM
+			// document.getElementById("pause").innerHTML = self.elapsedPause;
+
+		}
+
 			// ===========
-			// LOOP
+			// LOOP (always want to loop, to do/sense other things, be able to start again, etc)
 			// ===========
-			self.currentTime = Date.now();
+			// Using Date.now() means the time keeps going even when the game is paused.
+			self.currentTime = Date.now() - self.elapsedPause;
+			// Prepares to time pause, but doesn't do anything with it unless game is paused
+			self.oldPauseTime = Date.now();
 
 			requestAnimationFrame( self.update.bind( self ) );
-
-		}  // end if( !gameOver )
 	};  // end Board.update()
 
 
@@ -175,6 +219,15 @@ var Board = function ( id ) {
 		self.addObjects();
 		self.appendChildren();
 		// var selfHTML = self.html;
+
+		self.keypress = new window.keypress.Listener();
+		self.keypress.register_combo({
+		    "keys"              : "esc",
+		    "on_keydown"        : self.togglePause,
+		    "this"              : self,
+		    "prevent_default"   : true,
+		});
+
 
 		document.body.appendChild( self.html );
 		return self;

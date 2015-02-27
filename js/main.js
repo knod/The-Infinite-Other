@@ -13,12 +13,6 @@ TODO:
 		or don't freeze everything on end condition till done
 		with other stuff)
 - Score
-- Destroying AI
-	- score
-		- each time AI is killed, it adds to the score
-- Destroy Player
-	- lose life
-- Lives
 
 ---- 2 ----
 - Limit shooting speed
